@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    tools:context=".FirstLoginActivity">
+
+    <!-- Top App Bar Fragment Container -->
+    <FrameLayout
+        android:id="@+id/topAppBarFragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <!-- Container for main content -->
+    <FrameLayout
+        android:id="@+id/mainContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <!-- First Login Fragment Container -->
+        <FrameLayout
+            android:id="@+id/firstLoginFragmentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+
+    </FrameLayout>
+
+    <!-- Bottom Navigation Container (Fragment) -->
+    <FrameLayout
+        android:id="@+id/bottomNavigationContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/purple_secondary"
+        android:elevation="8dp"
+        tools:layout="@layout/fragment_bottom_navigation"/>
+
+</LinearLayout>

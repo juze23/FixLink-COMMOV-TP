@@ -2,4 +2,8 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="purple_primary">#6B46C1</color>
+    <color name="gray_inactive">#666666</color>
+    <color name="purple_secondary">#E6E6FA</color>
+    <color name="default_nav_item_color">#666666</color>
 </resources>
