@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:elevation="8dp"
+    android:paddingTop="15dp"
+    android:paddingBottom="15dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- My Tasks -->
+        <LinearLayout
+            android:id="@+id/nav_my_tasks"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless">
+
+            <ImageView
+                android:id="@+id/icon_my_tasks"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginBottom="5dp"
+                android:src="@drawable/ic_tasks"
+                app:tint="#666666" />
+
+            <TextView
+                android:id="@+id/text_my_tasks"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="My Tasks"
+                android:textColor="#666666"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <!-- Issues -->
+        <LinearLayout
+            android:id="@+id/nav_issues"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless">
+
+            <ImageView
+                android:id="@+id/icon_issues"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginBottom="5dp"
+                android:src="@drawable/ic_issues_outline"
+                app:tint="#666666" />
+
+            <TextView
+                android:id="@+id/text_issues"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Issues"
+                android:textColor="#666666"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <!-- Maintenance -->
+        <LinearLayout
+            android:id="@+id/nav_maintenance"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless">
+
+            <ImageView
+                android:id="@+id/icon_maintenance"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginBottom="5dp"
+                android:src="@drawable/ic_maintenace_outline"
+                app:tint="#666666" />
+
+            <TextView
+                android:id="@+id/text_maintenance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Maintenance"
+                android:textColor="#666666"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <!-- Profile -->
+        <LinearLayout
+            android:id="@+id/nav_profile"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless">
+
+            <ImageView
+                android:id="@+id/icon_profile"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginBottom="5dp"
+                android:src="@drawable/ic_profile_outline"
+                app:tint="#666666" />
+
+            <TextView
+                android:id="@+id/text_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Profile"
+                android:textColor="#666666"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>
