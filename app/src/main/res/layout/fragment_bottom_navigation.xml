@@ -62,7 +62,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginBottom="5dp"
-                android:src="@drawable/ic_issues"
+                android:src="@drawable/ic_issues_outline"
                 app:tint="#666666" />
 
             <TextView
@@ -93,7 +93,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginBottom="5dp"
-                android:src="@drawable/ic_maintenance"
+                android:src="@drawable/ic_maintenace_outline"
                 app:tint="#666666" />
 
             <TextView
@@ -124,7 +124,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginBottom="5dp"
-                android:src="@drawable/ic_profile"
+                android:src="@drawable/ic_profile_outline"
                 app:tint="#666666" />
 
             <TextView

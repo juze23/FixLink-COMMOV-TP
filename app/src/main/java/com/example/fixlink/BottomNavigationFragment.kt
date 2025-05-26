@@ -1,5 +1,6 @@
 package com.example.fixlink
 
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -92,8 +93,6 @@ class BottomNavigationFragment : Fragment() {
         if (selectedItemId != itemId) {
             selectedItemId = itemId
             updateColors(selectedItemId)
-            // TODO: Navigate to the corresponding fragment/activity
-            Toast.makeText(context, "Selected item: ${resources.getResourceEntryName(itemId)}", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -101,34 +100,42 @@ class BottomNavigationFragment : Fragment() {
         val defaultColor = ContextCompat.getColor(requireContext(), R.color.default_nav_item_color)
         val selectedColor = ContextCompat.getColor(requireContext(), R.color.purple_primary)
 
-        // Reset all items to default color
+        // Reset all items to default (outline icons + default color)
+        iconMyTasks.setImageResource(R.drawable.ic_tasks_outline)
         iconMyTasks.setColorFilter(defaultColor)
         textMyTasks.setTextColor(defaultColor)
 
+        iconIssues.setImageResource(R.drawable.ic_issues_outline)
         iconIssues.setColorFilter(defaultColor)
         textIssues.setTextColor(defaultColor)
 
+        iconMaintenance.setImageResource(R.drawable.ic_maintenace_outline)
         iconMaintenance.setColorFilter(defaultColor)
         textMaintenance.setTextColor(defaultColor)
 
+        iconProfile.setImageResource(R.drawable.ic_profile_outline)
         iconProfile.setColorFilter(defaultColor)
         textProfile.setTextColor(defaultColor)
 
-        // Set selected item color
+        // Set selected item (filled icon + selected color)
         when (selectedItemId) {
             R.id.nav_my_tasks -> {
+                iconMyTasks.setImageResource(R.drawable.ic_tasks)
                 iconMyTasks.setColorFilter(selectedColor)
                 textMyTasks.setTextColor(selectedColor)
             }
             R.id.nav_issues -> {
+                iconIssues.setImageResource(R.drawable.ic_issues)
                 iconIssues.setColorFilter(selectedColor)
                 textIssues.setTextColor(selectedColor)
             }
             R.id.nav_maintenance -> {
+                iconMaintenance.setImageResource(R.drawable.ic_maintenance)
                 iconMaintenance.setColorFilter(selectedColor)
                 textMaintenance.setTextColor(selectedColor)
             }
             R.id.nav_profile -> {
+                iconProfile.setImageResource(R.drawable.ic_profile)
                 iconProfile.setColorFilter(selectedColor)
                 textProfile.setTextColor(selectedColor)
             }
