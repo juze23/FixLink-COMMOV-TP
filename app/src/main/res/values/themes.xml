@@ -1,8 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.FixLink" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    <style name="Base.Theme.FixLink" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Cores principais -->
+        <item name="colorPrimary">@color/purple_primary</item>
+        <item name="colorPrimaryDark">@color/purple_primary</item>
+        <item name="colorAccent">@color/purple_primary</item>
+        
+        <!-- Cores de texto -->
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:textColorSecondary">@color/gray_inactive</item>
+        <item name="android:textColor">@color/black</item>
+        
+        <!-- Cores de fundo -->
+        <item name="android:windowBackground">@color/purple_secondary</item>
+        <item name="android:colorBackground">@color/purple_secondary</item>
+        
+        <!-- Cores dos componentes Material -->
+        <item name="materialButtonStyle">@style/Widget.FixLink.Button</item>
+        <item name="textInputStyle">@style/Widget.FixLink.TextInputLayout</item>
+        <item name="materialCardViewStyle">@style/Widget.FixLink.CardView</item>
+    </style>
+
+    <!-- Estilo para botões -->
+    <style name="Widget.FixLink.Button" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">@color/white</item>
+        <item name="backgroundTint">@color/purple_primary</item>
+        <item name="rippleColor">@color/white</item>
+    </style>
+
+    <!-- Estilo para campos de texto -->
+    <style name="Widget.FixLink.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/purple_primary</item>
+        <item name="hintTextColor">@color/purple_primary</item>
+        <item name="android:textColorHint">@color/gray_inactive</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="boxBackgroundColor">@color/white</item>
+    </style>
+
+    <!-- Estilo para cards -->
+    <style name="Widget.FixLink.CardView" parent="Widget.MaterialComponents.CardView">
+        <item name="cardBackgroundColor">@color/white</item>
+        <item name="cardElevation">4dp</item>
+        <item name="contentPadding">16dp</item>
     </style>
 
     <style name="Theme.FixLink" parent="Base.Theme.FixLink" />
