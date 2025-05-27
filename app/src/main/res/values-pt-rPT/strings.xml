@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">FixLink</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Olá fragmento em branco</string>
+
+    <!-- Comum -->
+    <string name="button_login">Login</string>
+    <string name="text_already_have_account">Já tem uma conta?</string>
+    <string name="text_dont_have_account">Não tem uma conta?</string>
+
+    <!-- Página de Login -->
+    <string name="label_email">Email</string>
+    <string name="hint_email_login">email@email.com</string>
+    <string name="label_password">Palavra-passe</string>
+    <string name="hint_password_login">Por favor, insira a sua palavra-passe</string>
+    <string name="text_forgot_password">Esqueceu-se da palavra-passe</string>
+    <string name="text_remember_me">Lembrar-me</string>
+
+    <!-- Página de Cadastro -->
+    <string name="label_email_address">Endereço de Email</string>
+    <string name="hint_email_signup">Insira o seu email</string>
+    <string name="label_phone_number">Número de Telefone</string>
+    <string name="hint_phone_number">Insira o seu número de telefone</string>
+    <string name="label_confirm_password">Confirmar Palavra-passe</string>
+    <string name="hint_confirm_password_signup">Por favor, confirme a sua nova palavra-passe</string>
+    <string name="button_sign_up">Registar</string>
+
+    <!-- Página de Esqueceu Palavra-passe -->
+    <string name="button_change_password">Alterar Palavra-passe</string>
+
+    <!-- Página de Registrar Issue -->
+    <string name="page_title_register_issue">Registrar uma Issue</string>
+    <string name="label_title">Título</string>
+    <string name="hint_issue_title">Insira o título da issue</string>
+    <string name="label_description">Descrição</string>
+    <string name="hint_description">Insira a sua descrição</string>
+    <string name="label_location">Localização</string>
+    <string name="hint_location">Insira a localização</string>
+    <string name="label_equipment">Equipamento</string>
+    <string-array name="equipment_options">
+        <item>Escolha o equipamento</item>
+        <item>Projetor</item>
+        <item>Computador</item>
+        <item>Impressora</item>
+        <item>Dispositivo de Rede</item>
+        <item>Outro</item>
+    </string-array>
+    <string name="label_priority">Prioridade</string>
+    <string-array name="priority_options">
+        <item>Escolha a prioridade</item>
+        <item>Baixa</item>
+        <item>Média</item>
+        <item>Alta</item>
+        <item>Urgente</item>
+    </string-array>
+    <string name="button_register_issue">Registrar Issue</string>
+
+    <!-- Navegação Inferior -->
+    <string name="nav_my_tasks">Minhas Tarefas</string>
+    <string name="nav_issues">Issues</string>
+    <string name="nav_maintenance">Manutenção</string>
+    <string name="nav_profile">Perfil</string>
+
+</resources> 
