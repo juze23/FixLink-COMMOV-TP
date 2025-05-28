@@ -42,7 +42,7 @@ class BottomNavigationUserFragment : Fragment() {
     private lateinit var textMaintenance: TextView
     private lateinit var textProfile: TextView
 
-    private var selectedItemId: Int = R.id.nav_my_tasks // Default selected item
+    private var selectedItemId: Int = R.id.nav_issues // Default selected item
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +57,7 @@ class BottomNavigationUserFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_bottom_navigation, container, false)
+        return inflater.inflate(R.layout.fragment_bottom_navigation_user, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

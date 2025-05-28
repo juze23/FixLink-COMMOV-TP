@@ -39,6 +39,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".RegisterIssueActivity"/>
+        <activity
+            android:name=".MainIssuesHostActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
