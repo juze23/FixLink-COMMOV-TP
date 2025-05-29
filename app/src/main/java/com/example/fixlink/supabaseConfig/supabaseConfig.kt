@@ -1,4 +1,4 @@
-package com.example.fixlink.database
+package com.example.fixlink.supabaseConfig
 
 import com.example.fixlink.BuildConfig
 import io.github.jan.supabase.auth.Auth
