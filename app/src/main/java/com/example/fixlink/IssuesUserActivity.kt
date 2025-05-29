@@ -6,11 +6,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
-class MainIssuesHostActivity : AppCompatActivity() {
+class IssuesUserActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_main_issues_host)
+        setContentView(R.layout.activity_issues_user)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main_issues_host)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())

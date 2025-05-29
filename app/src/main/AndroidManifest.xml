@@ -40,7 +40,10 @@
         </activity>
         <activity android:name=".RegisterIssueActivity"/>
         <activity
-            android:name=".MainIssuesHostActivity"
+            android:name=".IssuesUserActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MaintenanceUserActivity"
             android:exported="false" />
     </application>
 
