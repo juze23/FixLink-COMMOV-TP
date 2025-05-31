@@ -14,6 +14,8 @@ class TopAppBarFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_top_app_bar, container, false)
+        val view = inflater.inflate(R.layout.fragment_top_app_bar, container, false)
+
+        return view
     }
 } 
