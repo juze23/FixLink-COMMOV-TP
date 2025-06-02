@@ -64,10 +64,15 @@
 
     <!-- Technician Options (for Register User) -->
     <string-array name="technician_options">
-        <item>Select Technician</item>
         <item>Technician 1</item>
         <item>Technician 2</item>
         <item>Technician 3</item>
+    </string-array>
+
+    <string-array name="equipment_statuses">
+        <item>Active</item>
+        <item>Inactive</item>
+        <item>Under Maintenance</item>
     </string-array>
 
 </resources> 

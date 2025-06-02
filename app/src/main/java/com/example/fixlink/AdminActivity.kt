@@ -14,6 +14,11 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.view.View
 import android.content.Intent
+import android.widget.FrameLayout
+import androidx.fragment.app.replace
+import androidx.fragment.app.add
+import android.widget.ScrollView
+import androidx.activity.addCallback
 
 class AdminActivity : AppCompatActivity() {
 
@@ -25,6 +30,9 @@ class AdminActivity : AppCompatActivity() {
     private lateinit var viewAllEquipments: TextView
     private lateinit var addFab: FloatingActionButton
     private lateinit var icon_profile: ImageView
+    private lateinit var editFragmentContainer: FrameLayout
+    private lateinit var contentScrollView: ScrollView
+    private lateinit var viewAllListFragmentContainer: FrameLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,14 +54,17 @@ class AdminActivity : AppCompatActivity() {
         viewAllEquipments = findViewById(R.id.viewAllEquipments)
         addFab = findViewById(R.id.addFab)
         icon_profile = findViewById(R.id.icon_profile)
+        editFragmentContainer = findViewById(R.id.editFragmentContainer)
+        contentScrollView = findViewById(R.id.contentScrollView)
+        viewAllListFragmentContainer = findViewById(R.id.viewAllListFragmentContainer)
 
         // Populate lists with temporary data
         populateTechniciansList()
         populateEquipmentsList()
 
         // Set click listeners
-        viewAllTechnicians.setOnClickListener { navigateToViewAll("technicians") }
-        viewAllEquipments.setOnClickListener { navigateToViewAll("equipments") }
+        viewAllTechnicians.setOnClickListener { showViewAllListFragment("technicians") }
+        viewAllEquipments.setOnClickListener { showViewAllListFragment("equipments") }
         addFab.setOnClickListener { navigateToAddItem() }
         icon_profile.setOnClickListener { navigateToProfile() }
         // Add listeners for search and filter if needed
@@ -62,6 +73,18 @@ class AdminActivity : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+
+        // Handle back button press
+        onBackPressedDispatcher.addCallback(this) {
+            if (viewAllListFragmentContainer.visibility == View.VISIBLE) {
+                hideViewAllListFragment()
+            } else {
+                // If viewAllListFragment is not visible, allow default back behavior (e.g., exit activity)
+                isEnabled = false // Disable this callback temporarily
+                onBackPressedDispatcher.onBackPressed() // Call default back behavior
+                isEnabled = true // Re-enable the callback
+            }
         }
     }
 
@@ -90,27 +113,64 @@ class AdminActivity : AppCompatActivity() {
         for (equipment in equipments) {
             val equipmentItemView = inflater.inflate(R.layout.list_item_admin, equipmentsListContainer, false) // Assuming list_item_admin.xml also works for equipments or create a separate one
             val nameTextView = equipmentItemView.findViewById<TextView>(R.id.itemNameTextView) // Assuming IDs in list_item_admin.xml
-            // Add edit and delete icon handling here
+            val editIcon = equipmentItemView.findViewById<ImageView>(R.id.editIcon)
+            val deleteIcon = equipmentItemView.findViewById<ImageView>(R.id.deleteIcon)
 
             nameTextView.text = equipment
+
+            editIcon.setOnClickListener { 
+                showEditFragment(equipment)
+            }
+
             equipmentsListContainer.addView(equipmentItemView)
         }
     }
 
-    private fun navigateToViewAll(listType: String) {
-        // Implement navigation to a separate "View All" screen for technicians or equipments
-        // Pass listType to indicate which list to display
+    private fun showViewAllListFragment(listType: String) {
+        contentScrollView.visibility = View.GONE
+        viewAllListFragmentContainer.visibility = View.VISIBLE
+
+        supportFragmentManager.commit {
+            replace(R.id.viewAllListFragmentContainer, ViewAllListFragment.newInstance(listType))
+        }
+    }
+
+    private fun hideViewAllListFragment() {
+        val existingFragment = supportFragmentManager.findFragmentById(R.id.viewAllListFragmentContainer)
+        if (existingFragment != null) {
+            supportFragmentManager.commit {
+                remove(existingFragment)
+            }
+        }
+        viewAllListFragmentContainer.visibility = View.GONE
+        contentScrollView.visibility = View.VISIBLE
     }
 
     private fun navigateToAddItem() {
-        // Implement navigation to the "Register User" or "Register Equipment" page based on the FAB's context or a choice mechanism
-        val intent = Intent(this, RegisterUserActivity::class.java) // Example: navigate to RegisterUserActivity
+        val intent = Intent(this, RegisterUserActivity::class.java)
         startActivity(intent)
     }
 
     private fun navigateToProfile() {
-        // Implement navigation to the Profile page
-         val intent = Intent(this, ProfileActivity::class.java) // Assuming you have a ProfileActivity
-         startActivity(intent)
+        val intent = Intent(this, ProfileActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun showEditFragment(equipmentName: String) {
+        editFragmentContainer.visibility = View.VISIBLE
+        supportFragmentManager.commit {
+            replace(R.id.editFragmentContainer, EditEquipmentFragment.newInstance())
+            addToBackStack(null)
+        }
+    }
+
+    fun hideEditFragment() {
+        editFragmentContainer.visibility = View.GONE
+        val existingFragment = supportFragmentManager.findFragmentById(R.id.editFragmentContainer)
+        if (existingFragment != null) {
+            supportFragmentManager.commit {
+                remove(existingFragment)
+            }
+        }
     }
 }

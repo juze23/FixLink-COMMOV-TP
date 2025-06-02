@@ -60,6 +60,9 @@
         <activity
             android:name=".MaintenanceUserActivity"
             android:exported="false" />
+        <activity
+            android:name=".ViewAllListActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
