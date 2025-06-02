@@ -5,8 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class User(
-    @SerialName("user_id")
-    val id: String,
+    val user_id: String,
     val name: String,
     val email: String,
     @SerialName("telephone")
@@ -16,7 +15,7 @@ data class User(
     @SerialName("updated_at")
     val updatedAt: String? = null,
     @SerialName("type_id")
-    val typeId: String,
+    val typeId: Int,
 )
 
 @Serializable

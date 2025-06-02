@@ -27,11 +27,11 @@ class UserRepository {
             //creates user record in the database
             val currentTime = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)
             val user = User(
-                id = userId,
+                user_id = userId,
                 name = email.split("@")[0], //CHANGE AFTER CHANGING REGISTER UI
                 email = email,
                 phoneNumber = phone,
-                typeId = "1",
+                typeId = 1,
                 createdAt = currentTime,
                 updatedAt = currentTime
             )
@@ -44,44 +44,75 @@ class UserRepository {
             Result.failure(e)
         }
     }
-    /*
-    suspend fun getUserById(userId: String): Result<User> {
+
+    suspend fun logIn(email: String, password: String): Result<User> {
         return try {
+            // Authenticate user with Supabase
+            val response = SupabaseClient.supabase.auth.signInWith(Email) {
+                this.email = email
+                this.password = password
+            }
+
+            if (response == null) {
+                throw Exception("Failed to authenticate user")
+            }
+
+            // Get the user ID from auth response
+            val currentUser = SupabaseClient.supabase.auth.currentUserOrNull()
+            val userId = currentUser?.id ?: throw Exception("No authenticated user found")
+
+            // Fetch user data from the database
             val user = SupabaseClient.supabase.postgrest["User"]
                 .select {
-                    eq("user_id", userId)
+                    filter {
+                        eq("user_id", userId)
+                    }
                 }
                 .decodeSingle<User>()
+
             Result.success(user)
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
-
-    suspend fun updateUser(user: User): Result<User> {
-        return try {
-            val updatedUser = user.copy(
-                updatedAt = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)
-            )
-            SupabaseClient.supabase.postgrest["User"]
-                .update(updatedUser) {
-                    eq("user_id", user.id)
-                }
-            Result.success(updatedUser)
-        } catch (e: Exception) {
-            Result.failure(e)
+    /*
+        suspend fun getUserById(userId: String): Result<User> {
+            return try {
+                val user = SupabaseClient.supabase.postgrest["User"]
+                    .select {
+                        eq("user_id", userId)
+                    }
+                    .decodeSingle<User>()
+                Result.success(user)
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
         }
-    }
 
-    suspend fun deleteUser(userId: String): Result<Unit> {
-        return try {
-            SupabaseClient.supabase.postgrest["User"]
-                .delete {
-                    eq("user_id", userId)
-                }
-            Result.success(Unit)
-        } catch (e: Exception) {
-            Result.failure(e)
+        suspend fun updateUser(user: User): Result<User> {
+            return try {
+                val updatedUser = user.copy(
+                    updatedAt = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)
+                )
+                SupabaseClient.supabase.postgrest["User"]
+                    .update(updatedUser) {
+                        eq("user_id", user.id)
+                    }
+                Result.success(updatedUser)
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
         }
-    }*/
+
+        suspend fun deleteUser(userId: String): Result<Unit> {
+            return try {
+                SupabaseClient.supabase.postgrest["User"]
+                    .delete {
+                        eq("user_id", userId)
+                    }
+                Result.success(Unit)
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+        }*/
 }
