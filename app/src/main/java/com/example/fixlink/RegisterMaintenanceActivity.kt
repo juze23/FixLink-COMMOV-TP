@@ -8,7 +8,6 @@ import com.example.fixlink.TopAppBarFragment
 import com.example.fixlink.BottomNavigationFragment
 import android.widget.ArrayAdapter
 import android.widget.Spinner
-import androidx.activity.enableEdgeToEdge
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.commit
@@ -20,7 +19,6 @@ class RegisterMaintenanceActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_register_maintenance)
         // Further setup like finding views and setting listeners will go here
 

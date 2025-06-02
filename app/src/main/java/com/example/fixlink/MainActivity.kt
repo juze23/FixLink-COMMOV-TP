@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
 
         Handler(Looper.getMainLooper()).postDelayed({
             // Create an Intent to start LoginActivity
-            val intent = Intent(this, RegisterMaintenanceActivity::class.java)
+            val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
 
             // Close this activity so user can't go back to splash screen

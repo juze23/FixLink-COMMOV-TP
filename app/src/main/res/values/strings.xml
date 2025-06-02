@@ -62,4 +62,12 @@
     <string name="nav_maintenance">Maintenance</string>
     <string name="nav_profile">Profile</string>
 
+    <!-- Technician Options (for Register User) -->
+    <string-array name="technician_options">
+        <item>Select Technician</item>
+        <item>Technician 1</item>
+        <item>Technician 2</item>
+        <item>Technician 3</item>
+    </string-array>
+
 </resources> 

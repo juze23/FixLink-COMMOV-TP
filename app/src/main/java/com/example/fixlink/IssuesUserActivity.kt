@@ -9,7 +9,6 @@ import androidx.core.view.WindowInsetsCompat
 class IssuesUserActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_issues_user)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main_issues_host)) { v, insets ->
