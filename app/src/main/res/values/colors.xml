@@ -6,4 +6,5 @@
     <color name="gray_inactive">#666666</color>
     <color name="purple_secondary">#E6E6FA</color>
     <color name="default_nav_item_color">#666666</color>
+    <color name="background_grey">#E8E8E8</color>
 </resources>
