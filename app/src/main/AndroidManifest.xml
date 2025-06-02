@@ -15,6 +15,9 @@
         android:theme="@style/Theme.FixLink"
         tools:targetApi="31">
         <activity
+            android:name=".RegisterMaintenanceActivity"
+            android:exported="false" />
+        <activity
             android:name=".MaintenanceReportActivity"
             android:exported="false" />
         <activity
