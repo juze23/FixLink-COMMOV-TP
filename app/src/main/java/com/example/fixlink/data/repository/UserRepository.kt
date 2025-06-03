@@ -1,5 +1,7 @@
 package com.example.fixlink.data.repository
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.example.fixlink.data.entities.User
 import com.example.fixlink.supabaseConfig.SupabaseClient
 import io.github.jan.supabase.auth.auth
@@ -9,6 +11,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class UserRepository {
+    @RequiresApi(Build.VERSION_CODES.O)
     suspend fun signUp(email: String, password: String, phone: String): Result<User> {
         return try {
             //creates the user in supabase auth

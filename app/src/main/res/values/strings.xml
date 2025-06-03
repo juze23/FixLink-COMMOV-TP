@@ -38,6 +38,7 @@
     <string name="label_location">Location</string>
     <string name="hint_location">Enter location</string>
     <string name="label_equipment">Equipment</string>
+    <string name="label_issue_type">Issue Type</string>
     <string-array name="equipment_options">
         <item>Choose the equipment</item>
         <item>Projector</item>

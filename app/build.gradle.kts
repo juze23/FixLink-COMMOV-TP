@@ -71,4 +71,6 @@ dependencies {
     implementation("io.github.jan-tennert.supabase:auth-kt")
     implementation("io.ktor:ktor-client-android:3.1.3")
     implementation("androidx.fragment:fragment-ktx:1.6.2")
+    implementation("io.github.jan-tennert.supabase:storage-kt")
+
 }

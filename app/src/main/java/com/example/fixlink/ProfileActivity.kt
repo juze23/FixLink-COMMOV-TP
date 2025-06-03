@@ -29,7 +29,7 @@ class ProfileActivity : AppCompatActivity() {
             .replace(R.id.topAppBarFragmentContainer, topAppBarFragment)
             .commit()
 
-        val bottomNavFragment = BottomNavigationFragment()
+        val bottomNavFragment = BottomNavigationUserFragment()
         supportFragmentManager.beginTransaction()
             .replace(R.id.bottomNavigationContainer, bottomNavFragment)
             .commit()

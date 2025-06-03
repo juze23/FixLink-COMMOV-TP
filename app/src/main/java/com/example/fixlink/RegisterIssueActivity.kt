@@ -1,65 +1,342 @@
 package com.example.fixlink
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
+import android.view.View
+import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.fixlink.TopAppBarFragment
-import com.example.fixlink.BottomNavigationFragment
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.TextView
-import androidx.core.content.ContextCompat
-
+import androidx.fragment.app.commit
+import com.example.fixlink.data.entities.Equipment
+import com.example.fixlink.data.entities.Priority
+import com.example.fixlink.data.entities.Location
+import com.example.fixlink.data.entities.Issue_type
+import com.example.fixlink.data.repository.IssueRepository
+import com.example.fixlink.data.repository.EquipmentRepository
+import com.example.fixlink.data.repository.PriorityRepository
+import com.example.fixlink.data.repository.LocationRepository
+import com.example.fixlink.data.repository.IssueTypeRepository
+import com.example.fixlink.data.repository.StateIssueRepository
+import com.example.fixlink.supabaseConfig.SupabaseClient
+import io.github.jan.supabase.auth.auth
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class RegisterIssueActivity : AppCompatActivity() {
 
     private lateinit var equipmentSpinner: Spinner
     private lateinit var prioritySpinner: Spinner
+    private lateinit var locationSpinner: Spinner
+    private lateinit var issueTypeSpinner: Spinner
+    private lateinit var titleEditText: EditText
+    private lateinit var descriptionEditText: EditText
+    private lateinit var imageView: ImageView
+    private lateinit var submitButton: Button
+    private lateinit var issueRepository: IssueRepository
+    private lateinit var equipmentRepository: EquipmentRepository
+    private lateinit var priorityRepository: PriorityRepository
+    private lateinit var locationRepository: LocationRepository
+    private lateinit var issueTypeRepository: IssueTypeRepository
+    private lateinit var stateIssueRepository: StateIssueRepository
+    
+    private var selectedImageUri: Uri? = null
+    private var equipmentList: List<Equipment> = emptyList()
+    private var priorityList: List<Priority> = emptyList()
+    private var locationList: List<Location> = emptyList()
+    private var issueTypeList: List<Issue_type> = emptyList()
+
+    private val getContent = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            result.data?.data?.let { uri ->
+                selectedImageUri = uri
+                try {
+                    imageView.apply {
+                        setImageURI(uri)
+                        scaleType = ImageView.ScaleType.FIT_CENTER
+                        background = null
+                        imageTintList = null // Remove o tint da imagem
+                    }
+                } catch (e: Exception) {
+                    Log.e("RegisterIssueActivity", "Error loading image: ${e.message}", e)
+                }
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register_issue)
-        // Further setup like finding views and setting listeners will go here
 
+        // Add fragments
         if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.topAppBarFragmentContainer, TopAppBarFragment())
-                .commit()
-
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.bottomNavigationContainer, BottomNavigationFragment())
-                .commit()
+            supportFragmentManager.commit {
+                replace(R.id.topAppBarFragmentContainer, TopAppBarFragment())
+                replace(R.id.bottomNavigationContainer, BottomNavigationUserFragment())
+            }
         }
 
-        setupSpinners()
+        // Handle window insets
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+
+        issueRepository = IssueRepository()
+        equipmentRepository = EquipmentRepository()
+        priorityRepository = PriorityRepository()
+        locationRepository = LocationRepository()
+        issueTypeRepository = IssueTypeRepository()
+        stateIssueRepository = StateIssueRepository()
+        initializeViews()
+        loadData()
         setLabelColors()
+        setupImageButton()
+        setupSubmitButton()
     }
 
-    private fun setupSpinners() {
+    private fun initializeViews() {
+        Log.d("RegisterIssueActivity", "Initializing views")
         equipmentSpinner = findViewById(R.id.equipment_spinner)
         prioritySpinner = findViewById(R.id.priority_spinner)
+        locationSpinner = findViewById(R.id.location_spinner)
+        issueTypeSpinner = findViewById(R.id.issue_type_spinner)
+        titleEditText = findViewById(R.id.title_input)
+        descriptionEditText = findViewById(R.id.description_input)
+        imageView = findViewById(R.id.add_image_placeholder)
+        submitButton = findViewById(R.id.register_issue_button)
+        Log.d("RegisterIssueActivity", "Views initialized")
+    }
 
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        val equipmentAdapter = ArrayAdapter.createFromResource(
-            this,
-            R.array.equipment_options,
-            android.R.layout.simple_spinner_item
-        )
+    private fun loadData() {
+        val currentUser = SupabaseClient.supabase.auth.currentUserOrNull()
+        
+        if (currentUser == null) {
+            return
+        }
 
-        val priorityAdapter = ArrayAdapter.createFromResource(
-            this,
-            R.array.priority_options,
-            android.R.layout.simple_spinner_item
-        )
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                // Load equipment list
+                val equipmentResult = equipmentRepository.getEquipmentList()
+                
+                equipmentResult.fold(
+                    onSuccess = { equipment ->
+                        equipmentList = equipment
+                        withContext(Dispatchers.Main) {
+                            try {
+                                val adapter = ArrayAdapter(
+                                    this@RegisterIssueActivity,
+                                    android.R.layout.simple_spinner_item,
+                                    listOf("Select equipment") + equipment.map { it.name }
+                                ).apply {
+                                    setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                                }
+                                equipmentSpinner.adapter = adapter
+                            } catch (e: Exception) {
+                                Log.e("RegisterIssueActivity", "Error setting adapter: ${e.message}", e)
+                            }
+                        }
+                    },
+                    onFailure = { error ->
+                        Log.e("RegisterIssueActivity", "Error loading equipment: ${error.message}", error)
+                    }
+                )
 
-        // Specify the layout to use when the list of choices appears
-        equipmentAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        priorityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                // Load priority list
+                priorityRepository.getPriorityList().fold(
+                    onSuccess = { priorities ->
+                        priorityList = priorities
+                        withContext(Dispatchers.Main) {
+                            val adapter = ArrayAdapter(
+                                this@RegisterIssueActivity,
+                                android.R.layout.simple_spinner_item,
+                                listOf("Select priority") + priorities.map { it.priority }
+                            ).apply {
+                                setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                            }
+                            prioritySpinner.adapter = adapter
+                        }
+                    },
+                    onFailure = { error ->
+                        Log.e("RegisterIssueActivity", "Error loading priorities: ${error.message}", error)
+                    }
+                )
 
-        // Apply the adapter to the spinner
-        equipmentSpinner.adapter = equipmentAdapter
-        prioritySpinner.adapter = priorityAdapter
+                // Load location list
+                locationRepository.getLocationList().fold(
+                    onSuccess = { locations ->
+                        locationList = locations
+                        withContext(Dispatchers.Main) {
+                            val adapter = ArrayAdapter(
+                                this@RegisterIssueActivity,
+                                android.R.layout.simple_spinner_item,
+                                listOf("Select location") + locations.map { it.name }
+                            ).apply {
+                                setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                            }
+                            locationSpinner.adapter = adapter
+                        }
+                    },
+                    onFailure = { error ->
+                        Log.e("RegisterIssueActivity", "Error loading locations: ${error.message}", error)
+                    }
+                )
+
+                // Load issue types
+                issueTypeRepository.getIssueTypes().fold(
+                    onSuccess = { types ->
+                        issueTypeList = types
+                        withContext(Dispatchers.Main) {
+                            val adapter = ArrayAdapter(
+                                this@RegisterIssueActivity,
+                                android.R.layout.simple_spinner_item,
+                                listOf("Select issue type") + types.map { it.type }
+                            ).apply {
+                                setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                            }
+                            issueTypeSpinner.adapter = adapter
+                        }
+                    },
+                    onFailure = { error ->
+                        Log.e("RegisterIssueActivity", "Error loading issue types: ${error.message}", error)
+                    }
+                )
+            } catch (e: Exception) {
+                Log.e("RegisterIssueActivity", "Error loading data: ${e.message}", e)
+            }
+        }
+    }
+
+    private fun setupImageButton() {
+        imageView.setOnClickListener {
+            if (selectedImageUri == null) {
+                imageView.apply {
+                    setImageResource(R.drawable.ic_add)
+                    background = ContextCompat.getDrawable(this@RegisterIssueActivity, R.drawable.rounded_rect_dashed)
+                    scaleType = ImageView.ScaleType.CENTER
+                    imageTintList = ContextCompat.getColorStateList(this@RegisterIssueActivity, R.color.gray_inactive)
+                }
+            }
+            
+            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            getContent.launch(intent)
+        }
+    }
+
+    private fun setupSubmitButton() {
+        submitButton.setOnClickListener {
+            if (validateForm()) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    submitIssue()
+                } else {
+                    Toast.makeText(this, "This app requires Android 8.0 or higher", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
+
+    private fun validateForm(): Boolean {
+        var isValid = true
+
+        if (titleEditText.text.toString().trim().isEmpty()) {
+            titleEditText.error = "Title is required"
+            isValid = false
+        }
+
+        if (descriptionEditText.text.toString().trim().isEmpty()) {
+            descriptionEditText.error = "Description is required"
+            isValid = false
+        }
+
+        if (equipmentSpinner.selectedItemPosition == 0) {
+            Toast.makeText(this, "Please select equipment", Toast.LENGTH_SHORT).show()
+            isValid = false
+        }
+
+        if (prioritySpinner.selectedItemPosition == 0) {
+            Toast.makeText(this, "Please select priority", Toast.LENGTH_SHORT).show()
+            isValid = false
+        }
+
+        if (locationSpinner.selectedItemPosition == 0) {
+            Toast.makeText(this, "Please select location", Toast.LENGTH_SHORT).show()
+            isValid = false
+        }
+
+        if (issueTypeSpinner.selectedItemPosition == 0) {
+            Toast.makeText(this, "Please select issue type", Toast.LENGTH_SHORT).show()
+            isValid = false
+        }
+
+        return isValid
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun submitIssue() {
+        val currentUser = SupabaseClient.supabase.auth.currentUserOrNull()
+        if (currentUser == null) {
+            Toast.makeText(this, "User not authenticated", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val userId = currentUser.id
+        val selectedEquipment = equipmentList.getOrNull(equipmentSpinner.selectedItemPosition - 1)
+        val selectedPriority = priorityList.getOrNull(prioritySpinner.selectedItemPosition - 1)
+        val selectedLocation = locationList.getOrNull(locationSpinner.selectedItemPosition - 1)
+        val selectedIssueType = issueTypeList.getOrNull(issueTypeSpinner.selectedItemPosition - 1)
+
+        if (selectedEquipment == null || selectedPriority == null || selectedLocation == null || selectedIssueType == null) {
+            Toast.makeText(this, "Please select all required fields", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val description = descriptionEditText.text.toString()
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val result = issueRepository.createIssue(
+                    userId = userId,
+                    equipmentId = selectedEquipment.equipment_id,
+                    description = description,
+                    locationId = selectedLocation.location_id,
+                    priorityId = selectedPriority.priority_id,
+                    typeId = selectedIssueType.type_id,
+                    imageUri = selectedImageUri,
+                    context = this@RegisterIssueActivity
+                )
+
+                withContext(Dispatchers.Main) {
+                    result.fold(
+                        onSuccess = {
+                            Toast.makeText(this@RegisterIssueActivity, "Issue registered successfully!", Toast.LENGTH_SHORT).show()
+                            // Navigate to IssuesUserActivity after successful registration
+                            val intent = Intent(this@RegisterIssueActivity, IssuesUserActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        },
+                        onFailure = { error ->
+                            Toast.makeText(this@RegisterIssueActivity, "Error: ${error.message}", Toast.LENGTH_SHORT).show()
+                        }
+                    )
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@RegisterIssueActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 
     private fun setLabelColors() {
@@ -70,11 +347,13 @@ class RegisterIssueActivity : AppCompatActivity() {
         val locationLabel = findViewById<TextView>(R.id.location_label)
         val equipmentLabel = findViewById<TextView>(R.id.equipment_label)
         val priorityLabel = findViewById<TextView>(R.id.priority_label)
+        val issueTypeLabel = findViewById<TextView>(R.id.issue_type_label)
 
         titleLabel.setTextColor(purpleColor)
         descriptionLabel.setTextColor(purpleColor)
         locationLabel.setTextColor(purpleColor)
         equipmentLabel.setTextColor(purpleColor)
         priorityLabel.setTextColor(purpleColor)
+        issueTypeLabel.setTextColor(purpleColor)
     }
 } 

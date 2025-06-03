@@ -6,17 +6,17 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Maintenance(
     @SerialName("maintenance_id")
-    val id: String,
+    val maintenance_id: String,
     @SerialName("id_user")
-    val idUser: String,
+    val id_user: String,
     @SerialName("id_technician")
-    val idTechnician: String? = null,
+    val id_technician: String? = null,
     @SerialName("id_equipment")
-    val idEquipment: String,
+    val id_equipment: String,
     @SerialName("publication_date")
     val publicationDate: String,
     @SerialName("state_id")
-    val stateId: String,
+    val state_id: String,
     val description: String? = null,
     val report: String? = null,
     @SerialName("beginning_date")
@@ -24,23 +24,23 @@ data class Maintenance(
     @SerialName("ending_date")
     val endingDate: String? = null,
     @SerialName("localization_id")
-    val localizationId: String,
+    val localization_id: String,
     @SerialName("priority_id")
-    val priorityId: String,
+    val priority_id: String,
     @SerialName("type_id")
-    val typeId: String
+    val type_id: String
 )
 
 @Serializable
 data class StateMaintenance(
     @SerialName("state_id")
-    val stateId: String? = null,
+    val state_id: String? = null,
     val state: String
 )
 
 @Serializable
 data class MaintenanceType(
     @SerialName("type_id")
-    val typeId: String,
-    val type: String
+    val type_id: String,
+        val type: String
 )

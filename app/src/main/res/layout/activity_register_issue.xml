@@ -37,7 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="@string/page_title_register_issue"
+                android:text="Register Issue"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -53,7 +53,7 @@
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="32dp"
-                android:text="@string/label_title"
+                android:text="Title"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="@color/purple_primary"
@@ -69,7 +69,7 @@
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="32dp"
-                android:hint="@string/hint_issue_title"
+                android:hint="Enter issue title"
                 android:inputType="textCapSentences"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
@@ -88,7 +88,7 @@
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="32dp"
-                android:text="@string/label_description"
+                android:text="Description"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="@color/purple_primary"
@@ -104,7 +104,7 @@
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="32dp"
-                android:hint="@string/hint_description"
+                android:hint="Enter issue description"
                 android:inputType="textCapSentences|textMultiLine"
                 android:gravity="top"
                 android:paddingStart="16dp"
@@ -124,7 +124,7 @@
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="32dp"
-                android:text="@string/label_location"
+                android:text="Location"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="@color/purple_primary"
@@ -132,21 +132,19 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/description_input" />
 
-            <!-- Location Input -->
-            <EditText
-                android:id="@+id/location_input"
+            <!-- Location Input (Spinner) -->
+            <Spinner
+                android:id="@+id/location_spinner"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="32dp"
-                android:hint="@string/hint_location"
-                android:inputType="textCapWords"
+                android:background="@drawable/rounded_edittext_background"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:background="@drawable/rounded_edittext_background"
+                android:spinnerMode="dropdown"
+                style="@style/Widget.AppCompat.Spinner"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/location_label" />
@@ -159,13 +157,13 @@
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="32dp"
-                android:text="@string/label_equipment"
+                android:text="Equipment"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="@color/purple_primary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/location_input" />
+                app:layout_constraintTop_toBottomOf="@+id/location_spinner" />
 
             <!-- Equipment Input (Spinner/Dropdown) -->
             <Spinner
@@ -192,7 +190,7 @@
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="32dp"
-                android:text="@string/label_priority"
+                android:text="Priority"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="@color/purple_primary"
@@ -217,19 +215,55 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/priority_label" />
 
+            <!-- Issue Type Label -->
+            <TextView
+                android:id="@+id/issue_type_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="32dp"
+                android:text="Issue Type"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/purple_primary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/priority_spinner" />
+
+            <!-- Issue Type Input (Spinner/Dropdown) -->
+            <Spinner
+                android:id="@+id/issue_type_spinner"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/rounded_edittext_background"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:spinnerMode="dropdown"
+                style="@style/Widget.AppCompat.Spinner"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/issue_type_label" />
+
             <!-- Add Image Placeholder -->
             <ImageView
                 android:id="@+id/add_image_placeholder"
-                android:layout_width="150dp"
-                android:layout_height="100dp"
+                android:layout_width="0dp"
+                android:layout_height="200dp"
+                android:layout_marginStart="32dp"
                 android:layout_marginTop="32dp"
+                android:layout_marginEnd="32dp"
                 android:background="@drawable/rounded_rect_dashed"
-                android:scaleType="center"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
                 android:src="@drawable/ic_add"
                 app:tint="@color/gray_inactive"
-                app:layout_constraintTop_toBottomOf="@+id/priority_spinner"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/issue_type_spinner" />
 
             <!-- Register Issue Button -->
             <Button
@@ -239,7 +273,7 @@
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="32dp"
                 android:layout_marginEnd="32dp"
-                android:text="@string/button_register_issue"
+                android:text="Register Issue"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold"

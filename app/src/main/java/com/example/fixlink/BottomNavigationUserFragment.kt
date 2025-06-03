@@ -1,6 +1,6 @@
 package com.example.fixlink
 
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 
 // TODO: Rename parameter arguments, choose names that match
@@ -27,16 +26,13 @@ class BottomNavigationUserFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
-
     private lateinit var navIssues: LinearLayout
     private lateinit var navMaintenance: LinearLayout
     private lateinit var navProfile: LinearLayout
 
-
     private lateinit var iconIssues: ImageView
     private lateinit var iconMaintenance: ImageView
     private lateinit var iconProfile: ImageView
-
 
     private lateinit var textIssues: TextView
     private lateinit var textMaintenance: TextView
@@ -53,79 +49,81 @@ class BottomNavigationUserFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_bottom_navigation_user, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
+        // Initialize views
         navIssues = view.findViewById(R.id.nav_issues)
         navMaintenance = view.findViewById(R.id.nav_maintenance)
         navProfile = view.findViewById(R.id.nav_profile)
-
 
         iconIssues = view.findViewById(R.id.icon_issues)
         iconMaintenance = view.findViewById(R.id.icon_maintenance)
         iconProfile = view.findViewById(R.id.icon_profile)
 
-
         textIssues = view.findViewById(R.id.text_issues)
         textMaintenance = view.findViewById(R.id.text_maintenance)
         textProfile = view.findViewById(R.id.text_profile)
 
-        // Set initial selected item color
+        // Set initial selected item based on current activity
+        when (activity) {
+            is IssuesUserActivity -> selectedItemId = R.id.nav_issues
+            is MaintenanceUserActivity -> selectedItemId = R.id.nav_maintenance
+            is ProfileActivity -> selectedItemId = R.id.nav_profile
+        }
         updateColors(selectedItemId)
 
         // Set click listeners
-
-        navIssues.setOnClickListener { selectItem(R.id.nav_issues) }
-        navMaintenance.setOnClickListener { selectItem(R.id.nav_maintenance) }
-        navProfile.setOnClickListener { selectItem(R.id.nav_profile) }
-    }
-
-    private fun selectItem(itemId: Int) {
-        if (selectedItemId != itemId) {
-            selectedItemId = itemId
-            updateColors(selectedItemId)
+        navIssues.setOnClickListener { 
+            if (activity !is IssuesUserActivity) {
+                startActivity(Intent(activity, IssuesUserActivity::class.java))
+                activity?.finish()
+            }
+        }
+        navMaintenance.setOnClickListener { 
+            if (activity !is RegisterIssueActivity) {
+                startActivity(Intent(activity, MaintenanceUserActivity::class.java))
+                activity?.finish()
+            }
+        }
+        navProfile.setOnClickListener { 
+            if (activity !is ProfileActivity) {
+                startActivity(Intent(activity, ProfileActivity::class.java))
+                activity?.finish()
+            }
         }
     }
 
     private fun updateColors(selectedItemId: Int) {
-        val defaultColor = ContextCompat.getColor(requireContext(), R.color.default_nav_item_color)
+        val defaultColor = ContextCompat.getColor(requireContext(), R.color.gray_inactive)
         val selectedColor = ContextCompat.getColor(requireContext(), R.color.purple_primary)
 
-
-        iconIssues.setImageResource(R.drawable.ic_issues_outline)
+        // Reset all items to default color
         iconIssues.setColorFilter(defaultColor)
         textIssues.setTextColor(defaultColor)
-
-        iconMaintenance.setImageResource(R.drawable.ic_maintenace_outline)
         iconMaintenance.setColorFilter(defaultColor)
         textMaintenance.setTextColor(defaultColor)
-
-        iconProfile.setImageResource(R.drawable.ic_profile_outline)
         iconProfile.setColorFilter(defaultColor)
         textProfile.setTextColor(defaultColor)
 
-        // Set selected item (filled icon + selected color)
+        // Set selected item color
         when (selectedItemId) {
             R.id.nav_issues -> {
-                iconIssues.setImageResource(R.drawable.ic_issues)
                 iconIssues.setColorFilter(selectedColor)
                 textIssues.setTextColor(selectedColor)
             }
             R.id.nav_maintenance -> {
-                iconMaintenance.setImageResource(R.drawable.ic_maintenance)
                 iconMaintenance.setColorFilter(selectedColor)
                 textMaintenance.setTextColor(selectedColor)
             }
             R.id.nav_profile -> {
-                iconProfile.setImageResource(R.drawable.ic_profile)
                 iconProfile.setColorFilter(selectedColor)
                 textProfile.setTextColor(selectedColor)
             }
