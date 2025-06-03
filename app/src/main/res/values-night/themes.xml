@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/purple_primary</item>
         <item name="colorPrimaryDark">@color/purple_primary</item>
         <item name="colorAccent">@color/purple_primary</item>
+        <item name="android:statusBarColor">@color/black</item>
         
         <!-- Força as mesmas cores de texto -->
         <item name="android:textColorPrimary">@color/black</item>

@@ -9,7 +9,6 @@ import androidx.core.view.WindowInsetsCompat
 class MaintenanceUserActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_maintenance_user)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main_maintenance_host)) { v, insets ->

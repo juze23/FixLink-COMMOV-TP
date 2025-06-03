@@ -15,6 +15,21 @@
         android:theme="@style/Theme.FixLink"
         tools:targetApi="31">
         <activity
+            android:name=".AdminActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ChooseTechnicianActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RegisterUserActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RegisterMaintenanceActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MaintenanceReportActivity"
+            android:exported="false" />
+        <activity
             android:name=".ProfileActivity"
             android:exported="false" />
         <activity
@@ -38,12 +53,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RegisterIssueActivity"/>
+        <activity android:name=".RegisterIssueActivity" />
         <activity
             android:name=".IssuesUserActivity"
             android:exported="false" />
         <activity
             android:name=".MaintenanceUserActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ViewAllListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".EditProfileActivity"
             android:exported="false" />
     </application>
 

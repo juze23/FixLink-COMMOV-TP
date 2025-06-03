@@ -337,12 +337,12 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:layout_marginBottom="24dp">
+                android:layout_marginTop="32dp">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_edit_profile"
                     android:layout_width="0dp"
-                    android:layout_height="56dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Edit Profile"
                     android:textColor="@color/white"
@@ -355,7 +355,7 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_logout"
                     android:layout_width="0dp"
-                    android:layout_height="56dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Logout"
                     android:textColor="@color/white"

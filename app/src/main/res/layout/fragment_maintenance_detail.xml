@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_grey"
+    tools:context=".MaintenanceDetailFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Card View for Maintenance Details -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp"
+            android:layout_marginBottom="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- Title and Creator -->
+                <TextView
+                    android:id="@+id/maintenanceTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Fire Extinguisher Inspection"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                    android:layout_marginBottom="4dp"/>
+
+                <TextView
+                    android:id="@+id/maintenanceCreator"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Luís Santos"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textColor="@android:color/darker_gray"
+                    android:layout_marginBottom="16dp"/>
+
+                <!-- Maintenance Image -->
+                <ImageView
+                    android:id="@+id/maintenanceImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/placeholder_fire_extinguisher"
+                    android:layout_marginBottom="16dp"/>
+
+                <!-- Description Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="8dp">
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_info_outline"
+                        android:layout_marginEnd="8dp"
+                        app:tint="@android:color/darker_gray" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Description:"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                        android:textColor="@android:color/black" />
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/maintenanceDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Monthly inspection of all fire extinguishers on the ground floor. The inspection includes checking pressure levels, expiry dates, physical condition, and seal integrity."
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:layout_marginBottom="16dp"/>
+
+                <!-- Location Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="8dp">
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_location_outline"
+                        android:layout_marginEnd="8dp"
+                        app:tint="@android:color/darker_gray" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Location:"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                        android:textColor="@android:color/black" />
+                </LinearLayout>
+                 <TextView
+                    android:id="@+id/maintenanceLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Ground Floor – Hallways, Meeting Rooms"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:layout_marginBottom="16dp"/>
+
+                <!-- Responsible Technician Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="8dp">
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_person_outline"
+                        android:layout_marginEnd="8dp"
+                        app:tint="@android:color/darker_gray" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Responsible Technician:"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+                 <TextView
+                    android:id="@+id/responsibleTechnician"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Luís Fernandes"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:layout_marginBottom="16dp"/>
+
+                <!-- Date Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="16dp">
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_calendar_outline"
+                        android:layout_marginEnd="8dp"
+                        app:tint="@android:color/darker_gray" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Date:"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                        android:textColor="@android:color/black" />
+                </LinearLayout>
+                 <TextView
+                    android:id="@+id/maintenanceDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="28/05/2025"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:layout_marginBottom="16dp"/>
+
+                <!-- Status Indicators -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <!-- Low Status -->
+                    <TextView
+                        android:id="@+id/statusLow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Low"
+                        android:padding="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/rounded_corner_low_status"
+                        android:textColor="@android:color/black"
+                        android:textStyle="bold"/>
+
+                    <!-- Scheduled Status (using Assigned drawable as it's visually similar) -->
+                    <TextView
+                        android:id="@+id/statusScheduled"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Scheduled"
+                        android:padding="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/rounded_corner_assigned_status"
+                         android:textColor="@android:color/black"
+                        android:textStyle="bold"/>
+
+                    <!-- Active Status -->
+                     <TextView
+                        android:id="@+id/statusActive"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Active"
+                        android:padding="8dp"
+                        android:background="@drawable/rounded_corner_active_status"
+                         android:textColor="@android:color/black"
+                        android:textStyle="bold"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Assuming there might be action buttons below the card, add them here if needed -->
+
+    </LinearLayout>
+</ScrollView>

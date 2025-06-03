@@ -53,7 +53,7 @@ class BottomNavigationAdminFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_bottom_navigation, container, false)
+        return inflater.inflate(R.layout.fragment_bottom_navigation_admin, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
