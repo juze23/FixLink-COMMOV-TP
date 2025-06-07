@@ -56,6 +56,9 @@ class IssuesContentFragment : Fragment() {
     private var states: List<Issue_state> = emptyList()
     private var users: List<User> = emptyList()
 
+    private lateinit var loadingProgressBar: View
+    private lateinit var issuesContent: View
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -72,6 +75,8 @@ class IssuesContentFragment : Fragment() {
         val fabAddIssue: FloatingActionButton = view.findViewById(R.id.fab_add_issue)
         issuesRecyclerView = view.findViewById(R.id.issuesRecyclerView)
         searchEditText = view.findViewById(R.id.searchEditText)
+        loadingProgressBar = view.findViewById(R.id.loadingProgressBar)
+        issuesContent = view.findViewById(R.id.issuesContent)
 
         filterIcon.setOnClickListener {
             IssuesFilterDialogFragment().show(childFragmentManager, IssuesFilterDialogFragment.TAG)
@@ -96,6 +101,9 @@ class IssuesContentFragment : Fragment() {
 
         // Setup search functionality
         setupSearch()
+
+        // Show loading state
+        showLoading(true)
 
         // Carregar dados auxiliares e issues
         loadAuxiliaryDataAndIssues()
@@ -135,39 +143,69 @@ class IssuesContentFragment : Fragment() {
         issueAdapter.notifyDataSetChanged()
     }
 
+    private fun showLoading(show: Boolean) {
+        loadingProgressBar.visibility = if (show) View.VISIBLE else View.GONE
+        issuesContent.visibility = if (show) View.GONE else View.VISIBLE
+    }
+
     private fun loadAuxiliaryDataAndIssues() {
         CoroutineScope(Dispatchers.IO).launch {
-            val prioritiesResult = priorityRepository.getPriorityList()
-            val equipmentsResult = equipmentRepository.getEquipmentList()
-            val locationsResult = locationRepository.getLocationList()
-            val statesResult = stateIssueRepository.getIssueStates()
-            val usersResult = userRepository.getAllUsers()
+            try {
+                val prioritiesResult = priorityRepository.getPriorityList()
+                val equipmentsResult = equipmentRepository.getEquipmentList()
+                val locationsResult = locationRepository.getLocationList()
+                val statesResult = stateIssueRepository.getIssueStates()
+                val usersResult = userRepository.getAllUsers()
 
-            priorities = prioritiesResult.getOrNull() ?: emptyList()
-            equipments = equipmentsResult.getOrNull() ?: emptyList()
-            locations = locationsResult.getOrNull() ?: emptyList()
-            states = statesResult.getOrNull() ?: emptyList()
-            users = usersResult.getOrNull() ?: emptyList()
+                if (prioritiesResult.isFailure || equipmentsResult.isFailure || 
+                    locationsResult.isFailure || statesResult.isFailure || usersResult.isFailure) {
+                    withContext(Dispatchers.Main) {
+                        showLoading(false)
+                        Toast.makeText(requireContext(), "Error loading auxiliary data", Toast.LENGTH_SHORT).show()
+                    }
+                    return@launch
+                }
 
-            withContext(Dispatchers.Main) {
-                loadIssues()
+                priorities = prioritiesResult.getOrNull() ?: emptyList()
+                equipments = equipmentsResult.getOrNull() ?: emptyList()
+                locations = locationsResult.getOrNull() ?: emptyList()
+                states = statesResult.getOrNull() ?: emptyList()
+                users = usersResult.getOrNull() ?: emptyList()
+
+                withContext(Dispatchers.Main) {
+                    loadIssues()
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    showLoading(false)
+                    Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
 
     private fun loadIssues() {
         CoroutineScope(Dispatchers.IO).launch {
-            val result = issueRepository.getAllIssues()
-            withContext(Dispatchers.Main) {
-                result.onSuccess { issues ->
-                    issuesList.clear()
-                    issuesList.addAll(issues)
-                    filteredIssuesList.clear()
-                    filteredIssuesList.addAll(issues)
-                    issueAdapter.setAuxiliaryData(priorities, equipments, locations, states, users)
-                    issueAdapter.notifyDataSetChanged()
-                }.onFailure {
-                    Toast.makeText(requireContext(), "Erro ao carregar issues", Toast.LENGTH_SHORT).show()
+            try {
+                val result = issueRepository.getAllIssues()
+                withContext(Dispatchers.Main) {
+                    result.onSuccess { issues ->
+                        issuesList.clear()
+                        issuesList.addAll(issues)
+                        filteredIssuesList.clear()
+                        filteredIssuesList.addAll(issues)
+                        issueAdapter.setAuxiliaryData(priorities, equipments, locations, states, users)
+                        issueAdapter.notifyDataSetChanged()
+                        showLoading(false)
+                    }.onFailure {
+                        showLoading(false)
+                        Toast.makeText(requireContext(), "Erro ao carregar issues", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    showLoading(false)
+                    Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
             }
         }

@@ -7,6 +7,17 @@
     android:background="@color/purple_secondary"
     android:elevation="4dp">
 
+    <ImageButton
+        android:id="@+id/backButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="start|center_vertical"
+        android:layout_marginStart="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_arrow_back"
+        android:visibility="gone"
+        android:contentDescription="Back button" />
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

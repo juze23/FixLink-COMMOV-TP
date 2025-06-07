@@ -41,7 +41,18 @@ class IssueAdapter(private val issues: List<Issue>) : RecyclerView.Adapter<Issue
     }
 
     override fun onBindViewHolder(holder: IssueViewHolder, position: Int) {
-        holder.bind(issues[position], priorities, equipments, locations, states, users)
+        val issue = issues[position]
+        holder.bind(issue, priorities, equipments, locations, states, users)
+        
+        // Add click listener to navigate to issue details
+        holder.itemView.setOnClickListener {
+            val fragment = IssueDetailFragment.newInstance(issue.issue_id)
+            val activity = holder.itemView.context as? androidx.fragment.app.FragmentActivity
+            activity?.supportFragmentManager?.beginTransaction()
+                ?.replace(R.id.issuesContentFragmentContainer, fragment)
+                ?.addToBackStack(null)
+                ?.commit()
+        }
     }
 
     override fun getItemCount(): Int = issues.size

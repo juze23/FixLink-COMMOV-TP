@@ -36,11 +36,12 @@ class IssueRepository {
         context: Context
     ): Result<Issue> = withContext(Dispatchers.IO) {
         try {
+            // Generate issue ID first
+            val issueId = UUID.randomUUID().toString()
+            
             // Upload image if provided
-            val imagePath = if (imageUri != null) {
-                uploadImage(imageUri, context)
-            } else {
-                null
+            if (imageUri != null) {
+                uploadImage(imageUri, context, issueId)
             }
             
             // Get current timestamp
@@ -48,7 +49,7 @@ class IssueRepository {
             
             // Create issue object
             val issue = Issue(
-                issue_id = UUID.randomUUID().toString(),
+                issue_id = issueId,
                 id_user = userId,
                 id_technician = null,
                 id_equipment = equipmentId,
@@ -78,10 +79,10 @@ class IssueRepository {
         }
     }
     
-    private suspend fun uploadImage(imageUri: Uri, context: Context): String? {
+    private suspend fun uploadImage(imageUri: Uri, context: Context, issueId: String): String? {
         return try {
-            // Generate a unique filename for the image
-            val fileName = "issue_${System.currentTimeMillis()}.jpg"
+            // Use issue ID as filename
+            val fileName = "issue_${issueId}.jpg"
             
             // Get the image bytes from the URI
             val inputStream = context.contentResolver.openInputStream(imageUri)

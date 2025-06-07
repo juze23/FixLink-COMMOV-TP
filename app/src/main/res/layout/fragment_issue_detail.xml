@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,200 +7,228 @@
     android:background="@color/background_grey"
     tools:context=".IssueDetailFragment">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <ProgressBar
+        android:id="@+id/loadingProgressBar"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_gravity="center"
+        android:visibility="gone" />
 
-        <androidx.cardview.widget.CardView
+    <ScrollView
+        android:id="@+id/contentScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/issueDetailRootLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="4dp"
-            android:layout_marginBottom="16dp">
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            <LinearLayout
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:id="@+id/issueTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="2nd Floor Printer Paper Jam Error"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                    android:layout_marginBottom="4dp"/>
-
-                <TextView
-                    android:id="@+id/issueReporter"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="João Marques"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:textColor="@android:color/darker_gray"
-                    android:layout_marginBottom="16dp"/>
-
-                <ImageView
-                    android:id="@+id/issueImage"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/placeholder_printer_image"
-                    android:layout_marginBottom="16dp"/>
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp"
+                android:layout_marginBottom="16dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="8dp">
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/issueTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Issue Title"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                        android:layout_marginBottom="4dp"/>
+
+                    <TextView
+                        android:id="@+id/issueReporter"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Reporter Name"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                        android:textColor="@android:color/darker_gray"
+                        android:layout_marginBottom="16dp"/>
+
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_info_outline"
-                        android:layout_marginEnd="8dp"
-                        app:tint="@android:color/darker_gray" />
+                        android:id="@+id/issueImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/placeholder_printer_image"
+                        android:layout_marginBottom="16dp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_info_outline"
+                            android:layout_marginEnd="8dp"
+                            app:tint="@android:color/darker_gray" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Description:"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                            android:textColor="@android:color/black" />
+                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/issueDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Issue description"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                        android:layout_marginBottom="16dp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_location_outline"
+                            android:layout_marginEnd="8dp"
+                            app:tint="@android:color/darker_gray" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Location:"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                            android:textColor="@android:color/black" />
+                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/issueLocation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Location"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                        android:layout_marginBottom="16dp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_person_outline"
+                            android:layout_marginEnd="8dp"
+                            app:tint="@android:color/darker_gray" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Responsible Technician:"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                            android:textColor="@color/black" />
+                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/responsibleTechnician"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Technician Name"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                        android:layout_marginBottom="16dp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_calendar_outline"
+                            android:layout_marginEnd="8dp"
+                            app:tint="@android:color/darker_gray" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Date:"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                            android:textColor="@android:color/black" />
+                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/issueDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Date"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                        android:layout_marginBottom="16dp"/>
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Description:"
+                        android:text="Status Information"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                        android:textColor="@android:color/black" />
-                </LinearLayout>
-                <TextView
-                    android:id="@+id/issueDescription"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="The malfunction printer located on the 2nd floor (meeting room) is showing a constant paper jam error, even after attempts to remove the paper. The device is currently unable to print or copy."
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:layout_marginBottom="16dp"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="8dp">
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_location_outline"
-                        android:layout_marginEnd="8dp"
-                        app:tint="@android:color/darker_gray" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Location:"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                        android:textColor="@android:color/black" />
-                </LinearLayout>
-                 <TextView
-                    android:id="@+id/issueLocation"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Main Building, 2nd Floor, Meeting Room"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:layout_marginBottom="16dp"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="8dp">
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_person_outline"
-                        android:layout_marginEnd="8dp"
-                        app:tint="@android:color/darker_gray" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Responsible Technician:"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                        android:textColor="@color/black" />
-                </LinearLayout>
-                 <TextView
-                    android:id="@+id/responsibleTechnician"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Luís Fernandes"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:layout_marginBottom="16dp"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="16dp">
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_calendar_outline"
-                        android:layout_marginEnd="8dp"
-                        app:tint="@android:color/darker_gray" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Date:"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                        android:textColor="@android:color/black" />
-                </LinearLayout>
-                 <TextView
-                    android:id="@+id/issueDate"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="25/05/2025"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:layout_marginBottom="16dp"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-
-                    <TextView
-                        android:id="@+id/statusMedium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Medium"
-                        android:padding="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:background="@drawable/rounded_corner_medium_status"
                         android:textColor="@android:color/black"
-                        android:textStyle="bold"/>
+                        android:layout_marginBottom="8dp"/>
 
-                    <TextView
-                        android:id="@+id/statusPending"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Pending"
-                        android:padding="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:background="@drawable/rounded_corner_pending_status"
-                         android:textColor="@android:color/black"
-                        android:textStyle="bold"/>
+                        android:orientation="horizontal"
+                        android:gravity="start"
+                        android:layout_marginBottom="16dp">
 
-                     <TextView
-                        android:id="@+id/statusActive"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Active"
-                        android:padding="8dp"
-                        android:background="@drawable/rounded_corner_active_status"
-                         android:textColor="@android:color/black"
-                        android:textStyle="bold"/>
+                        <TextView
+                            android:id="@+id/statusMedium"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Priority"
+                            android:textColor="@color/black"
+                            android:paddingLeft="12dp"
+                            android:paddingRight="12dp"
+                            android:paddingTop="4dp"
+                            android:paddingBottom="4dp"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="8dp"/>
+
+                        <TextView
+                            android:id="@+id/statusPending"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Status"
+                            android:textColor="@color/black"
+                            android:paddingLeft="12dp"
+                            android:paddingRight="12dp"
+                            android:paddingTop="4dp"
+                            android:paddingBottom="4dp"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="8dp"/>
+
+                        <TextView
+                            android:id="@+id/statusActive"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Equipment"
+                            android:textColor="@color/black"
+                            android:paddingLeft="12dp"
+                            android:paddingRight="12dp"
+                            android:paddingTop="4dp"
+                            android:paddingBottom="4dp"
+                            android:textSize="12sp"/>
+
+                    </LinearLayout>
 
                 </LinearLayout>
-
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-    </LinearLayout>
-</ScrollView>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>
