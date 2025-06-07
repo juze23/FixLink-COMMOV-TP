@@ -1,25 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:id="@+id/main"
-    android:background="@color/white">
+    android:background="@color/purple_secondary"
+    tools:context=".ProfileActivity">
 
     <!-- Top App Bar Fragment Container -->
     <FrameLayout
         android:id="@+id/topAppBarFragmentContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/purple_secondary"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <!-- Main Profile Content -->
     <ScrollView
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@color/white">
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/topAppBarFragmentContainer"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -253,35 +260,32 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     app:boxCornerRadiusTopStart="8dp"
                     app:boxCornerRadiusTopEnd="8dp"
                     app:boxCornerRadiusBottomStart="8dp"
                     app:boxCornerRadiusBottomEnd="8dp"
                     app:boxStrokeColor="@color/gray_inactive">
 
-                    <AutoCompleteTextView
-                        android:id="@+id/edit_date_birth"
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edit_dob"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="23/05/1995"
+                        android:text="01/01/1990"
                         android:textColor="@color/black"
                         android:textSize="16sp"
-                        android:inputType="none"
-                        android:focusable="false"
-                        android:clickable="true"
                         android:padding="16dp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
 
-            <!-- Country/Region Field -->
+            <!-- Phone Field -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginBottom="32dp">
+                android:layout_marginBottom="20dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -293,14 +297,14 @@
                     <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:src="@drawable/ic_location_outline"
+                        android:src="@drawable/ic_phone"
                         android:layout_marginEnd="8dp"
                         app:tint="@color/gray_inactive" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Country/Region"
+                        android:text="Phone"
                         android:textColor="@color/black"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -310,63 +314,51 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     app:boxCornerRadiusTopStart="8dp"
                     app:boxCornerRadiusTopEnd="8dp"
                     app:boxCornerRadiusBottomStart="8dp"
                     app:boxCornerRadiusBottomEnd="8dp"
                     app:boxStrokeColor="@color/gray_inactive">
 
-                    <AutoCompleteTextView
-                        android:id="@+id/edit_country"
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edit_phone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Portugal"
+                        android:text="+351 912 345 678"
                         android:textColor="@color/black"
                         android:textSize="16sp"
-                        android:inputType="none"
+                        android:inputType="phone"
                         android:padding="16dp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
 
-            <!-- Buttons Section -->
+            <!-- Buttons -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:layout_marginTop="32dp">
+                android:orientation="vertical"
+                android:layout_marginTop="16dp">
 
-                <com.google.android.material.button.MaterialButton
+                <Button
                     android:id="@+id/btn_edit_profile"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:text="Edit Profile"
                     android:textColor="@color/white"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
                     android:backgroundTint="@color/purple_primary"
-                    app:cornerRadius="8dp"
-                    android:layout_marginEnd="8dp" />
+                    android:layout_marginBottom="16dp"/>
 
-                <com.google.android.material.button.MaterialButton
+                <Button
                     android:id="@+id/btn_logout"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:text="Logout"
-                    android:textColor="@color/white"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:backgroundTint="@color/purple_primary"
-                    app:cornerRadius="8dp"
-                    android:layout_marginStart="8dp"
-                    app:icon="@drawable/ic_logout"
-                    app:iconTint="@color/white"
-                    app:iconGravity="textStart" />
+                    android:textColor="@color/purple_primary"
+                    android:backgroundTint="@color/white"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
 
             </LinearLayout>
 
@@ -374,13 +366,14 @@
 
     </ScrollView>
 
-    <!-- Bottom Navigation Container (Fragment) -->
+    <!-- Bottom Navigation Container -->
     <FrameLayout
         android:id="@+id/bottomNavigationContainer"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/purple_secondary"
-        android:elevation="8dp"
-        tools:layout="@layout/fragment_bottom_navigation"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
