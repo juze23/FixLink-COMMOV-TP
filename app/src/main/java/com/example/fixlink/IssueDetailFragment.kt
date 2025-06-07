@@ -11,6 +11,8 @@ import android.widget.Toast
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.widget.ImageButton
+import android.widget.Button
+import android.widget.EditText
 import coil.load
 import coil.request.CachePolicy
 import coil.transition.CrossfadeTransition
@@ -35,6 +37,7 @@ import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Locale
 import android.util.Log
+import android.content.Intent
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -90,6 +93,8 @@ class IssueDetailFragment : Fragment() {
     private lateinit var equipmentChip: TextView
     private lateinit var loadingProgressBar: View
     private lateinit var contentScrollView: View
+    private lateinit var startTaskButton: Button
+    private lateinit var endTaskButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -152,6 +157,8 @@ class IssueDetailFragment : Fragment() {
         equipmentChip = view.findViewById(R.id.statusActive)
         loadingProgressBar = view.findViewById(R.id.loadingProgressBar)
         contentScrollView = view.findViewById(R.id.contentScrollView)
+        startTaskButton = view.findViewById(R.id.startTaskButton)
+        endTaskButton = view.findViewById(R.id.endTaskButton)
     }
 
     private fun showLoading(show: Boolean) {
@@ -296,6 +303,40 @@ class IssueDetailFragment : Fragment() {
             issueImage.setImageResource(R.drawable.placeholder_printer_image)
             Toast.makeText(requireContext(), "Error loading image", Toast.LENGTH_SHORT).show()
         }
+
+        // Lógica para mostrar/esconder botões e campo de relatório
+        if (statusText.equals("assigned", true) || statusText.equals("atribuído", true) || statusText.equals("atribuido", true)) {
+            startTaskButton.visibility = View.VISIBLE
+            endTaskButton.visibility = View.GONE
+        } else if (statusText.equals("under repair", true) || statusText.equals("em andamento", true) || statusText.equals("em reparacao", true)) {
+            startTaskButton.visibility = View.GONE
+            endTaskButton.visibility = View.VISIBLE
+        } else {
+            startTaskButton.visibility = View.GONE
+            endTaskButton.visibility = View.GONE
+        }
+
+        startTaskButton.setOnClickListener {
+            showChangeStatusDialog(
+                title = "Change Status to Under Repair",
+                message = "Are you sure you want to change the status of this task to Under Repair? You won't be able to undo it afterwards.",
+                onConfirm = {
+                    changeIssueStatus(issue, states, "under repair")
+                }
+            )
+        }
+        endTaskButton.setOnClickListener {
+            android.app.AlertDialog.Builder(requireContext())
+                .setTitle("Finish Task")
+                .setMessage("Are you sure you want to send this report and finish this task?")
+                .setPositiveButton("Send Report") { _, _ ->
+                    val intent = Intent(requireContext(), ReportActivity::class.java)
+                    intent.putExtra("ISSUE_ID", issue.issue_id)
+                    startActivity(intent)
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+        }
     }
 
     private fun setChipColor(chip: TextView, color: Int) {
@@ -315,11 +356,17 @@ class IssueDetailFragment : Fragment() {
     }
 
     private fun getStatusColor(status: String): Int {
-        return when (status.lowercase()) {
-            "pending", "pendente" -> Color.parseColor("#E0E0E0") // Cinza claro
-            "assigned", "atribuído", "atribuido" -> Color.parseColor("#B3E5FC") // Azul claro
-            "under repair", "em reparação", "em reparacao" -> Color.parseColor("#E1E0F7") // Lilás claro
-            "resolved", "resolvido" -> Color.parseColor("#66BB6A") // Verde
+        val normalized = status.trim().lowercase()
+            .replace("á", "a").replace("ã", "a").replace("â", "a")
+            .replace("é", "e").replace("ê", "e")
+            .replace("í", "i").replace("ó", "o").replace("õ", "o").replace("ô", "o")
+            .replace("ú", "u").replace("ç", "c")
+            .replace("  ", " ")
+        return when {
+            normalized == "pending" || normalized == "pendente" -> Color.parseColor("#E0E0E0") // Cinza claro
+            normalized == "assigned" || normalized == "atribuido" || normalized == "atribuido" -> Color.parseColor("#B3E5FC") // Azul claro
+            normalized.replace(" ","") == "underrepair" || normalized.replace(" ","") == "emandamento" || normalized.replace(" ","") == "emreparacao" -> Color.parseColor("#D6CDEA") // Lilás claro
+            normalized == "resolved" || normalized == "completo" -> Color.parseColor("#66BB6A") // Verde
             else -> Color.LTGRAY
         }
     }
@@ -329,6 +376,37 @@ class IssueDetailFragment : Fragment() {
             "active", "ativo" -> Color.parseColor("#FFC107") // Amarelo
             "inactive", "inativo" -> Color.parseColor("#00BCD4") // Azul
             else -> Color.LTGRAY
+        }
+    }
+
+    private fun showChangeStatusDialog(title: String, message: String, onConfirm: () -> Unit) {
+        android.app.AlertDialog.Builder(requireContext())
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton("Confirm") { _, _ -> onConfirm() }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun changeIssueStatus(issue: Issue, states: List<Issue_state>, newStatus: String, report: String? = null) {
+        val newState = states.find { it.state.equals(newStatus, true) }
+        if (newState == null) {
+            Toast.makeText(requireContext(), "Invalid state.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        showLoading(true)
+        CoroutineScope(Dispatchers.IO).launch {
+            val updatedIssue = issue.copy(state_id = newState.state_id, report = report ?: issue.report)
+            val result = issueRepository.updateIssue(updatedIssue)
+            withContext(Dispatchers.Main) {
+                showLoading(false)
+                if (result.isSuccess) {
+                    Toast.makeText(requireContext(), "Status updated successfully!", Toast.LENGTH_SHORT).show()
+                    loadIssueData()
+                } else {
+                    Toast.makeText(requireContext(), "Failed to update status.", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 }

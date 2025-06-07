@@ -1,5 +1,6 @@
 package com.example.fixlink
 
+import android.content.Intent
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -11,6 +12,12 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import com.example.fixlink.data.repository.UserRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -43,6 +50,8 @@ class BottomNavigationFragment : Fragment() {
     private lateinit var textProfile: TextView
 
     private var selectedItemId: Int = R.id.nav_my_tasks // Default selected item
+
+    private val userRepository = UserRepository()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,7 +88,14 @@ class BottomNavigationFragment : Fragment() {
         textMaintenance = view.findViewById(R.id.text_maintenance)
         textProfile = view.findViewById(R.id.text_profile)
 
-        // Set initial selected item color
+        // Set initial selected item based on current activity
+        selectedItemId = when (activity) {
+            is MyTasksActivity -> R.id.nav_my_tasks
+            is IssuesUserActivity -> R.id.nav_issues
+            is MaintenanceUserActivity -> R.id.nav_maintenance
+            is ProfileActivity -> R.id.nav_profile
+            else -> R.id.nav_my_tasks
+        }
         updateColors(selectedItemId)
 
         // Set click listeners
@@ -93,6 +109,37 @@ class BottomNavigationFragment : Fragment() {
         if (selectedItemId != itemId) {
             selectedItemId = itemId
             updateColors(selectedItemId)
+
+            // Handle navigation based on current activity
+            val intent = when (itemId) {
+                R.id.nav_my_tasks -> {
+                    if (activity !is MyTasksActivity) {
+                        Intent(requireContext(), MyTasksActivity::class.java)
+                    } else null
+                }
+                R.id.nav_issues -> {
+                    if (activity !is IssuesUserActivity) {
+                        Intent(requireContext(), IssuesUserActivity::class.java)
+                    } else null
+                }
+                R.id.nav_maintenance -> {
+                    if (activity !is MaintenanceUserActivity) {
+                        Intent(requireContext(), MaintenanceUserActivity::class.java)
+                    } else null
+                }
+                R.id.nav_profile -> {
+                    if (activity !is ProfileActivity) {
+                        Intent(requireContext(), ProfileActivity::class.java)
+                    } else null
+                }
+                else -> null
+            }
+
+            intent?.let {
+                // Add flags to clear the back stack
+                it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(it)
+            }
         }
     }
 

@@ -48,8 +48,20 @@ class IssueAdapter(private val issues: List<Issue>) : RecyclerView.Adapter<Issue
         holder.itemView.setOnClickListener {
             val fragment = IssueDetailFragment.newInstance(issue.issue_id)
             val activity = holder.itemView.context as? androidx.fragment.app.FragmentActivity
+            
+            // Get the parent fragment to determine which container to use
+            val parentFragment = activity?.supportFragmentManager?.fragments?.firstOrNull { 
+                it is IssuesContentFragment || it is MyTasksFragment 
+            }
+            
+            val containerId = when (parentFragment) {
+                is IssuesContentFragment -> R.id.issuesContentFragmentContainer
+                is MyTasksFragment -> R.id.myTasksContentFragmentContainer
+                else -> return@setOnClickListener
+            }
+            
             activity?.supportFragmentManager?.beginTransaction()
-                ?.replace(R.id.issuesContentFragmentContainer, fragment)
+                ?.replace(containerId, fragment)
                 ?.addToBackStack(null)
                 ?.commit()
         }
@@ -106,8 +118,8 @@ class IssueAdapter(private val issues: List<Issue>) : RecyclerView.Adapter<Issue
             when (statusText.lowercase()) {
                 "pending", "pendente" -> setChipColor(statusChip, Color.parseColor("#E0E0E0")) // Cinza claro
                 "assigned", "atribuído", "atribuido" -> setChipColor(statusChip, Color.parseColor("#B3E5FC")) // Azul claro
-                "under repair", "em reparação", "em reparacao" -> setChipColor(statusChip, Color.parseColor("#E1E0F7")) // Lilás claro
-                "resolved", "resolvido" -> setChipColor(statusChip, Color.parseColor("#66BB6A")) // Verde
+                "under repair", "em andamento", "em reparacao" -> setChipColor(statusChip, Color.parseColor("#D6CDEA")) // Lilás claro
+                "resolved", "completo" -> setChipColor(statusChip, Color.parseColor("#66BB6A")) // Verde
                 else -> setChipColor(statusChip, Color.LTGRAY)
             }
             // Cores para equipamento (ativo/inativo)

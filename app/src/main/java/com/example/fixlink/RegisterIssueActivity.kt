@@ -82,7 +82,16 @@ class RegisterIssueActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             supportFragmentManager.commit {
                 replace(R.id.topAppBarFragmentContainer, TopAppBarFragment())
-                replace(R.id.bottomNavigationContainer, BottomNavigationUserFragment())
+            }
+
+            // Add appropriate bottom navigation based on user type
+            CoroutineScope(Dispatchers.Main).launch {
+                val bottomNavFragment = withContext(Dispatchers.IO) {
+                    NavigationUtils.getBottomNavigationFragment()
+                }
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.bottomNavigationContainer, bottomNavFragment)
+                    .commit()
             }
         }
 

@@ -12,6 +12,7 @@ import android.widget.TextView
 import android.widget.ImageView
 import com.example.fixlink.data.repository.UserRepository
 import com.example.fixlink.data.entities.User
+import com.example.fixlink.NavigationUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -43,10 +44,15 @@ class ProfileActivity : AppCompatActivity() {
             .replace(R.id.topAppBarFragmentContainer, topAppBarFragment)
             .commit()
 
-        val bottomNavFragment = BottomNavigationUserFragment()
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.bottomNavigationContainer, bottomNavFragment)
-            .commit()
+        // Add appropriate bottom navigation based on user type
+        CoroutineScope(Dispatchers.Main).launch {
+            val bottomNavFragment = withContext(Dispatchers.IO) {
+                NavigationUtils.getBottomNavigationFragment()
+            }
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.bottomNavigationContainer, bottomNavFragment)
+                .commit()
+        }
 
         initializeViews()
         

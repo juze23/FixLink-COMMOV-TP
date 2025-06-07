@@ -5,6 +5,11 @@ import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.fixlink.NavigationUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class IssuesUserActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,10 +33,15 @@ class IssuesUserActivity : AppCompatActivity() {
                 .replace(R.id.issuesContentFragmentContainer, IssuesContentFragment())
                 .commit()
 
-            // Add BottomNavigationUserFragment
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.bottomNavigationContainer, BottomNavigationUserFragment())
-                .commit()
+            // Add appropriate bottom navigation based on user type
+            CoroutineScope(Dispatchers.Main).launch {
+                val bottomNavFragment = withContext(Dispatchers.IO) {
+                    NavigationUtils.getBottomNavigationFragment()
+                }
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.bottomNavigationContainer, bottomNavFragment)
+                    .commit()
+            }
         }
     }
 } 

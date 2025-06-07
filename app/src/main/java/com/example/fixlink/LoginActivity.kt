@@ -93,10 +93,12 @@ class LoginActivity : AppCompatActivity() {
                             Toast.makeText(this@LoginActivity, "Login successful!", Toast.LENGTH_SHORT).show()
                             // Navigate to the appropriate activity based on user type
                             val intent = when (user.typeId) {
-                                1 -> Intent(this@LoginActivity, IssuesUserActivity::class.java)
-                                //REST OF THE USERS THAT WILL BE IMPLEMENTED LATER
+                                1 -> Intent(this@LoginActivity, IssuesUserActivity::class.java) // Regular user
+                                2 -> Intent(this@LoginActivity, MyTasksActivity::class.java) // Technician
                                 else -> Intent(this@LoginActivity, ProfileActivity::class.java)
                             }
+                            // Add flag to clear the back stack
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                             startActivity(intent)
                             finish()
                         }

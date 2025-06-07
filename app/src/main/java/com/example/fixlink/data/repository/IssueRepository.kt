@@ -162,4 +162,41 @@ class IssueRepository {
             Result.failure(e)
         }
     }
+    
+    suspend fun getIssuesByTechnician(technicianId: String): Result<List<Issue>> = withContext(Dispatchers.IO) {
+        try {
+            val response = SupabaseClient.supabase.postgrest["Issue"]
+                .select {
+                    filter {
+                        eq("id_technician", technicianId)
+                    }
+                    order("created_at", Order.DESCENDING)
+                }
+            val issues = response.decodeList<Issue>()
+            // Retorna uma lista vazia como sucesso, não como erro
+            Result.success(issues)
+        } catch (e: Exception) {
+            // Só retorna erro se houver uma exceção real
+            if (e.message?.contains("empty list") == true) {
+                Result.success(emptyList())
+            } else {
+                Result.failure(e)
+            }
+        }
+    }
+    
+    suspend fun updateIssue(issue: Issue): Result<Issue> = withContext(Dispatchers.IO) {
+        try {
+            SupabaseClient.supabase.postgrest["Issue"]
+                .update(issue) {
+                    filter {
+                        eq("issue_id", issue.issue_id)
+                    }
+                }
+            Result.success(issue)
+        } catch (e: Exception) {
+            Log.e("IssueRepository", "Error updating issue: ", e)
+            Result.failure(e)
+        }
+    }
 }
