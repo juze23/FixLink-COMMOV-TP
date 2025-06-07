@@ -90,6 +90,82 @@ class UserRepository {
         }
     }
 
+    suspend fun getCurrentUser(): Result<User> {
+        return try {
+            val currentUser = SupabaseClient.supabase.auth.currentUserOrNull()
+                ?: throw Exception("No authenticated user found")
+
+            val user = SupabaseClient.supabase.postgrest["User"]
+                .select {
+                    filter {
+                        eq("user_id", currentUser.id)
+                    }
+                }
+                .decodeSingle<User>()
+
+            Result.success(user)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun updateUserProfile(
+        userId: String,
+        name: String,
+        email: String,
+        phoneNumber: String
+    ): Result<User> {
+        return try {
+            val currentTime = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)
+            val updatedUser = User(
+                user_id = userId,
+                name = name,
+                email = email,
+                phoneNumber = phoneNumber,
+                createdAt = currentTime, // Keep original creation time
+                updatedAt = currentTime,
+                typeId = 1 // Keep original type
+            )
+
+            SupabaseClient.supabase.postgrest["User"]
+                .update(updatedUser) {
+                    filter {
+                        eq("user_id", userId)
+                    }
+                }
+
+            Result.success(updatedUser)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun updatePassword(currentPassword: String, newPassword: String): Result<Unit> {
+        return try {
+            // First verify current password
+            val currentUser = SupabaseClient.supabase.auth.currentUserOrNull()
+                ?: throw Exception("No authenticated user found")
+
+            // Update password in Supabase Auth
+            SupabaseClient.supabase.auth.updateUser {
+                password = newPassword
+            }
+
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun logout(): Result<Unit> {
+        return try {
+            SupabaseClient.supabase.auth.signOut()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     /*
         suspend fun getUserById(userId: String): Result<User> {
             return try {
