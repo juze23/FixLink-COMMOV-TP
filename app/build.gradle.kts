@@ -72,5 +72,6 @@ dependencies {
     implementation("io.ktor:ktor-client-android:3.1.3")
     implementation("androidx.fragment:fragment-ktx:1.6.2")
     implementation("io.github.jan-tennert.supabase:storage-kt")
-
+    implementation("com.github.bumptech.glide:glide:4.15.1")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
 }

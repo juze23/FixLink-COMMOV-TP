@@ -78,6 +78,18 @@ class UserRepository {
             Result.failure(e)
         }
     }
+
+    suspend fun getAllUsers(): Result<List<User>> {
+        return try {
+            val users = SupabaseClient.supabase.postgrest["User"]
+                .select()
+                .decodeList<User>()
+            Result.success(users)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     /*
         suspend fun getUserById(userId: String): Result<User> {
             return try {

@@ -166,49 +166,16 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:layout_marginBottom="16dp"/>
 
-                <!-- Status Indicators -->
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <!-- Status Indicator (apenas um chip) -->
+                <TextView
+                    android:id="@+id/statusChip"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-
-                    <!-- Low Status -->
-                    <TextView
-                        android:id="@+id/statusLow"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Low"
-                        android:padding="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:background="@drawable/rounded_corner_low_status"
-                        android:textColor="@android:color/black"
-                        android:textStyle="bold"/>
-
-                    <!-- Scheduled Status (using Assigned drawable as it's visually similar) -->
-                    <TextView
-                        android:id="@+id/statusScheduled"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Scheduled"
-                        android:padding="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:background="@drawable/rounded_corner_assigned_status"
-                         android:textColor="@android:color/black"
-                        android:textStyle="bold"/>
-
-                    <!-- Active Status -->
-                     <TextView
-                        android:id="@+id/statusActive"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Active"
-                        android:padding="8dp"
-                        android:background="@drawable/rounded_corner_active_status"
-                         android:textColor="@android:color/black"
-                        android:textStyle="bold"/>
-
-                </LinearLayout>
+                    android:text="Status"
+                    android:padding="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:textColor="@android:color/black"
+                    android:textStyle="bold"/>
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>

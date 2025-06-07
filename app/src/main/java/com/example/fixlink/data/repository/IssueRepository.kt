@@ -148,4 +148,17 @@ class IssueRepository {
             Result.failure(e)
         }
     }
+    
+    suspend fun getAllIssues(): Result<List<Issue>> = withContext(Dispatchers.IO) {
+        try {
+            val issues = SupabaseClient.supabase.postgrest["Issue"]
+                .select {
+                    order("created_at", Order.DESCENDING)
+                }
+                .decodeList<Issue>()
+            Result.success(issues)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }

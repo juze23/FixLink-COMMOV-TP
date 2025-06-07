@@ -5,6 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import android.graphics.drawable.GradientDrawable
+import android.graphics.Color
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -35,6 +38,29 @@ class MaintenanceDetailFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_maintenance_detail, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val statusChip = view.findViewById<TextView>(R.id.statusChip)
+
+        fun setChipColor(chip: TextView, color: Int) {
+            val drawable = GradientDrawable()
+            drawable.cornerRadius = 32f
+            drawable.setColor(color)
+            chip.background = drawable
+        }
+
+        // Exemplo: definir o status dinamicamente
+        val status = "Pending" // Aqui deves buscar o status real da manutenção
+        statusChip.text = status
+        when (status.lowercase()) {
+            "pending", "pendente" -> setChipColor(statusChip, Color.parseColor("#E0E0E0"))      // Pending: cinza claro
+            "assigned", "atribuído", "atribuido" -> setChipColor(statusChip, Color.parseColor("#B3E5FC"))     // Assigned: azul claro
+            "under repair", "em reparação", "em reparacao" -> setChipColor(statusChip, Color.parseColor("#E1E0F7"))  // Under Repair: lilás claro
+            "resolved", "resolvido" -> setChipColor(statusChip, Color.parseColor("#66BB6A"))     // Resolved: verde
+            else -> setChipColor(statusChip, Color.LTGRAY)
+        }
     }
 
     companion object {
