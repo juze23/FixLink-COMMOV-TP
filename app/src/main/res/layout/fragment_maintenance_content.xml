@@ -7,6 +7,17 @@
     android:background="@color/white"
     tools:context=".MaintenanceContentFragment">
 
+    <!-- Loading Progress Bar -->
+    <ProgressBar
+        android:id="@+id/loadingProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <!-- Content area for maintenance tasks -->
     <LinearLayout
         android:id="@+id/maintenanceContent"
@@ -44,14 +55,28 @@
                 android:focusable="true"/>
         </LinearLayout>
 
-        <!-- Maintenance List (placeholder - A RecyclerView or ListView would go here) -->
-        <TextView
+        <!-- Maintenance List -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/maintenanceRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:text="Maintenance List Goes Here"
-            android:gravity="center"/>
+            android:padding="8dp"
+            android:clipToPadding="false"
+            android:scrollbars="vertical" />
 
     </LinearLayout>
+
+    <!-- Floating Action Button -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add_maintenance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@color/white"
+        app:backgroundTint="@color/purple_primary" />
 
 </androidx.constraintlayout.widget.ConstraintLayout> 

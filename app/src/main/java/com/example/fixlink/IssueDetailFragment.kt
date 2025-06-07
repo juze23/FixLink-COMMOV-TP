@@ -10,9 +10,12 @@ import android.widget.ImageView
 import android.widget.Toast
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
+<<<<<<< HEAD
 import android.widget.ImageButton
 import android.widget.Button
 import android.widget.EditText
+=======
+>>>>>>> 43d8c2b27ba7a82087ee45e50da3eaa647d45602
 import coil.load
 import coil.request.CachePolicy
 import coil.transition.CrossfadeTransition
@@ -39,15 +42,6 @@ import java.util.Locale
 import android.util.Log
 import android.content.Intent
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_ISSUE_ID = "issue_id"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [IssueDetailFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class IssueDetailFragment : Fragment() {
     companion object {
         private const val TAG = "IssueDetailFragment"
@@ -227,11 +221,11 @@ class IssueDetailFragment : Fragment() {
         users: List<User>
     ) {
         // Set basic info
-        issueTitle.text = issue.description ?: "(Sem título)"
+        issueTitle.text = issue.description ?: "(No description)"
         
         // Set reporter name
         val reporterName = users.find { it.user_id == issue.id_user }?.name ?: issue.id_user
-        issueReporter.text = "Utilizador: $reporterName"
+        issueReporter.text = "User: $reporterName"
 
         // Set description
         issueDescription.text = issue.description
@@ -244,7 +238,7 @@ class IssueDetailFragment : Fragment() {
         val technicianName = if (issue.id_technician != null) {
             users.find { it.user_id == issue.id_technician }?.name ?: issue.id_technician
         } else {
-            "Não atribuído"
+            "Not assigned"
         }
         responsibleTechnician.text = technicianName
 
