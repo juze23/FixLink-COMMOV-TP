@@ -12,11 +12,11 @@ data class Maintenance(
     @SerialName("id_technician")
     val id_technician: String? = null,
     @SerialName("id_equipment")
-    val id_equipment: String,
+    val id_equipment: Int,
     @SerialName("publication_date")
     val publicationDate: String,
     @SerialName("state_id")
-    val state_id: String,
+    val state_id: Int,
     val description: String? = null,
     val report: String? = null,
     @SerialName("beginning_date")
@@ -24,23 +24,23 @@ data class Maintenance(
     @SerialName("ending_date")
     val endingDate: String? = null,
     @SerialName("localization_id")
-    val localization_id: String,
+    val localization_id: Int,
     @SerialName("priority_id")
-    val priority_id: String,
+    val priority_id: Int,
     @SerialName("type_id")
-    val type_id: String
+    val type_id: Int
 )
 
 @Serializable
-data class StateMaintenance(
+data class State_maintenance(
     @SerialName("state_id")
-    val state_id: String? = null,
+    val state_id: Int,
     val state: String
 )
 
 @Serializable
-data class MaintenanceType(
+data class Type_maintenance(
     @SerialName("type_id")
-    val type_id: String,
-        val type: String
+    val type_id: Int,
+    val type: String
 )
