@@ -11,6 +11,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import android.content.Intent
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -75,14 +76,55 @@ class BottomNavigationAdminFragment : Fragment() {
         textMaintenance = view.findViewById(R.id.text_maintenance)
         textAdmin = view.findViewById(R.id.text_admin)
 
-        // Set initial selected item color
+        // Set initial selected item based on current activity and intent
+        selectedItemId = when {
+            activity is DashboardActivity -> R.id.nav_dashboard
+            activity is IssuesUserActivity -> R.id.nav_issues
+            activity is MaintenanceUserActivity -> R.id.nav_maintenance
+            activity is AdminActivity -> R.id.nav_admin
+            activity is ProfileActivity && activity?.intent?.getBooleanExtra("FROM_ADMIN", false) == true -> R.id.nav_admin
+            activity is ViewReportActivity -> R.id.nav_issues
+            else -> R.id.nav_dashboard
+        }
         updateColors(selectedItemId)
 
         // Set click listeners
-        navDashboard.setOnClickListener { selectItem(R.id.nav_dashboard) }
-        navIssues.setOnClickListener { selectItem(R.id.nav_issues) }
-        navMaintenance.setOnClickListener { selectItem(R.id.nav_maintenance) }
-        navAdmin.setOnClickListener { selectItem(R.id.nav_admin) }
+        navDashboard.setOnClickListener {
+            if (activity !is DashboardActivity) {
+                selectItem(R.id.nav_dashboard)
+                val intent = Intent(requireContext(), DashboardActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                activity?.finish()
+            }
+        }
+        navIssues.setOnClickListener {
+            if (activity !is IssuesUserActivity) {
+                selectItem(R.id.nav_issues)
+                val intent = Intent(requireContext(), IssuesUserActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                activity?.finish()
+            }
+        }
+        navMaintenance.setOnClickListener {
+            if (activity !is MaintenanceUserActivity) {
+                selectItem(R.id.nav_maintenance)
+                val intent = Intent(requireContext(), MaintenanceUserActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                activity?.finish()
+            }
+        }
+        navAdmin.setOnClickListener {
+            if (activity !is AdminActivity) {
+                selectItem(R.id.nav_admin)
+                val intent = Intent(requireContext(), AdminActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                activity?.finish()
+            }
+        }
     }
 
     private fun selectItem(itemId: Int) {
@@ -93,45 +135,34 @@ class BottomNavigationAdminFragment : Fragment() {
     }
 
     private fun updateColors(selectedItemId: Int) {
-        val defaultColor = ContextCompat.getColor(requireContext(), R.color.default_nav_item_color)
+        val defaultColor = ContextCompat.getColor(requireContext(), R.color.gray_inactive)
         val selectedColor = ContextCompat.getColor(requireContext(), R.color.purple_primary)
 
-        // Reset all items to default (outline icons + default color)
-        iconDashboard.setImageResource(R.drawable.ic_dashboard_outline)
+        // Reset all items to default color
         iconDashboard.setColorFilter(defaultColor)
         textDashboard.setTextColor(defaultColor)
-
-        iconIssues.setImageResource(R.drawable.ic_issues_outline)
         iconIssues.setColorFilter(defaultColor)
         textIssues.setTextColor(defaultColor)
-
-        iconMaintenance.setImageResource(R.drawable.ic_maintenace_outline)
         iconMaintenance.setColorFilter(defaultColor)
         textMaintenance.setTextColor(defaultColor)
-
-        iconAdmin.setImageResource(R.drawable.ic_admin_outline)
         iconAdmin.setColorFilter(defaultColor)
         textAdmin.setTextColor(defaultColor)
 
-        // Set selected item (filled icon + selected color)
+        // Set selected item color
         when (selectedItemId) {
             R.id.nav_dashboard -> {
-                iconDashboard.setImageResource(R.drawable.ic_dashboard)
                 iconDashboard.setColorFilter(selectedColor)
                 textDashboard.setTextColor(selectedColor)
             }
             R.id.nav_issues -> {
-                iconIssues.setImageResource(R.drawable.ic_issues)
                 iconIssues.setColorFilter(selectedColor)
                 textIssues.setTextColor(selectedColor)
             }
             R.id.nav_maintenance -> {
-                iconMaintenance.setImageResource(R.drawable.ic_maintenance)
                 iconMaintenance.setColorFilter(selectedColor)
                 textMaintenance.setTextColor(selectedColor)
             }
             R.id.nav_admin -> {
-                iconAdmin.setImageResource(R.drawable.ic_admin)
                 iconAdmin.setColorFilter(selectedColor)
                 textAdmin.setTextColor(selectedColor)
             }

@@ -253,6 +253,26 @@
                             android:visibility="gone"
                             android:backgroundTint="@color/purple_primary"
                             android:textColor="@android:color/white"/>
+
+                        <Button
+                            android:id="@+id/assignTechnicianButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Assign Technician"
+                            android:backgroundTint="@color/purple_primary"
+                            android:textColor="@android:color/white"
+                            android:layout_marginBottom="8dp"
+                            android:visibility="gone"/>
+
+                        <Button
+                            android:id="@+id/viewReportButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="View Report"
+                            android:backgroundTint="@color/purple_primary"
+                            android:textColor="@android:color/white"
+                            android:layout_marginBottom="8dp"
+                            android:visibility="gone"/>
                     </LinearLayout>
 
                 </LinearLayout>

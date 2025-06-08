@@ -95,6 +95,7 @@ class LoginActivity : AppCompatActivity() {
                             val intent = when (user.typeId) {
                                 1 -> Intent(this@LoginActivity, IssuesUserActivity::class.java) // Regular user
                                 2 -> Intent(this@LoginActivity, MyTasksActivity::class.java) // Technician
+                                3 -> Intent(this@LoginActivity, DashboardActivity::class.java) // Admin
                                 else -> Intent(this@LoginActivity, ProfileActivity::class.java)
                             }
                             // Add flag to clear the back stack

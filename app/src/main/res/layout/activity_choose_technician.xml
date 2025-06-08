@@ -1,86 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/purple_secondary"
-    tools:context=".ChooseTechnicianActivity">
+    android:background="@color/white">
 
-    <!-- App Bar Fragment Container -->
-    <FrameLayout
-        android:id="@+id/topAppBarFragmentContainer"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 
-    <ScrollView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:fillViewport="true"
-        app:layout_constraintTop_toBottomOf="@+id/topAppBarFragmentContainer"
-        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationContainer"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cardContainer"
+        <!-- Top App Bar Fragment Container -->
+        <FrameLayout
+            android:id="@+id/topAppBarFragmentContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:background="@drawable/rounded_card_background"
-            android:padding="16dp">
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <!-- Technicians Title -->
-            <TextView
-                android:id="@+id/techniciansTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Technicians"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/techniciansRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:clipToPadding="false"
+            android:padding="16dp"
+            app:layout_constraintBottom_toTopOf="@id/bottomNavigationContainer"
+            app:layout_constraintTop_toBottomOf="@id/topAppBarFragmentContainer" />
 
-            <!-- Technicians List Container -->
-            <LinearLayout
-                android:id="@+id/techniciansListLayout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="16dp"
-                app:layout_constraintTop_toBottomOf="@+id/techniciansTitle"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-            <!-- Confirm Button -->
-            <Button
-                android:id="@+id/confirmButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Confirm"
-                android:layout_marginTop="32dp"
-                android:padding="12dp"
-                android:backgroundTint="@color/purple_primary"
-                app:layout_constraintTop_toBottomOf="@+id/techniciansListLayout"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+        <!-- Bottom Navigation Container (Fragment) -->
+        <FrameLayout
+            android:id="@+id/bottomNavigationContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </ScrollView>
-
-    <!-- Bottom Navigation Container (Fragment) -->
-    <FrameLayout
-        android:id="@+id/bottomNavigationContainer"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -84,21 +84,18 @@ class BottomNavigationUserFragment : Fragment() {
         navIssues.setOnClickListener { 
             if (activity !is IssuesUserActivity) {
                 startActivity(Intent(activity, IssuesUserActivity::class.java))
-                activity?.overridePendingTransition(0, 0)
                 activity?.finish()
             }
         }
         navMaintenance.setOnClickListener { 
             if (activity !is RegisterIssueActivity) {
                 startActivity(Intent(activity, MaintenanceUserActivity::class.java))
-                activity?.overridePendingTransition(0, 0)
                 activity?.finish()
             }
         }
         navProfile.setOnClickListener { 
             if (activity !is ProfileActivity) {
                 startActivity(Intent(activity, ProfileActivity::class.java))
-                activity?.overridePendingTransition(0, 0)
                 activity?.finish()
             }
         }

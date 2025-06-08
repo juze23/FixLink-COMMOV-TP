@@ -24,82 +24,58 @@ class ReportActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_report)
-        // Adicionar fragments de top app bar e bottom navigation
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.topAppBarFragmentContainer, TopAppBarFragment())
-            .commit()
 
-        CoroutineScope(Dispatchers.IO).launch {
-            val userResult = userRepository.getCurrentUser()
-            withContext(Dispatchers.Main) {
-                if (userResult.isSuccess) {
-                    val user = userResult.getOrNull()
-                    val navFragment = if (user?.typeId == 2) BottomNavigationFragment() else BottomNavigationUserFragment()
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.bottomNavigationContainer, navFragment)
-                        .commit()
-                } else {
-                    // fallback para usuário comum
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.bottomNavigationContainer, BottomNavigationUserFragment())
-                        .commit()
-                }
-            }
+        // Add fragments
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.topAppBarFragmentContainer, TopAppBarFragment())
+                .commit()
+
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.bottomNavigationContainer, BottomNavigationAdminFragment())
+                .commit()
         }
 
+        // Initialize views and load data
+        initializeViews()
+        loadData()
+    }
+
+    private fun initializeViews() {
         reportEditText = findViewById(R.id.reportEditText)
         sendReportButton = findViewById(R.id.sendReportButton)
-        issueId = intent.getStringExtra("ISSUE_ID")
 
         sendReportButton.setOnClickListener {
-            val reportText = reportEditText.text.toString().trim()
-            if (reportText.isEmpty()) {
-                Toast.makeText(this, "Please enter your report.", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+            val report = reportEditText.text.toString()
+            if (report.isNotEmpty()) {
+                sendReport(report)
+            } else {
+                Toast.makeText(this, "Please enter a report", Toast.LENGTH_SHORT).show()
             }
-            if (issueId == null) {
-                Toast.makeText(this, "Invalid issue.", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            android.app.AlertDialog.Builder(this)
-                .setTitle("Finish Task")
-                .setMessage("Are you sure you want to send this report and finish this task?")
-                .setPositiveButton("Send Report") { _, _ ->
-                    sendReport(reportText)
-                }
-                .setNegativeButton("Cancel", null)
-                .show()
+        }
+    }
+
+    private fun loadData() {
+        issueId = intent.getStringExtra("ISSUE_ID")
+        if (issueId == null) {
+            Toast.makeText(this, "Error: Issue ID not provided", Toast.LENGTH_SHORT).show()
+            finish()
+            return
         }
     }
 
     private fun sendReport(report: String) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val issueResult = issueRepository.getIssueById(issueId!!)
-            val statesResult = stateIssueRepository.getIssueStates()
-            if (issueResult.isFailure || statesResult.isFailure) {
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(this@ReportActivity, "Error loading data.", Toast.LENGTH_SHORT).show()
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                withContext(Dispatchers.IO) {
+                    issueId?.let { id ->
+                        issueRepository.updateIssueReport(id, report)
+                    }
                 }
-                return@launch
-            }
-            val issue = issueResult.getOrNull()!!
-            val states = statesResult.getOrNull()!!
-            val resolvedState = states.find { it.state.equals("resolved", true) }
-            if (resolvedState == null) {
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(this@ReportActivity, "Resolved state not found.", Toast.LENGTH_SHORT).show()
-                }
-                return@launch
-            }
-            val updatedIssue = issue.copy(state_id = resolvedState.state_id, report = report)
-            val updateResult = issueRepository.updateIssue(updatedIssue)
-            withContext(Dispatchers.Main) {
-                if (updateResult.isSuccess) {
-                    Toast.makeText(this@ReportActivity, "Report sent and task resolved!", Toast.LENGTH_SHORT).show()
-                    finish()
-                } else {
-                    Toast.makeText(this@ReportActivity, "Failed to send report.", Toast.LENGTH_SHORT).show()
-                }
+                Toast.makeText(this@ReportActivity, "Report sent successfully", Toast.LENGTH_SHORT).show()
+                finish()
+            } catch (e: Exception) {
+                Toast.makeText(this@ReportActivity, "Error sending report: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }

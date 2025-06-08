@@ -10,12 +10,9 @@ import android.widget.ImageView
 import android.widget.Toast
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
-<<<<<<< HEAD
 import android.widget.ImageButton
 import android.widget.Button
 import android.widget.EditText
-=======
->>>>>>> 43d8c2b27ba7a82087ee45e50da3eaa647d45602
 import coil.load
 import coil.request.CachePolicy
 import coil.transition.CrossfadeTransition
@@ -41,6 +38,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import android.util.Log
 import android.content.Intent
+import android.app.Activity
 
 class IssueDetailFragment : Fragment() {
     companion object {
@@ -48,6 +46,7 @@ class IssueDetailFragment : Fragment() {
         // TODO: Rename parameter arguments, choose names that match
         // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
         private const val ARG_ISSUE_ID = "issue_id"
+        private const val REQUEST_ASSIGN_TECHNICIAN = 1001
 
         /**
          * Use this factory method to create a new instance of
@@ -89,6 +88,8 @@ class IssueDetailFragment : Fragment() {
     private lateinit var contentScrollView: View
     private lateinit var startTaskButton: Button
     private lateinit var endTaskButton: Button
+    private lateinit var assignTechnicianButton: Button
+    private lateinit var viewReportButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -153,6 +154,23 @@ class IssueDetailFragment : Fragment() {
         contentScrollView = view.findViewById(R.id.contentScrollView)
         startTaskButton = view.findViewById(R.id.startTaskButton)
         endTaskButton = view.findViewById(R.id.endTaskButton)
+        assignTechnicianButton = view.findViewById(R.id.assignTechnicianButton)
+        viewReportButton = view.findViewById(R.id.viewReportButton)
+
+        // Set click listener for assign technician button
+        assignTechnicianButton.setOnClickListener {
+            val intent = Intent(requireContext(), ChooseTechnicianActivity::class.java)
+            intent.putExtra("ISSUE_ID", issueId)
+            startActivityForResult(intent, REQUEST_ASSIGN_TECHNICIAN)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_ASSIGN_TECHNICIAN && resultCode == Activity.RESULT_OK) {
+            // Refresh the issue data to show the assigned technician
+            loadIssueData()
+        }
     }
 
     private fun showLoading(show: Boolean) {
@@ -199,8 +217,14 @@ class IssueDetailFragment : Fragment() {
                 val states = statesResult.getOrNull() ?: emptyList()
                 val users = usersResult.getOrNull() ?: emptyList()
 
+                // Buscar utilizador atual
+                val currentUserResult = userRepository.getCurrentUser()
+                val isAdmin = currentUserResult.isSuccess && currentUserResult.getOrNull()?.typeId == 3
+
                 withContext(Dispatchers.Main) {
-                    displayIssueData(issue, priorities, equipments, locations, states, users)
+                    displayIssueData(issue, priorities, equipments, locations, states, users, isAdmin)
+                    // Mostrar botão Assign Technician só para admin e quando não há técnico atribuído
+                    assignTechnicianButton.visibility = if (isAdmin && issue.id_technician == null) View.VISIBLE else View.GONE
                     showLoading(false)
                 }
             } catch (e: Exception) {
@@ -218,7 +242,8 @@ class IssueDetailFragment : Fragment() {
         equipments: List<Equipment>,
         locations: List<Location>,
         states: List<Issue_state>,
-        users: List<User>
+        users: List<User>,
+        isAdmin: Boolean
     ) {
         // Set basic info
         issueTitle.text = issue.description ?: "(No description)"
@@ -330,6 +355,14 @@ class IssueDetailFragment : Fragment() {
                 }
                 .setNegativeButton("Cancel", null)
                 .show()
+        }
+
+        // Show View Report button only for admin
+        viewReportButton.visibility = if (isAdmin) View.VISIBLE else View.GONE
+        viewReportButton.setOnClickListener {
+            val intent = Intent(requireContext(), ViewReportActivity::class.java)
+            intent.putExtra("ISSUE_ID", issue.issue_id)
+            startActivity(intent)
         }
     }
 

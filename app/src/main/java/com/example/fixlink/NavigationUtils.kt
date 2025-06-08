@@ -14,8 +14,9 @@ object NavigationUtils {
         return withContext(Dispatchers.IO) {
             val user = userRepository.getCurrentUser().getOrNull()
             when (user?.typeId) {
-                2 -> BottomNavigationFragment() // Technician
-                else -> BottomNavigationUserFragment() // Regular user
+                1 -> BottomNavigationUserFragment() // Regular user
+                2 -> BottomNavigationFragment()  // Technician
+                else -> BottomNavigationAdminFragment() // Admin/Manager
             }
         }
     }

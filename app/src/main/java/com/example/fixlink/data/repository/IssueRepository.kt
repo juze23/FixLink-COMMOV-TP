@@ -13,6 +13,7 @@ import com.example.fixlink.data.entities.Issue_type
 import com.example.fixlink.data.entities.Issue_state
 import com.example.fixlink.supabaseConfig.SupabaseClient
 import io.github.jan.supabase.postgrest.postgrest
+import io.github.jan.supabase.postgrest.query.Columns
 import io.github.jan.supabase.postgrest.query.Order
 import io.github.jan.supabase.storage.storage
 import io.ktor.client.utils.EmptyContent.headers
@@ -22,6 +23,10 @@ import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.UUID
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromJsonElement
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 
 class IssueRepository {
     @RequiresApi(Build.VERSION_CODES.O)
@@ -196,6 +201,44 @@ class IssueRepository {
             Result.success(issue)
         } catch (e: Exception) {
             Log.e("IssueRepository", "Error updating issue: ", e)
+            Result.failure(e)
+        }
+    }
+    
+    suspend fun assignTechnicianToIssue(issueId: String, technicianId: String): Result<Unit> = withContext(Dispatchers.IO) {
+        try {
+            // First get the current issue to update
+            val currentIssue = getIssueById(issueId).getOrNull() ?: return@withContext Result.failure(Exception("Issue not found"))
+            
+            // Create updated issue with new technician and state
+            val updatedIssue = currentIssue.copy(
+                id_technician = technicianId,
+                state_id = 2  // Set state to "assigned"
+            )
+            
+            // Update the issue using the existing updateIssue method
+            updateIssue(updatedIssue).map { Unit }
+        } catch (e: Exception) {
+            Log.e("IssueRepository", "Error assigning technician: ", e)
+            Result.failure(e)
+        }
+    }
+
+    suspend fun updateIssueReport(issueId: String, report: String): Result<Unit> = withContext(Dispatchers.IO) {
+        try {
+            // First get the current issue to update
+            val currentIssue = getIssueById(issueId).getOrNull() ?: return@withContext Result.failure(Exception("Issue not found"))
+            
+            // Create updated issue with new report and state_id = 4
+            val updatedIssue = currentIssue.copy(
+                report = report,
+                state_id = 4  // Set state to "Reported"
+            )
+            
+            // Update the issue using the existing updateIssue method
+            updateIssue(updatedIssue).map { Unit }
+        } catch (e: Exception) {
+            Log.e("IssueRepository", "Error updating issue report: ", e)
             Result.failure(e)
         }
     }

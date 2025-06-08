@@ -19,6 +19,15 @@ import androidx.fragment.app.replace
 import androidx.fragment.app.add
 import android.widget.ScrollView
 import androidx.activity.addCallback
+import android.widget.Toast
+import com.example.fixlink.data.entities.User
+import com.example.fixlink.data.entities.Equipment
+import com.example.fixlink.data.repository.UserRepository
+import com.example.fixlink.data.repository.EquipmentRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AdminActivity : AppCompatActivity() {
 
@@ -34,6 +43,9 @@ class AdminActivity : AppCompatActivity() {
     private lateinit var contentScrollView: ScrollView
     private lateinit var viewAllListFragmentContainer: FrameLayout
 
+    private val userRepository = UserRepository()
+    private val equipmentRepository = EquipmentRepository()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_admin)
@@ -42,6 +54,7 @@ class AdminActivity : AppCompatActivity() {
             supportFragmentManager.commit {
                 replace(R.id.topAppBarFragmentContainer, TopAppBarFragment())
                 replace(R.id.bottomNavigationContainer, BottomNavigationAdminFragment())
+                replace(R.id.viewAllListFragmentContainer, AdminFragment())
             }
         }
 
@@ -58,15 +71,20 @@ class AdminActivity : AppCompatActivity() {
         contentScrollView = findViewById(R.id.contentScrollView)
         viewAllListFragmentContainer = findViewById(R.id.viewAllListFragmentContainer)
 
-        // Populate lists with temporary data
-        populateTechniciansList()
-        populateEquipmentsList()
+        // Load real data
+        loadTechnicians()
+        loadEquipments()
 
         // Set click listeners
         viewAllTechnicians.setOnClickListener { showViewAllListFragment("technicians") }
         viewAllEquipments.setOnClickListener { showViewAllListFragment("equipments") }
         addFab.setOnClickListener { navigateToAddItem() }
-        icon_profile.setOnClickListener { navigateToProfile() }
+        icon_profile.setOnClickListener { 
+            val intent = Intent(this, ProfileActivity::class.java).apply {
+                putExtra("FROM_ADMIN", true)
+            }
+            startActivity(intent)
+        }
         // Add listeners for search and filter if needed
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -88,42 +106,111 @@ class AdminActivity : AppCompatActivity() {
         }
     }
 
-    private fun populateTechniciansList() {
-        // Temporary data - replace with actual data fetching
-        val technicians = listOf("Luís Fernandes", "Luís Santos", "João Silva", "Tiago Gomes")
-        val inflater = layoutInflater
+    private fun loadTechnicians() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val usersResult = userRepository.getAllUsers()
+                if (usersResult.isFailure) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@AdminActivity, "Error loading technicians", Toast.LENGTH_SHORT).show()
+                    }
+                    return@launch
+                }
 
-        techniciansListContainer.removeAllViews() // Clear previous views
-        for (technician in technicians) {
-            val technicianItemView = inflater.inflate(R.layout.list_item_admin, techniciansListContainer, false) // Assuming you have a list_item_admin.xml layout
-            val nameTextView = technicianItemView.findViewById<TextView>(R.id.itemNameTextView) // Assuming IDs in list_item_admin.xml
-            // Add edit and delete icon handling here
-
-            nameTextView.text = technician
-            techniciansListContainer.addView(technicianItemView)
+                val technicians = usersResult.getOrNull()?.filter { it.typeId == 2 } ?: emptyList()
+                withContext(Dispatchers.Main) {
+                    populateTechniciansList(technicians)
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@AdminActivity, "Error loading technicians: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
-    private fun populateEquipmentsList() {
-        // Temporary data - replace with actual data fetching
-        val equipments = listOf("Fire Extinguisher", "Server Room UPS System", "Air Conditioning System", "Printer Paper")
-        val inflater = layoutInflater
+    private fun loadEquipments() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val equipmentsResult = equipmentRepository.getEquipmentList()
+                if (equipmentsResult.isFailure) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@AdminActivity, "Error loading equipments", Toast.LENGTH_SHORT).show()
+                    }
+                    return@launch
+                }
 
-        equipmentsListContainer.removeAllViews() // Clear previous views
-        for (equipment in equipments) {
-            val equipmentItemView = inflater.inflate(R.layout.list_item_admin, equipmentsListContainer, false) // Assuming list_item_admin.xml also works for equipments or create a separate one
-            val nameTextView = equipmentItemView.findViewById<TextView>(R.id.itemNameTextView) // Assuming IDs in list_item_admin.xml
+                val equipments = equipmentsResult.getOrNull() ?: emptyList()
+                withContext(Dispatchers.Main) {
+                    populateEquipmentsList(equipments)
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@AdminActivity, "Error loading equipments: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun populateTechniciansList(technicians: List<User>) {
+        val inflater = layoutInflater
+        techniciansListContainer.removeAllViews()
+
+        // Show only first 4 technicians in the main view
+        val techniciansToShow = technicians.take(4)
+        
+        for (technician in techniciansToShow) {
+            val technicianItemView = inflater.inflate(R.layout.list_item_admin, techniciansListContainer, false)
+            val nameTextView = technicianItemView.findViewById<TextView>(R.id.itemNameTextView)
+            val editIcon = technicianItemView.findViewById<ImageView>(R.id.editIcon)
+            val deleteIcon = technicianItemView.findViewById<ImageView>(R.id.deleteIcon)
+
+            nameTextView.text = technician.name
+
+            // TODO: Implement edit and delete functionality
+            editIcon.setOnClickListener {
+                // Handle edit technician
+            }
+
+            deleteIcon.setOnClickListener {
+                // Handle delete technician
+            }
+
+            techniciansListContainer.addView(technicianItemView)
+        }
+
+        // Update "View All" text to show total count
+        viewAllTechnicians.text = "View All (${technicians.size})"
+    }
+
+    private fun populateEquipmentsList(equipments: List<Equipment>) {
+        val inflater = layoutInflater
+        equipmentsListContainer.removeAllViews()
+
+        // Show only first 4 equipments in the main view
+        val equipmentsToShow = equipments.take(4)
+        
+        for (equipment in equipmentsToShow) {
+            val equipmentItemView = inflater.inflate(R.layout.list_item_admin, equipmentsListContainer, false)
+            val nameTextView = equipmentItemView.findViewById<TextView>(R.id.itemNameTextView)
             val editIcon = equipmentItemView.findViewById<ImageView>(R.id.editIcon)
             val deleteIcon = equipmentItemView.findViewById<ImageView>(R.id.deleteIcon)
 
-            nameTextView.text = equipment
+            nameTextView.text = equipment.name
 
             editIcon.setOnClickListener { 
-                showEditFragment(equipment)
+                showEditFragment(equipment.name)
+            }
+
+            deleteIcon.setOnClickListener {
+                // Handle delete equipment
             }
 
             equipmentsListContainer.addView(equipmentItemView)
         }
+
+        // Update "View All" text to show total count
+        viewAllEquipments.text = "View All (${equipments.size})"
     }
 
     private fun showViewAllListFragment(listType: String) {
@@ -148,11 +235,6 @@ class AdminActivity : AppCompatActivity() {
 
     private fun navigateToAddItem() {
         val intent = Intent(this, RegisterUserActivity::class.java)
-        startActivity(intent)
-    }
-
-    private fun navigateToProfile() {
-        val intent = Intent(this, ProfileActivity::class.java)
         startActivity(intent)
     }
 

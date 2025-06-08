@@ -99,47 +99,48 @@ class BottomNavigationFragment : Fragment() {
         updateColors(selectedItemId)
 
         // Set click listeners
-        navMyTasks.setOnClickListener { selectItem(R.id.nav_my_tasks) }
-        navIssues.setOnClickListener { selectItem(R.id.nav_issues) }
-        navMaintenance.setOnClickListener { selectItem(R.id.nav_maintenance) }
-        navProfile.setOnClickListener { selectItem(R.id.nav_profile) }
+        navMyTasks.setOnClickListener { 
+            if (activity !is MyTasksActivity) {
+                selectItem(R.id.nav_my_tasks)
+                val intent = Intent(requireContext(), MyTasksActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                activity?.finish()
+            }
+        }
+        navIssues.setOnClickListener { 
+            if (activity !is IssuesUserActivity) {
+                selectItem(R.id.nav_issues)
+                val intent = Intent(requireContext(), IssuesUserActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                activity?.finish()
+            }
+        }
+        navMaintenance.setOnClickListener { 
+            if (activity !is MaintenanceUserActivity) {
+                selectItem(R.id.nav_maintenance)
+                val intent = Intent(requireContext(), MaintenanceUserActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                activity?.finish()
+            }
+        }
+        navProfile.setOnClickListener { 
+            if (activity !is ProfileActivity) {
+                selectItem(R.id.nav_profile)
+                val intent = Intent(requireContext(), ProfileActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                activity?.finish()
+            }
+        }
     }
 
     private fun selectItem(itemId: Int) {
         if (selectedItemId != itemId) {
             selectedItemId = itemId
             updateColors(selectedItemId)
-
-            // Handle navigation based on current activity
-            val intent = when (itemId) {
-                R.id.nav_my_tasks -> {
-                    if (activity !is MyTasksActivity) {
-                        Intent(requireContext(), MyTasksActivity::class.java)
-                    } else null
-                }
-                R.id.nav_issues -> {
-                    if (activity !is IssuesUserActivity) {
-                        Intent(requireContext(), IssuesUserActivity::class.java)
-                    } else null
-                }
-                R.id.nav_maintenance -> {
-                    if (activity !is MaintenanceUserActivity) {
-                        Intent(requireContext(), MaintenanceUserActivity::class.java)
-                    } else null
-                }
-                R.id.nav_profile -> {
-                    if (activity !is ProfileActivity) {
-                        Intent(requireContext(), ProfileActivity::class.java)
-                    } else null
-                }
-                else -> null
-            }
-
-            intent?.let {
-                // Add flags to clear the back stack
-                it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(it)
-            }
         }
     }
 

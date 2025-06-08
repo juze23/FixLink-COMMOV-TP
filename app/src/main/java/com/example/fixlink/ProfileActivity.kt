@@ -17,6 +17,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import androidx.fragment.app.commit
 
 class ProfileActivity : AppCompatActivity() {
 
@@ -25,6 +26,7 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var nameTextView: TextView
     private lateinit var emailTextView: TextView
     private lateinit var phoneTextView: TextView
+    private var isFromAdmin: Boolean = false
 
     private val userRepository = UserRepository()
     private var currentUser: User? = null
@@ -39,19 +41,25 @@ class ProfileActivity : AppCompatActivity() {
             insets
         }
 
-        val topAppBarFragment = TopAppBarFragment()
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.topAppBarFragmentContainer, topAppBarFragment)
-            .commit()
+        // Check if coming from admin
+        isFromAdmin = intent.getBooleanExtra("FROM_ADMIN", false)
 
-        // Add appropriate bottom navigation based on user type
-        CoroutineScope(Dispatchers.Main).launch {
-            val bottomNavFragment = withContext(Dispatchers.IO) {
-                NavigationUtils.getBottomNavigationFragment()
-            }
+        // Add fragments
+        if (savedInstanceState == null) {
+            val topAppBarFragment = TopAppBarFragment()
             supportFragmentManager.beginTransaction()
-                .replace(R.id.bottomNavigationContainer, bottomNavFragment)
+                .replace(R.id.topAppBarFragmentContainer, topAppBarFragment)
                 .commit()
+
+            // Add appropriate bottom navigation based on user type
+            CoroutineScope(Dispatchers.Main).launch {
+                val bottomNavFragment = withContext(Dispatchers.IO) {
+                    NavigationUtils.getBottomNavigationFragment()
+                }
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.bottomNavigationContainer, bottomNavFragment)
+                    .commit()
+            }
         }
 
         initializeViews()
@@ -144,5 +152,11 @@ class ProfileActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         loadUserData()
+        
+        // Show back button only if coming from admin
+        if (isFromAdmin) {
+            val topAppBarFragment = supportFragmentManager.findFragmentById(R.id.topAppBarFragmentContainer) as? TopAppBarFragment
+            topAppBarFragment?.showBackButton()
+        }
     }
 }

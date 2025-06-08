@@ -20,7 +20,13 @@ class TopAppBarFragment : Fragment() {
         backButton = view.findViewById(R.id.backButton)
         
         backButton.setOnClickListener {
-            activity?.supportFragmentManager?.popBackStack()
+            // If we're in a fragment that's part of a back stack, pop it
+            if (parentFragmentManager.backStackEntryCount > 0) {
+                parentFragmentManager.popBackStack()
+            } else {
+                // Otherwise, finish the activity
+                activity?.finish()
+            }
         }
         
         return view
