@@ -71,7 +71,6 @@ class MaintenanceContentFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         
         val filterIcon: ImageView = view.findViewById(R.id.filterIcon)
-        val fabAddMaintenance: FloatingActionButton = view.findViewById(R.id.fab_add_maintenance)
         maintenanceRecyclerView = view.findViewById(R.id.maintenanceRecyclerView)
         searchEditText = view.findViewById(R.id.searchEditText)
         loadingProgressBar = view.findViewById(R.id.loadingProgressBar)
@@ -79,18 +78,6 @@ class MaintenanceContentFragment : Fragment() {
 
         filterIcon.setOnClickListener {
             MaintenanceFilterDialogFragment().show(childFragmentManager, MaintenanceFilterDialogFragment.TAG)
-        }
-
-        fabAddMaintenance.setOnClickListener {
-            Log.d(TAG, "FAB clicked, attempting to launch RegisterMaintenanceActivity")
-            try {
-                val intent = Intent(requireContext(), RegisterMaintenanceActivity::class.java)
-                startActivity(intent)
-                Log.d(TAG, "Successfully launched RegisterMaintenanceActivity")
-            } catch (e: Exception) {
-                Log.e(TAG, "Error launching RegisterMaintenanceActivity", e)
-                Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
         }
 
         // Setup RecyclerView
