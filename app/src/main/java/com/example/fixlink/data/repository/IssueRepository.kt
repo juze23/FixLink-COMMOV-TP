@@ -242,4 +242,33 @@ class IssueRepository {
             Result.failure(e)
         }
     }
+
+    suspend fun changeIssueStatus(issueId: String, newStatus: String): Result<Unit> = withContext(Dispatchers.IO) {
+        try {
+            // First get the current issue to update
+            val currentIssue = getIssueById(issueId).getOrNull() ?: return@withContext Result.failure(Exception("Issue not found"))
+            
+            // Get all states to find the correct state_id
+            val statesResult = StateIssueRepository().getIssueStates()
+            if (statesResult.isFailure) {
+                return@withContext Result.failure(Exception("Failed to get issue states"))
+            }
+            
+            val states = statesResult.getOrNull() ?: return@withContext Result.failure(Exception("No issue states found"))
+            val newState = states.find { it.state.lowercase() == newStatus.lowercase() }
+            
+            if (newState == null) {
+                return@withContext Result.failure(Exception("Invalid state: $newStatus"))
+            }
+            
+            // Create updated issue with new state
+            val updatedIssue = currentIssue.copy(state_id = newState.state_id)
+            
+            // Update the issue using the existing updateIssue method
+            updateIssue(updatedIssue).map { Unit }
+        } catch (e: Exception) {
+            Log.e("IssueRepository", "Error changing issue status: ", e)
+            Result.failure(e)
+        }
+    }
 }

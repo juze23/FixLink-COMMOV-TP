@@ -6,7 +6,9 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.fixlink.data.repository.IssueRepository
+import com.example.fixlink.data.repository.MaintenanceRepository
 import com.example.fixlink.data.repository.StateIssueRepository
+import com.example.fixlink.data.repository.StateMaintenanceRepository
 import com.example.fixlink.data.repository.UserRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,9 +19,13 @@ class ReportActivity : AppCompatActivity() {
     private lateinit var reportEditText: EditText
     private lateinit var sendReportButton: Button
     private val issueRepository = IssueRepository()
+    private val maintenanceRepository = MaintenanceRepository()
     private val stateIssueRepository = StateIssueRepository()
+    private val stateMaintenanceRepository = StateMaintenanceRepository()
     private val userRepository = UserRepository()
     private var issueId: String? = null
+    private var maintenanceId: String? = null
+    private var isMaintenance: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +38,12 @@ class ReportActivity : AppCompatActivity() {
                 .commit()
 
             supportFragmentManager.beginTransaction()
-                .replace(R.id.bottomNavigationContainer, BottomNavigationAdminFragment())
+                .replace(R.id.bottomNavigationContainer, BottomNavigationAdminFragment().apply {
+                    arguments = Bundle().apply {
+                        // Set the selected item based on whether this is for maintenance or issue
+                        putInt("selected_item", if (isMaintenance) R.id.nav_maintenance else R.id.nav_issues)
+                    }
+                })
                 .commit()
         }
 
@@ -56,9 +67,13 @@ class ReportActivity : AppCompatActivity() {
     }
 
     private fun loadData() {
+        // Get IDs from intent
         issueId = intent.getStringExtra("ISSUE_ID")
-        if (issueId == null) {
-            Toast.makeText(this, "Error: Issue ID not provided", Toast.LENGTH_SHORT).show()
+        maintenanceId = intent.getStringExtra("MAINTENANCE_ID")
+        isMaintenance = maintenanceId != null
+
+        if (issueId == null && maintenanceId == null) {
+            Toast.makeText(this, "Error: No task ID provided", Toast.LENGTH_SHORT).show()
             finish()
             return
         }
@@ -68,8 +83,17 @@ class ReportActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.Main).launch {
             try {
                 withContext(Dispatchers.IO) {
-                    issueId?.let { id ->
-                        issueRepository.updateIssueReport(id, report)
+                    if (isMaintenance) {
+                        maintenanceId?.let { id ->
+                            maintenanceRepository.updateMaintenanceReport(id, report)
+                            // No need to call changeMaintenanceStatus since updateMaintenanceReport already sets status to completed
+                        }
+                    } else {
+                        issueId?.let { id ->
+                            issueRepository.updateIssueReport(id, report)
+                            // Update status to resolved
+                            issueRepository.changeIssueStatus(id, "resolved")
+                        }
                     }
                 }
                 Toast.makeText(this@ReportActivity, "Report sent successfully", Toast.LENGTH_SHORT).show()

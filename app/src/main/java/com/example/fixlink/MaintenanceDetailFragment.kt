@@ -34,11 +34,15 @@ import android.util.Log
 import coil.load
 import coil.request.CachePolicy
 import coil.transition.CrossfadeTransition
+import android.content.Intent
+import android.app.Activity
+import android.widget.Button
 
 class MaintenanceDetailFragment : Fragment() {
     companion object {
         private const val TAG = "MaintenanceDetailFragment"
         private const val ARG_MAINTENANCE_ID = "maintenance_id"
+        private const val REQUEST_ASSIGN_TECHNICIAN = 1001
 
         /**
          * Use this factory method to create a new instance of
@@ -63,6 +67,7 @@ class MaintenanceDetailFragment : Fragment() {
     private lateinit var locationRepository: LocationRepository
     private lateinit var stateMaintenanceRepository: StateMaintenanceRepository
     private lateinit var userRepository: UserRepository
+    private var isAdmin: Boolean = false
 
     // Views
     private lateinit var maintenanceTitle: TextView
@@ -77,11 +82,39 @@ class MaintenanceDetailFragment : Fragment() {
     private lateinit var equipmentChip: TextView
     private lateinit var loadingProgressBar: View
     private lateinit var contentScrollView: View
+    private lateinit var startTaskButton: Button
+    private lateinit var endTaskButton: Button
+    private lateinit var assignTechnicianButton: Button
+    private lateinit var viewReportButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             maintenanceId = it.getString(ARG_MAINTENANCE_ID)
+        }
+
+        // Initialize repositories
+        maintenanceRepository = MaintenanceRepository()
+        priorityRepository = PriorityRepository()
+        equipmentRepository = EquipmentRepository()
+        locationRepository = LocationRepository()
+        stateMaintenanceRepository = StateMaintenanceRepository()
+        userRepository = UserRepository()
+
+        // Get current user role
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val userResult = userRepository.getCurrentUser()
+                if (userResult.isSuccess) {
+                    val user = userResult.getOrNull()
+                    isAdmin = user?.typeId == 3  // 3 is the typeId for admin
+                    Log.d(TAG, "User typeId: ${user?.typeId}, isAdmin: $isAdmin")
+                } else {
+                    Log.e(TAG, "Failed to get current user: ${userResult.exceptionOrNull()}")
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error getting user role", e)
+            }
         }
     }
 
@@ -92,14 +125,6 @@ class MaintenanceDetailFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_maintenance_detail, container, false)
         
-        // Initialize repositories
-        maintenanceRepository = MaintenanceRepository()
-        priorityRepository = PriorityRepository()
-        equipmentRepository = EquipmentRepository()
-        locationRepository = LocationRepository()
-        stateMaintenanceRepository = StateMaintenanceRepository()
-        userRepository = UserRepository()
-
         // Initialize views
         initializeViews(view)
         
@@ -127,6 +152,12 @@ class MaintenanceDetailFragment : Fragment() {
         topAppBarFragment?.hideBackButton()
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Reload data when returning from ReportActivity
+        loadMaintenanceData()
+    }
+
     private fun initializeViews(view: View) {
         maintenanceTitle = view.findViewById(R.id.maintenanceTitle)
         maintenanceCreator = view.findViewById(R.id.maintenanceCreator)
@@ -140,6 +171,25 @@ class MaintenanceDetailFragment : Fragment() {
         equipmentChip = view.findViewById(R.id.equipmentChip)
         loadingProgressBar = view.findViewById(R.id.loadingProgressBar)
         contentScrollView = view.findViewById(R.id.contentScrollView)
+        startTaskButton = view.findViewById(R.id.startTaskButton)
+        endTaskButton = view.findViewById(R.id.endTaskButton)
+        assignTechnicianButton = view.findViewById(R.id.assignTechnicianButton)
+        viewReportButton = view.findViewById(R.id.viewReportButton)
+
+        // Set click listener for assign technician button
+        assignTechnicianButton.setOnClickListener {
+            val intent = Intent(requireContext(), ChooseTechnicianActivity::class.java)
+            intent.putExtra("MAINTENANCE_ID", maintenanceId)
+            startActivityForResult(intent, REQUEST_ASSIGN_TECHNICIAN)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_ASSIGN_TECHNICIAN && resultCode == Activity.RESULT_OK) {
+            // Refresh maintenance data after technician assignment
+            loadMaintenanceData()
+        }
     }
 
     private fun showLoading(show: Boolean) {
@@ -256,6 +306,76 @@ class MaintenanceDetailFragment : Fragment() {
         equipmentChip.text = equipmentState
         setChipColor(equipmentChip, getEquipmentColor(equipmentState))
 
+        // Log the current status and admin state for debugging
+        Log.d(TAG, "Current status: $statusText, isAdmin: $isAdmin")
+
+        // Show/hide buttons based on status and user role
+        when (statusText.lowercase()) {
+            "pending" -> {
+                // Only show assign technician button for admin users
+                val shouldShowAssignButton = isAdmin
+                Log.d(TAG, "Pending status - should show assign button: $shouldShowAssignButton")
+                assignTechnicianButton.visibility = if (shouldShowAssignButton) View.VISIBLE else View.GONE
+                startTaskButton.visibility = View.GONE
+                endTaskButton.visibility = View.GONE
+                viewReportButton.visibility = View.GONE
+            }
+            "assigned", "atribuído", "atribuido" -> {
+                assignTechnicianButton.visibility = View.GONE
+                startTaskButton.visibility = View.VISIBLE
+                endTaskButton.visibility = View.GONE
+                viewReportButton.visibility = View.GONE
+            }
+            "ongoing", "em curso", "em reparacao" -> {
+                assignTechnicianButton.visibility = View.GONE
+                startTaskButton.visibility = View.GONE
+                endTaskButton.visibility = View.VISIBLE
+                viewReportButton.visibility = View.GONE
+            }
+            "completed", "concluído", "concluido" -> {
+                assignTechnicianButton.visibility = View.GONE
+                startTaskButton.visibility = View.GONE
+                endTaskButton.visibility = View.GONE
+                // Show View Report button only for admin and completed maintenance
+                viewReportButton.visibility = if (isAdmin) View.VISIBLE else View.GONE
+            }
+            else -> {
+                assignTechnicianButton.visibility = View.GONE
+                startTaskButton.visibility = View.GONE
+                endTaskButton.visibility = View.GONE
+                viewReportButton.visibility = View.GONE
+            }
+        }
+
+        startTaskButton.setOnClickListener {
+            showChangeStatusDialog(
+                title = "Change Status to Ongoing",
+                message = "Are you sure you want to change the status of this task to Ongoing? You won't be able to undo it afterwards.",
+                onConfirm = {
+                    changeMaintenanceStatus(maintenance, states, "ongoing")
+                }
+            )
+        }
+
+        endTaskButton.setOnClickListener {
+            android.app.AlertDialog.Builder(requireContext())
+                .setTitle("Finish Task")
+                .setMessage("Are you sure you want to send this report and finish this task?")
+                .setPositiveButton("Send Report") { _, _ ->
+                    val intent = Intent(requireContext(), ReportActivity::class.java)
+                    intent.putExtra("MAINTENANCE_ID", maintenance.maintenance_id)
+                    startActivity(intent)
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+        }
+
+        viewReportButton.setOnClickListener {
+            val intent = Intent(requireContext(), ViewReportActivity::class.java)
+            intent.putExtra("MAINTENANCE_ID", maintenance.maintenance_id)
+            startActivity(intent)
+        }
+
         // Load maintenance image
         try {
             CoroutineScope(Dispatchers.IO).launch {
@@ -318,5 +438,36 @@ class MaintenanceDetailFragment : Fragment() {
         drawable.cornerRadius = 32f
         drawable.setColor(color)
         chip.background = drawable
+    }
+
+    private fun showChangeStatusDialog(title: String, message: String, onConfirm: () -> Unit) {
+        android.app.AlertDialog.Builder(requireContext())
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton("Confirm") { _, _ -> onConfirm() }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun changeMaintenanceStatus(maintenance: Maintenance, states: List<State_maintenance>, newStatus: String, report: String? = null) {
+        val newState = states.find { it.state.equals(newStatus, true) }
+        if (newState == null) {
+            Toast.makeText(requireContext(), "Invalid state.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        showLoading(true)
+        CoroutineScope(Dispatchers.IO).launch {
+            val updatedMaintenance = maintenance.copy(state_id = newState.state_id, report = report ?: maintenance.report)
+            val result = maintenanceRepository.updateMaintenance(updatedMaintenance)
+            withContext(Dispatchers.Main) {
+                showLoading(false)
+                if (result.isSuccess) {
+                    Toast.makeText(requireContext(), "Status updated successfully!", Toast.LENGTH_SHORT).show()
+                    loadMaintenanceData()
+                } else {
+                    Toast.makeText(requireContext(), "Failed to update status.", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 }

@@ -188,33 +188,92 @@
                         android:layout_marginBottom="8dp">
 
                         <TextView
-                            android:id="@+id/statusChip"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Status"
-                            android:padding="8dp"
-                            android:layout_marginEnd="8dp"
-                            android:textColor="@android:color/black"
-                            android:textStyle="bold"/>
-
-                        <TextView
                             android:id="@+id/priorityChip"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Priority"
-                            android:padding="8dp"
-                            android:layout_marginEnd="8dp"
-                            android:textColor="@android:color/black"
-                            android:textStyle="bold"/>
+                            android:textColor="@color/black"
+                            android:paddingLeft="12dp"
+                            android:paddingRight="12dp"
+                            android:paddingTop="4dp"
+                            android:paddingBottom="4dp"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="8dp"/>
+
+                        <TextView
+                            android:id="@+id/statusChip"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Status"
+                            android:textColor="@color/black"
+                            android:paddingLeft="12dp"
+                            android:paddingRight="12dp"
+                            android:paddingTop="4dp"
+                            android:paddingBottom="4dp"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="8dp"/>
 
                         <TextView
                             android:id="@+id/equipmentChip"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Equipment"
-                            android:padding="8dp"
-                            android:textColor="@android:color/black"
-                            android:textStyle="bold"/>
+                            android:textColor="@color/black"
+                            android:paddingLeft="12dp"
+                            android:paddingRight="12dp"
+                            android:paddingTop="4dp"
+                            android:paddingBottom="4dp"
+                            android:textSize="12sp"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/actionButtonsLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center_horizontal"
+                        android:layout_marginTop="16dp">
+
+                        <Button
+                            android:id="@+id/startTaskButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Start Task"
+                            android:visibility="gone"
+                            android:backgroundTint="@color/purple_primary"
+                            android:textColor="@android:color/white"
+                            android:layout_marginBottom="8dp"/>
+
+                        <Button
+                            android:id="@+id/endTaskButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="End Task"
+                            android:visibility="gone"
+                            android:backgroundTint="@color/purple_primary"
+                            android:textColor="@android:color/white"
+                            android:layout_marginBottom="8dp"/>
+
+                        <Button
+                            android:id="@+id/assignTechnicianButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Assign Technician"
+                            android:visibility="gone"
+                            android:backgroundTint="@color/purple_primary"
+                            android:textColor="@android:color/white"
+                            android:layout_marginBottom="8dp"/>
+
+                        <Button
+                            android:id="@+id/viewReportButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="View Report"
+                            android:visibility="gone"
+                            android:backgroundTint="@color/purple_primary"
+                            android:textColor="@android:color/white"/>
+
                     </LinearLayout>
 
                 </LinearLayout>

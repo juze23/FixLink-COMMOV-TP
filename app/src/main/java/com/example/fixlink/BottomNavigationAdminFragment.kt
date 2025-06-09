@@ -46,6 +46,8 @@ class BottomNavigationAdminFragment : Fragment() {
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
+            // Get selected item from arguments if provided
+            selectedItemId = it.getInt("selected_item", R.id.nav_dashboard)
         }
     }
 
@@ -76,16 +78,7 @@ class BottomNavigationAdminFragment : Fragment() {
         textMaintenance = view.findViewById(R.id.text_maintenance)
         textAdmin = view.findViewById(R.id.text_admin)
 
-        // Set initial selected item based on current activity and intent
-        selectedItemId = when {
-            activity is DashboardActivity -> R.id.nav_dashboard
-            activity is IssuesUserActivity -> R.id.nav_issues
-            activity is MaintenanceUserActivity -> R.id.nav_maintenance
-            activity is AdminActivity -> R.id.nav_admin
-            activity is ProfileActivity && activity?.intent?.getBooleanExtra("FROM_ADMIN", false) == true -> R.id.nav_admin
-            activity is ViewReportActivity -> R.id.nav_issues
-            else -> R.id.nav_dashboard
-        }
+        // Update colors based on selected item
         updateColors(selectedItemId)
 
         // Set click listeners

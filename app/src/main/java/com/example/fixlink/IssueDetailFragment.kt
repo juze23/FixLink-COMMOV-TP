@@ -139,6 +139,12 @@ class IssueDetailFragment : Fragment() {
         topAppBarFragment?.hideBackButton()
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Reload data when returning from ReportActivity
+        loadIssueData()
+    }
+
     private fun initializeViews(view: View) {
         issueTitle = view.findViewById(R.id.issueTitle)
         issueReporter = view.findViewById(R.id.issueReporter)
@@ -323,16 +329,39 @@ class IssueDetailFragment : Fragment() {
             Toast.makeText(requireContext(), "Error loading image", Toast.LENGTH_SHORT).show()
         }
 
-        // Lógica para mostrar/esconder botões e campo de relatório
-        if (statusText.equals("assigned", true) || statusText.equals("atribuído", true) || statusText.equals("atribuido", true)) {
-            startTaskButton.visibility = View.VISIBLE
-            endTaskButton.visibility = View.GONE
-        } else if (statusText.equals("under repair", true) || statusText.equals("em andamento", true) || statusText.equals("em reparacao", true)) {
-            startTaskButton.visibility = View.GONE
-            endTaskButton.visibility = View.VISIBLE
-        } else {
-            startTaskButton.visibility = View.GONE
-            endTaskButton.visibility = View.GONE
+        // Show/hide buttons based on status and user role
+        when (statusText.lowercase()) {
+            "pending" -> {
+                assignTechnicianButton.visibility = if (isAdmin && issue.id_technician == null) View.VISIBLE else View.GONE
+                startTaskButton.visibility = View.GONE
+                endTaskButton.visibility = View.GONE
+                viewReportButton.visibility = View.GONE
+            }
+            "assigned", "atribuído", "atribuido" -> {
+                assignTechnicianButton.visibility = View.GONE
+                startTaskButton.visibility = View.VISIBLE
+                endTaskButton.visibility = View.GONE
+                viewReportButton.visibility = View.GONE
+            }
+            "ongoing", "em curso", "em reparacao" -> {
+                assignTechnicianButton.visibility = View.GONE
+                startTaskButton.visibility = View.GONE
+                endTaskButton.visibility = View.VISIBLE
+                viewReportButton.visibility = View.GONE
+            }
+            "resolved", "resolvido" -> {
+                assignTechnicianButton.visibility = View.GONE
+                startTaskButton.visibility = View.GONE
+                endTaskButton.visibility = View.GONE
+                // Show View Report button only for admin and resolved issues
+                viewReportButton.visibility = if (isAdmin) View.VISIBLE else View.GONE
+            }
+            else -> {
+                assignTechnicianButton.visibility = View.GONE
+                startTaskButton.visibility = View.GONE
+                endTaskButton.visibility = View.GONE
+                viewReportButton.visibility = View.GONE
+            }
         }
 
         startTaskButton.setOnClickListener {
@@ -357,8 +386,6 @@ class IssueDetailFragment : Fragment() {
                 .show()
         }
 
-        // Show View Report button only for admin
-        viewReportButton.visibility = if (isAdmin) View.VISIBLE else View.GONE
         viewReportButton.setOnClickListener {
             val intent = Intent(requireContext(), ViewReportActivity::class.java)
             intent.putExtra("ISSUE_ID", issue.issue_id)

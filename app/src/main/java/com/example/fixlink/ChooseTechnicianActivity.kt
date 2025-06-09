@@ -9,6 +9,7 @@ import androidx.fragment.app.commit
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.fixlink.data.entities.User
 import com.example.fixlink.data.repository.IssueRepository
+import com.example.fixlink.data.repository.MaintenanceRepository
 import com.example.fixlink.data.repository.UserRepository
 import com.example.fixlink.databinding.ActivityChooseTechnicianBinding
 import kotlinx.coroutines.CoroutineScope
@@ -20,8 +21,11 @@ class ChooseTechnicianActivity : AppCompatActivity() {
     private lateinit var binding: ActivityChooseTechnicianBinding
     private lateinit var userRepository: UserRepository
     private lateinit var issueRepository: IssueRepository
+    private lateinit var maintenanceRepository: MaintenanceRepository
     private lateinit var adapter: TechnicianAdapter
     private var issueId: String? = null
+    private var maintenanceId: String? = null
+    private var isMaintenance: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,10 +40,15 @@ class ChooseTechnicianActivity : AppCompatActivity() {
             }
         }
 
-        // Get issue ID from intent
+        // Get ID from intent
         issueId = intent.getStringExtra("ISSUE_ID")
-        if (issueId == null) {
-            Toast.makeText(this, "Error: Issue ID not provided", Toast.LENGTH_SHORT).show()
+        maintenanceId = intent.getStringExtra("MAINTENANCE_ID")
+        
+        // Determine if this is for maintenance or issue
+        isMaintenance = maintenanceId != null
+        
+        if (issueId == null && maintenanceId == null) {
+            Toast.makeText(this, "Error: No task ID provided", Toast.LENGTH_SHORT).show()
             finish()
             return
         }
@@ -47,6 +56,7 @@ class ChooseTechnicianActivity : AppCompatActivity() {
         // Initialize repositories
         userRepository = UserRepository()
         issueRepository = IssueRepository()
+        maintenanceRepository = MaintenanceRepository()
 
         // Set up RecyclerView
         binding.techniciansRecyclerView.layoutManager = LinearLayoutManager(this)
@@ -55,10 +65,16 @@ class ChooseTechnicianActivity : AppCompatActivity() {
         }
         binding.techniciansRecyclerView.adapter = adapter
 
-        // Add bottom navigation fragment
+        // Add bottom navigation fragment with the correct selected item
         if (savedInstanceState == null) {
+            val bottomNavFragment = BottomNavigationAdminFragment().apply {
+                arguments = Bundle().apply {
+                    // Set the selected item based on whether this is for maintenance or issue
+                    putInt("selected_item", if (isMaintenance) R.id.nav_maintenance else R.id.nav_issues)
+                }
+            }
             supportFragmentManager.commit {
-                replace(R.id.bottomNavigationContainer, BottomNavigationAdminFragment())
+                replace(R.id.bottomNavigationContainer, bottomNavFragment)
             }
         }
 
@@ -107,10 +123,15 @@ class ChooseTechnicianActivity : AppCompatActivity() {
 
     private fun assignTechnician(technician: User) {
         showLoading(true)
-        val currentIssueId = issueId ?: return
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val result = issueRepository.assignTechnicianToIssue(currentIssueId, technician.user_id)
+                val result = if (isMaintenance) {
+                    val currentMaintenanceId = maintenanceId ?: return@launch
+                    maintenanceRepository.assignTechnicianToMaintenance(currentMaintenanceId, technician.user_id)
+                } else {
+                    val currentIssueId = issueId ?: return@launch
+                    issueRepository.assignTechnicianToIssue(currentIssueId, technician.user_id)
+                }
                 
                 withContext(Dispatchers.Main) {
                     showLoading(false)

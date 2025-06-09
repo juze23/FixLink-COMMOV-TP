@@ -38,6 +38,12 @@ class MaintenanceUserActivity : AppCompatActivity() {
                 val bottomNavFragment = withContext(Dispatchers.IO) {
                     NavigationUtils.getBottomNavigationFragment()
                 }
+                // Set the selected item to maintenance
+                if (bottomNavFragment is BottomNavigationAdminFragment) {
+                    bottomNavFragment.arguments = Bundle().apply {
+                        putInt("selected_item", R.id.nav_maintenance)
+                    }
+                }
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.bottomNavigationContainer, bottomNavFragment)
                     .commit()
