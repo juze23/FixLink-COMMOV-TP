@@ -73,7 +73,7 @@ class ViewAllListFragment : Fragment() {
 
                 val technicians = usersResult.getOrNull()?.filter { it.typeId == 2 } ?: emptyList()
                 withContext(Dispatchers.Main) {
-                    populateList(technicians.map { it.name })
+                    populateList(technicians.map { "${it.firstname} ${it.lastname}" })
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {

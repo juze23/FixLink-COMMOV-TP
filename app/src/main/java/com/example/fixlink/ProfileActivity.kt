@@ -104,7 +104,7 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun updateUI(user: User) {
-        nameTextView.text = user.name
+        nameTextView.text = if (user.lastname.isNullOrEmpty()) user.firstname else "${user.firstname} ${user.lastname}"
         emailTextView.text = user.email
         phoneTextView.text = user.phoneNumber ?: "Not set"
         // TODO: Load profile image if available
@@ -113,7 +113,7 @@ class ProfileActivity : AppCompatActivity() {
     private fun navigateToEditProfile() {
         val intent = Intent(this, EditProfileActivity::class.java).apply {
             putExtra("USER_ID", currentUser?.user_id)
-            putExtra("USER_NAME", currentUser?.name)
+            putExtra("USER_NAME", if (currentUser?.lastname.isNullOrEmpty()) currentUser?.firstname else "${currentUser?.firstname} ${currentUser?.lastname}")
             putExtra("USER_EMAIL", currentUser?.email)
             putExtra("USER_PHONE", currentUser?.phoneNumber)
         }

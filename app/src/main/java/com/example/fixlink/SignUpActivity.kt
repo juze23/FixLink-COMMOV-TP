@@ -21,6 +21,8 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var phoneInput: EditText
     private lateinit var passwordInput: EditText
     private lateinit var confirmPasswordInput: EditText
+    private lateinit var firstnameInput: EditText
+    private lateinit var lastnameInput: EditText
     private lateinit var signUpButton: Button
     private lateinit var loginLink: TextView
     private val userRepository = UserRepository()
@@ -44,6 +46,8 @@ class SignUpActivity : AppCompatActivity() {
         phoneInput = findViewById(R.id.phone_input)
         passwordInput = findViewById(R.id.password_input)
         confirmPasswordInput = findViewById(R.id.confirm_password_input)
+        firstnameInput = findViewById(R.id.firstname_input)
+        lastnameInput = findViewById(R.id.lastname_input)
         signUpButton = findViewById(R.id.signup_button)
         loginLink = findViewById(R.id.login_link)
     }
@@ -69,6 +73,18 @@ class SignUpActivity : AppCompatActivity() {
         val phone = phoneInput.text.toString().trim()
         val password = passwordInput.text.toString()
         val confirmPassword = confirmPasswordInput.text.toString()
+        val firstname = firstnameInput.text.toString().trim()
+        val lastname = lastnameInput.text.toString().trim()
+
+        if (firstname.isEmpty()) {
+            firstnameInput.error = "First name is required"
+            return false
+        }
+
+        if (lastname.isEmpty()) {
+            lastnameInput.error = "Last name is required"
+            return false
+        }
 
         if (email.isEmpty()) {
             emailInput.error = "Email is required"
@@ -97,9 +113,11 @@ class SignUpActivity : AppCompatActivity() {
         val email = emailInput.text.toString().trim()
         val phone = phoneInput.text.toString().trim()
         val password = passwordInput.text.toString()
+        val firstname = firstnameInput.text.toString().trim()
+        val lastname = lastnameInput.text.toString().trim()
 
         try {
-            val result = userRepository.signUp(email, password, phone, 1)
+            val result = userRepository.signUp(email, password, phone, 1, firstname, lastname)
             result.fold(
                 onSuccess = {
                     withContext(Dispatchers.Main) {

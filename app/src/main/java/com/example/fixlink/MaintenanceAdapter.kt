@@ -64,6 +64,7 @@ class MaintenanceAdapter(private val maintenances: List<Maintenance>) : Recycler
         private val statusChip: TextView = itemView.findViewById(R.id.statusChip)
         private val equipmentChip: TextView = itemView.findViewById(R.id.equipmentChip)
         private val locationTextView: TextView = itemView.findViewById(R.id.locationTextView)
+        private val technicianTextView: TextView = itemView.findViewById(R.id.technicianTextView)
 
         private fun setChipColor(chip: TextView, color: Int) {
             val drawable = GradientDrawable()
@@ -80,9 +81,24 @@ class MaintenanceAdapter(private val maintenances: List<Maintenance>) : Recycler
             states: List<State_maintenance>,
             users: List<User>
         ) {
-            titleTextView.text = maintenance.title ?: "(Sem título)"
-            val userName = users.find { it.user_id == maintenance.id_user }?.name ?: maintenance.id_user
-            creatorTextView.text = "Utilizador: $userName"
+            titleTextView.text = maintenance.title ?: "(No title)"
+            
+            // Set creator name
+            val creator = users.find { it.user_id == maintenance.id_user }
+            val creatorName = if (creator != null) {
+                if (creator.lastname.isNullOrEmpty()) creator.firstname else "${creator.firstname} ${creator.lastname}"
+            } else maintenance.id_user
+            creatorTextView.text = "Creator: $creatorName"
+
+            // Set technician name if assigned
+            val technician = if (maintenance.id_technician != null) {
+                users.find { it.user_id == maintenance.id_technician }
+            } else null
+            val technicianName = if (technician != null) {
+                if (technician.lastname.isNullOrEmpty()) technician.firstname else "${technician.firstname} ${technician.lastname}"
+            } else "Not assigned"
+            technicianTextView.text = "Technician: $technicianName"
+
             val priorityText = priorities.find { it.priority_id == maintenance.priority_id }?.priority ?: maintenance.priority_id.toString()
             val statusText = states.find { it.state_id == maintenance.state_id }?.state ?: maintenance.state_id.toString()
             val equipment = equipments.find { it.equipment_id == maintenance.id_equipment }

@@ -92,9 +92,12 @@ class IssueAdapter(private val issues: List<Issue>) : RecyclerView.Adapter<Issue
             states: List<Issue_state>,
             users: List<User>
         ) {
-            titleTextView.text = issue.title ?: "(Sem título)"
-            val userName = users.find { it.user_id == issue.id_user }?.name ?: issue.id_user
-            reporterTextView.text = "Utilizador: $userName"
+            titleTextView.text = issue.title ?: "(No title)"
+            val user = users.find { it.user_id == issue.id_user }
+            val userName = if (user != null) {
+                if (user.lastname.isNullOrEmpty()) user.firstname else "${user.firstname} ${user.lastname}"
+            } else issue.id_user
+            reporterTextView.text = "Reporter: $userName"
             val priorityText = priorities.find { it.priority_id == issue.priority_id }?.priority ?: issue.priority_id.toString()
             val statusText = states.find { it.state_id == issue.state_id }?.state ?: issue.state_id.toString()
             val equipment = equipments.find { it.equipment_id == issue.id_equipment }

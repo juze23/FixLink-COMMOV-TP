@@ -32,7 +32,7 @@ class TechnicianAdapter(
 
         fun bind(technician: User) {
             binding.apply {
-                technicianNameTextView.text = technician.name
+                technicianNameTextView.text = if (technician.lastname.isNullOrEmpty()) technician.firstname else "${technician.firstname} ${technician.lastname}"
                 root.setOnClickListener { onTechnicianClick(technician) }
             }
         }

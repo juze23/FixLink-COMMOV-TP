@@ -31,21 +31,39 @@
             android:orientation="vertical"
             android:padding="16dp" >
 
-            <!-- Name Input -->
+            <!-- First Name Input -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Name"
+                android:text="First Name"
                 android:textSize="14sp"
                 android:textColor="@color/purple_primary"/>
 
             <EditText
-                android:id="@+id/nameEditText"
+                android:id="@+id/firstnameEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:hint="Enter your name"
+                android:hint="Enter your first name"
+                android:padding="12dp"
+                android:background="@drawable/rounded_edittext_background"/>
+
+            <!-- Last Name Input -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Last Name"
+                android:textSize="14sp"
+                android:textColor="@color/purple_primary"/>
+
+            <EditText
+                android:id="@+id/lastnameEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:hint="Enter your last name"
                 android:padding="12dp"
                 android:background="@drawable/rounded_edittext_background"/>
 

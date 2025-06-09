@@ -85,7 +85,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Name"
+                        android:text="Full Name"
                         android:textColor="@color/black"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -106,10 +106,11 @@
                         android:id="@+id/edit_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Luis Fernandes"
+                        android:text="First Last"
                         android:textColor="@color/black"
                         android:textSize="16sp"
-                        android:padding="16dp" />
+                        android:padding="16dp"
+                        android:enabled="false" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 

@@ -120,7 +120,7 @@ class MaintenanceContentFragment : Fragment() {
                 // Search in location name
                 locations.find { it.location_id == maintenance.localization_id }?.name?.lowercase()?.contains(searchQuery) == true ||
                 // Search in user name
-                users.find { it.user_id == maintenance.id_user }?.name?.lowercase()?.contains(searchQuery) == true ||
+                users.find { it.user_id == maintenance.id_user }?.let { "${it.firstname} ${it.lastname}" }?.lowercase()?.contains(searchQuery) == true ||
                 // Search in state
                 states.find { it.state_id == maintenance.state_id }?.state?.lowercase()?.contains(searchQuery) == true ||
                 // Search in priority

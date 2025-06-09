@@ -7,12 +7,24 @@ import com.example.fixlink.supabaseConfig.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.Email
 import io.github.jan.supabase.postgrest.postgrest
+import io.github.jan.supabase.postgrest.from
+import io.github.jan.supabase.postgrest.query.Order
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import kotlinx.coroutines.Dispatchers
+import android.util.Log
+import kotlinx.coroutines.withContext
 
 class UserRepository {
-    suspend fun signUp(email: String, password: String, phone: String, typeId: Int): Result<User> {
+    suspend fun signUp(
+        email: String,
+        password: String,
+        phone: String,
+        typeId: Int,
+        firstname: String,
+        lastname: String
+    ): Result<User> {
         return try {
             //creates the user in supabase auth
             val response = SupabaseClient.supabase.auth.signUpWith(Email) {
@@ -30,10 +42,10 @@ class UserRepository {
             //creates user record in the database
             val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
             val currentTime = dateFormat.format(Date())
-            val username = email.split("@")[0] // Get username from email prefix
             val user = User(
                 user_id = userId,
-                name = username,
+                firstname = firstname,
+                lastname = lastname,
                 email = email,
                 phoneNumber = phone,
                 typeId = typeId, // Use provided typeId (2 for technician, 3 for admin)
@@ -53,27 +65,43 @@ class UserRepository {
     suspend fun logIn(email: String, password: String): Result<User> {
         return try {
             // Authenticate user with Supabase
-            val response = SupabaseClient.supabase.auth.signInWith(Email) {
-                this.email = email
-                this.password = password
+            val response = try {
+                val authResponse = SupabaseClient.supabase.auth.signInWith(Email) {
+                    this.email = email
+                    this.password = password
+                }
+                authResponse
+            } catch (e: Exception) {
+                throw e
             }
 
             if (response == null) {
                 throw Exception("Failed to authenticate user")
             }
-
+            
             // Get the user ID from auth response
-            val currentUser = SupabaseClient.supabase.auth.currentUserOrNull()
+            val currentUser = try {
+                val user = SupabaseClient.supabase.auth.currentUserOrNull()
+                user
+            } catch (e: Exception) {
+                throw e
+            }
+            
             val userId = currentUser?.id ?: throw Exception("No authenticated user found")
 
             // Fetch user data from the database
-            val user = SupabaseClient.supabase.postgrest["User"]
-                .select {
-                    filter {
-                        eq("user_id", userId)
+            val user = try {
+                val userData = SupabaseClient.supabase.postgrest["User"]
+                    .select {
+                        filter {
+                            eq("user_id", userId)
+                        }
                     }
-                }
-                .decodeSingle<User>()
+                    .decodeSingle<User>()
+                userData
+            } catch (e: Exception) {
+                throw e
+            }
 
             Result.success(user)
         } catch (e: Exception) {
@@ -113,32 +141,44 @@ class UserRepository {
 
     suspend fun updateUserProfile(
         userId: String,
-        name: String,
+        firstname: String,
+        lastname: String,
         email: String,
-        phoneNumber: String
-    ): Result<User> {
-        return try {
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
-            val currentTime = dateFormat.format(Date())
-            val updatedUser = User(
-                user_id = userId,
-                name = name,
-                email = email,
-                phoneNumber = phoneNumber,
-                createdAt = currentTime, // Keep original creation time
-                updatedAt = currentTime,
-                typeId = 1 // Keep original type
-            )
-
-            SupabaseClient.supabase.postgrest["User"]
-                .update(updatedUser) {
+        phone: String?
+    ): Result<Unit> = withContext(Dispatchers.IO) {
+        try {
+            // First get the current user to keep their creation date and type
+            val currentUser = SupabaseClient.supabase.postgrest["User"]
+                .select {
                     filter {
                         eq("user_id", userId)
                     }
                 }
+                .decodeSingle<User>()
 
-            Result.success(updatedUser)
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+            val currentTime = dateFormat.format(Date())
+
+            val user = User(
+                user_id = userId,
+                email = email,
+                phoneNumber = phone,
+                typeId = currentUser.typeId, // Keep original type
+                firstname = firstname,
+                lastname = lastname,
+                createdAt = currentUser.createdAt, // Keep original creation date
+                updatedAt = currentTime
+            )
+
+            SupabaseClient.supabase.postgrest["User"]
+                .update(user) {
+                    filter {
+                        eq("user_id", userId)
+                    }
+                }
+            Result.success(Unit)
         } catch (e: Exception) {
+            Log.e("UserRepository", "Error updating user profile: ", e)
             Result.failure(e)
         }
     }

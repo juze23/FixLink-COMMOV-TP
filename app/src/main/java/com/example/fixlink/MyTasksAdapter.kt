@@ -94,7 +94,8 @@ class MyTasksAdapter(
         ) {
             icon.setImageResource(R.drawable.ic_issues)
             titleTextView.text = issue.title ?: "(Sem título)"
-            val userName = users.find { it.user_id == issue.id_user }?.name ?: issue.id_user
+            val user = users.find { it.user_id == issue.id_user }
+            val userName = if (user != null) "${user.firstname} ${user.lastname}" else issue.id_user
             reporterTextView.text = "Utilizador: $userName"
             val priorityText = priorities.find { it.priority_id == issue.priority_id }?.priority ?: issue.priority_id.toString()
             val statusText = states.find { it.state_id == issue.state_id }?.state ?: issue.state_id.toString()
@@ -157,7 +158,10 @@ class MyTasksAdapter(
         ) {
             icon.setImageResource(R.drawable.ic_maintenance)
             titleTextView.text = maintenance.title ?: "(Sem título)"
-            val userName = users.find { it.user_id == maintenance.id_user }?.name ?: maintenance.id_user
+            val user = users.find { it.user_id == maintenance.id_user }
+            val userName = if (user != null) {
+                if (user.lastname.isNullOrEmpty()) user.firstname else "${user.firstname} ${user.lastname}"
+            } else maintenance.id_user
             creatorTextView.text = "Utilizador: $userName"
             val priorityText = priorities.find { it.priority_id == maintenance.priority_id }?.priority ?: maintenance.priority_id.toString()
             val statusText = states.find { it.state_id == maintenance.state_id }?.state ?: maintenance.state_id.toString()

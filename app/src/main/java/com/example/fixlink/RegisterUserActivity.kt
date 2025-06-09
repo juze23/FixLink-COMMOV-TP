@@ -39,6 +39,8 @@ class RegisterUserActivity : AppCompatActivity() {
     private lateinit var emailInput: EditText
     private lateinit var phoneInput: EditText
     private lateinit var passwordInput: EditText
+    private lateinit var firstnameInput: EditText
+    private lateinit var lastnameInput: EditText
     private lateinit var registerUserButton: Button
 
     // Equipment form views
@@ -74,6 +76,8 @@ class RegisterUserActivity : AppCompatActivity() {
         emailInput = findViewById(R.id.email_input)
         phoneInput = findViewById(R.id.phone_input)
         passwordInput = findViewById(R.id.password_input)
+        firstnameInput = findViewById(R.id.firstname_input)
+        lastnameInput = findViewById(R.id.lastname_input)
         registerUserButton = findViewById(R.id.register_user_button)
         equipmentNameInput = findViewById(R.id.equipment_name_input)
         equipmentLocationSpinner = findViewById(R.id.equipmentLocationSpinner)
@@ -166,10 +170,22 @@ class RegisterUserActivity : AppCompatActivity() {
         val email = emailInput.text.toString().trim()
         val phone = phoneInput.text.toString().trim()
         val password = passwordInput.text.toString().trim()
+        val firstname = firstnameInput.text.toString().trim()
+        val lastname = lastnameInput.text.toString().trim()
         val userTypePosition = userTypeSpinner.selectedItemPosition
 
         if (userTypePosition == 0) {
             Toast.makeText(this, "Please select a user type", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        if (firstname.isEmpty()) {
+            firstnameInput.error = "First name is required"
+            return false
+        }
+
+        if (lastname.isEmpty()) {
+            lastnameInput.error = "Last name is required"
             return false
         }
 
@@ -212,10 +228,12 @@ class RegisterUserActivity : AppCompatActivity() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun registerUser    () {
+    private fun registerUser() {
         val email = emailInput.text.toString().trim()
         val phone = phoneInput.text.toString().trim()
         val password = passwordInput.text.toString().trim()
+        val firstname = firstnameInput.text.toString().trim()
+        val lastname = lastnameInput.text.toString().trim()
         val userTypePosition = userTypeSpinner.selectedItemPosition
         val typeId = when (userTypePosition) {
             1 -> 3 // Admin
@@ -225,7 +243,7 @@ class RegisterUserActivity : AppCompatActivity() {
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val result = userRepository.signUp(email, password, phone, typeId)
+                val result = userRepository.signUp(email, password, phone, typeId, firstname, lastname)
                 result.fold(
                     onSuccess = {
                         withContext(Dispatchers.Main) {

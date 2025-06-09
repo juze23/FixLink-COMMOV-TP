@@ -53,7 +53,11 @@ class AdminActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             supportFragmentManager.commit {
                 replace(R.id.topAppBarFragmentContainer, TopAppBarFragment())
-                replace(R.id.bottomNavigationContainer, BottomNavigationAdminFragment())
+                replace(R.id.bottomNavigationContainer, BottomNavigationAdminFragment().apply {
+                    arguments = Bundle().apply {
+                        putInt("selected_item", R.id.nav_admin)
+                    }
+                })
                 replace(R.id.viewAllListFragmentContainer, AdminFragment())
             }
         }
@@ -165,7 +169,7 @@ class AdminActivity : AppCompatActivity() {
             val editIcon = technicianItemView.findViewById<ImageView>(R.id.editIcon)
             val deleteIcon = technicianItemView.findViewById<ImageView>(R.id.deleteIcon)
 
-            nameTextView.text = technician.name
+            nameTextView.text = "${technician.firstname} ${technician.lastname}"
 
             // TODO: Implement edit and delete functionality
             editIcon.setOnClickListener {

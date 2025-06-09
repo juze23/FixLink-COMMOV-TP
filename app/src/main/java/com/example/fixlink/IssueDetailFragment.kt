@@ -255,7 +255,8 @@ class IssueDetailFragment : Fragment() {
         issueTitle.text = issue.title ?: "(No title)"
         
         // Set reporter name
-        val reporterName = users.find { it.user_id == issue.id_user }?.name ?: issue.id_user
+        val reporter = users.find { it.user_id == issue.id_user }
+        val reporterName = if (reporter != null) "${reporter.firstname} ${reporter.lastname}" else issue.id_user
         issueReporter.text = "User: $reporterName"
 
         // Set description
@@ -266,11 +267,8 @@ class IssueDetailFragment : Fragment() {
         issueLocation.text = locationName
 
         // Set responsible technician
-        val technicianName = if (issue.id_technician != null) {
-            users.find { it.user_id == issue.id_technician }?.name ?: issue.id_technician
-        } else {
-            "Not assigned"
-        }
+        val technician = users.find { it.user_id == issue.id_technician }
+        val technicianName = if (technician != null) "${technician.firstname} ${technician.lastname}" else "Not assigned"
         responsibleTechnician.text = technicianName
 
         // Set date (formatted to show only the date)

@@ -112,7 +112,9 @@ class MyTasksFragment : Fragment() {
                 (issue.description?.lowercase()?.contains(searchQuery) == true) ||
                 equipments.find { it.equipment_id == issue.id_equipment }?.name?.lowercase()?.contains(searchQuery) == true ||
                 locations.find { it.location_id == issue.localization_id }?.name?.lowercase()?.contains(searchQuery) == true ||
-                users.find { it.user_id == issue.id_user }?.name?.lowercase()?.contains(searchQuery) == true ||
+                users.find { it.user_id == issue.id_user }?.let { user ->
+                    if (user.lastname.isNullOrEmpty()) user.firstname.lowercase() else "${user.firstname} ${user.lastname}".lowercase()
+                }?.contains(searchQuery) == true ||
                 states.find { it.state_id == issue.state_id }?.state?.lowercase()?.contains(searchQuery) == true ||
                 priorities.find { it.priority_id == issue.priority_id }?.priority?.lowercase()?.contains(searchQuery) == true
             })
@@ -120,7 +122,9 @@ class MyTasksFragment : Fragment() {
                 maintenance.description?.lowercase()?.contains(searchQuery) == true ||
                 equipments.find { it.equipment_id == maintenance.id_equipment }?.name?.lowercase()?.contains(searchQuery) == true ||
                 locations.find { it.location_id == maintenance.localization_id }?.name?.lowercase()?.contains(searchQuery) == true ||
-                users.find { it.user_id == maintenance.id_user }?.name?.lowercase()?.contains(searchQuery) == true ||
+                users.find { it.user_id == maintenance.id_user }?.let { user ->
+                    if (user.lastname.isNullOrEmpty()) user.firstname.lowercase() else "${user.firstname} ${user.lastname}".lowercase()
+                }?.contains(searchQuery) == true ||
                 maintenanceStates.find { it.state_id == maintenance.state_id }?.state?.lowercase()?.contains(searchQuery) == true ||
                 priorities.find { it.priority_id == maintenance.priority_id }?.priority?.lowercase()?.contains(searchQuery) == true
             })

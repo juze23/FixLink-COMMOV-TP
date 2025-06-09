@@ -16,10 +16,12 @@ import kotlinx.coroutines.withContext
 import android.app.AlertDialog
 import android.view.LayoutInflater
 import android.widget.LinearLayout
+import androidx.lifecycle.lifecycleScope
 
 class EditProfileActivity : AppCompatActivity() {
 
-    private lateinit var nameEditText: EditText
+    private lateinit var firstnameEditText: EditText
+    private lateinit var lastnameEditText: EditText
     private lateinit var emailEditText: EditText
     private lateinit var phoneEditText: EditText
     private lateinit var changePasswordButton: Button
@@ -44,29 +46,37 @@ class EditProfileActivity : AppCompatActivity() {
         // Initialize views
         initializeViews()
 
-        // Load user data from intent
-        loadUserData()
+        // Get user data from intent
+        val userId = intent.getStringExtra("USER_ID")
+        val fullName = intent.getStringExtra("USER_NAME") ?: ""
+        val email = intent.getStringExtra("USER_EMAIL") ?: ""
+        val phone = intent.getStringExtra("USER_PHONE") ?: ""
+
+        // Split full name into first and last name
+        val nameParts = fullName.split(" ", limit = 2)
+        val firstname = nameParts.getOrNull(0) ?: ""
+        val lastname = nameParts.getOrNull(1) ?: ""
+
+        // Set initial values
+        firstnameEditText.setText(firstname)
+        lastnameEditText.setText(lastname)
+        emailEditText.setText(email)
+        phoneEditText.setText(phone)
 
         // Set click listeners
         changePasswordButton.setOnClickListener { showChangePasswordDialog() }
         cancelButton.setOnClickListener { finish() }
-        saveButton.setOnClickListener { saveProfile() }
+        saveButton.setOnClickListener { updateProfile() }
     }
 
     private fun initializeViews() {
-        nameEditText = findViewById(R.id.nameEditText)
+        firstnameEditText = findViewById(R.id.firstnameEditText)
+        lastnameEditText = findViewById(R.id.lastnameEditText)
         emailEditText = findViewById(R.id.emailEditText)
         phoneEditText = findViewById(R.id.phoneEditText)
         changePasswordButton = findViewById(R.id.changePasswordButton)
         cancelButton = findViewById(R.id.cancelButton)
         saveButton = findViewById(R.id.saveButton)
-    }
-
-    private fun loadUserData() {
-        userId = intent.getStringExtra("USER_ID")
-        nameEditText.setText(intent.getStringExtra("USER_NAME"))
-        emailEditText.setText(intent.getStringExtra("USER_EMAIL"))
-        phoneEditText.setText(intent.getStringExtra("USER_PHONE"))
     }
 
     private fun showChangePasswordDialog() {
@@ -123,46 +133,43 @@ class EditProfileActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveProfile() {
-        val name = nameEditText.text.toString()
-        val email = emailEditText.text.toString()
-        val phone = phoneEditText.text.toString()
+    private fun updateProfile() {
+        val userId = intent.getStringExtra("USER_ID") ?: return
+        val firstname = firstnameEditText.text.toString().trim()
+        val lastname = lastnameEditText.text.toString().trim()
+        val email = emailEditText.text.toString().trim()
+        val phone = phoneEditText.text.toString().trim()
 
-        if (name.isBlank() || email.isBlank()) {
-            Toast.makeText(this, "Name and email are required", Toast.LENGTH_SHORT).show()
+        if (firstname.isEmpty()) {
+            firstnameEditText.error = "First name is required"
             return
         }
 
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            Toast.makeText(this, "Please enter a valid email address", Toast.LENGTH_SHORT).show()
+        if (lastname.isEmpty()) {
+            lastnameEditText.error = "Last name is required"
             return
         }
 
-        userId?.let { id ->
-            CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    val result = userRepository.updateUserProfile(id, name, email, phone)
-                    result.fold(
-                        onSuccess = {
-                            withContext(Dispatchers.Main) {
-                                Toast.makeText(this@EditProfileActivity, "Profile updated successfully", Toast.LENGTH_SHORT).show()
-                                finish()
-                            }
-                        },
-                        onFailure = { error ->
-                            withContext(Dispatchers.Main) {
-                                Toast.makeText(this@EditProfileActivity, "Error updating profile: ${error.message}", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                    )
-                } catch (e: Exception) {
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(this@EditProfileActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
-                    }
-                }
+        if (email.isEmpty()) {
+            emailEditText.error = "Email is required"
+            return
+        }
+
+        lifecycleScope.launch {
+            val result = userRepository.updateUserProfile(
+                userId = userId,
+                firstname = firstname,
+                lastname = lastname,
+                email = email,
+                phone = phone
+            )
+
+            if (result.isSuccess) {
+                Toast.makeText(this@EditProfileActivity, "Profile updated successfully", Toast.LENGTH_SHORT).show()
+                finish()
+            } else {
+                Toast.makeText(this@EditProfileActivity, "Failed to update profile: ${result.exceptionOrNull()?.message}", Toast.LENGTH_SHORT).show()
             }
-        } ?: run {
-            Toast.makeText(this, "Error: User ID not found", Toast.LENGTH_SHORT).show()
         }
     }
 } 

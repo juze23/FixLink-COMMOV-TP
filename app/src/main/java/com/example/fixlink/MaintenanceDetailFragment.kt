@@ -261,7 +261,10 @@ class MaintenanceDetailFragment : Fragment() {
         maintenanceTitle.text = maintenance.title ?: "(No title)"
         
         // Set creator name
-        val creatorName = users.find { it.user_id == maintenance.id_user }?.name ?: maintenance.id_user
+        val creator = users.find { it.user_id == maintenance.id_user }
+        val creatorName = if (creator != null) {
+            if (creator.lastname.isNullOrEmpty()) creator.firstname else "${creator.firstname} ${creator.lastname}"
+        } else maintenance.id_user
         maintenanceCreator.text = "User: $creatorName"
 
         // Set description
@@ -272,11 +275,12 @@ class MaintenanceDetailFragment : Fragment() {
         maintenanceLocation.text = locationName
 
         // Set responsible technician
-        val technicianName = if (maintenance.id_technician != null) {
-            users.find { it.user_id == maintenance.id_technician }?.name ?: maintenance.id_technician
-        } else {
-            "Not assigned"
-        }
+        val technician = if (maintenance.id_technician != null) {
+            users.find { it.user_id == maintenance.id_technician }
+        } else null
+        val technicianName = if (technician != null) {
+            if (technician.lastname.isNullOrEmpty()) technician.firstname else "${technician.firstname} ${technician.lastname}"
+        } else "Not assigned"
         responsibleTechnician.text = technicianName
 
         // Set date (formatted to show only the date)

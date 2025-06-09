@@ -38,6 +38,12 @@ class IssuesUserActivity : AppCompatActivity() {
                 val bottomNavFragment = withContext(Dispatchers.IO) {
                     NavigationUtils.getBottomNavigationFragment()
                 }
+                // Set the selected item to issues
+                if (bottomNavFragment is BottomNavigationAdminFragment) {
+                    bottomNavFragment.arguments = Bundle().apply {
+                        putInt("selected_item", R.id.nav_issues)
+                    }
+                }
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.bottomNavigationContainer, bottomNavFragment)
                     .commit()
