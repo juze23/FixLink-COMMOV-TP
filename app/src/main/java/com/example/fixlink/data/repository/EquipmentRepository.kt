@@ -65,4 +65,56 @@ class EquipmentRepository {
             Result.failure(e)
         }
     }
+
+    suspend fun getEquipmentByName(name: String): Equipment? = withContext(Dispatchers.IO) {
+        try {
+            val response = SupabaseClient.supabase.postgrest["Equipment"]
+                .select {
+                    filter {
+                        eq("name", name)
+                    }
+                }
+                .decodeSingle<Equipment>()
+            response
+        } catch (e: Exception) {
+            Log.e("EquipmentRepository", "Error getting equipment by name: ${e.message}", e)
+            null
+        }
+    }
+
+    suspend fun updateEquipment(equipment: Equipment): Result<Equipment> = withContext(Dispatchers.IO) {
+        try {
+            Log.d("EquipmentRepository", "Attempting to update equipment: ${equipment.name}")
+
+            val equipmentId = equipment.equipment_id ?: throw IllegalArgumentException("Cannot update equipment without an ID")
+
+            // Update in database
+            SupabaseClient.supabase.postgrest["Equipment"]
+                .update({
+                    set("name", equipment.name)
+                    set("description", equipment.description)
+                    set("active", equipment.active)
+                }) {
+                    filter {
+                        eq("equipment_id", equipmentId)
+                    }
+                }
+
+            // Get the updated equipment
+            val response = SupabaseClient.supabase.postgrest["Equipment"]
+                .select {
+                    filter {
+                        eq("equipment_id", equipmentId)
+                    }
+                }
+                .decodeSingle<Equipment>()
+
+            Log.d("EquipmentRepository", "Successfully updated equipment: ${response.name}")
+            Result.success(response)
+        } catch (e: Exception) {
+            Log.e("EquipmentRepository", "Error updating equipment: ${e.message}", e)
+            Log.e("EquipmentRepository", "Error stack trace: ${e.stackTraceToString()}")
+            Result.failure(e)
+        }
+    }
 }

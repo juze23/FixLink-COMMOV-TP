@@ -9,60 +9,123 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
+import android.widget.Toast
+import com.example.fixlink.data.entities.Equipment
+import com.example.fixlink.data.repository.EquipmentRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class EditEquipmentFragment : Fragment() {
 
     private lateinit var equipmentNameTextView: TextView
-    private lateinit var locationEditText: EditText
+    private lateinit var nameEditText: EditText
+    private lateinit var descriptionEditText: EditText
     private lateinit var statusSpinner: Spinner
     private lateinit var cancelButton: Button
     private lateinit var saveButton: Button
+    private lateinit var equipmentRepository: EquipmentRepository
+    private var currentEquipment: Equipment? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_edit_equipment, container, false)
 
         equipmentNameTextView = view.findViewById(R.id.equipmentNameTextView)
-        locationEditText = view.findViewById(R.id.locationEditText)
+        nameEditText = view.findViewById(R.id.nameEditText)
+        descriptionEditText = view.findViewById(R.id.descriptionEditText)
         statusSpinner = view.findViewById(R.id.statusSpinner)
         cancelButton = view.findViewById(R.id.cancelButton)
         saveButton = view.findViewById(R.id.saveButton)
+        equipmentRepository = EquipmentRepository()
 
         // Set click listeners for buttons
         cancelButton.setOnClickListener { dismissFragment() }
         saveButton.setOnClickListener { saveChanges() }
 
-        // TODO: Load equipment data here
+        // Load equipment data if provided
+        arguments?.getString("equipmentName")?.let { equipmentName ->
+            loadEquipmentData(equipmentName)
+        }
 
         return view
     }
 
+    private fun loadEquipmentData(equipmentName: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val equipment = equipmentRepository.getEquipmentByName(equipmentName)
+                withContext(Dispatchers.Main) {
+                    equipment?.let {
+                        currentEquipment = it
+                        equipmentNameTextView.text = it.name
+                        nameEditText.setText(it.name)
+                        descriptionEditText.setText(it.description)
+                        statusSpinner.setSelection(if (it.active) 0 else 1) // 0 for Active, 1 for Inactive
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(context, "Error loading equipment: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
     private fun dismissFragment() {
-        // Hide the fragment and its container
         (activity as? AdminActivity)?.hideEditFragment()
     }
 
     private fun saveChanges() {
-        // TODO: Implement save logic
-        // Get data from EditText and Spinner
-        val location = locationEditText.text.toString()
-        val status = statusSpinner.selectedItem.toString()
+        val name = nameEditText.text.toString().trim()
+        val description = descriptionEditText.text.toString().trim()
+        val isActive = statusSpinner.selectedItemPosition == 0 // 0 for Active, 1 for Inactive
 
-        // TODO: Save data (e.g., update database, send to API)
+        if (name.isEmpty()) {
+            nameEditText.error = "Name is required"
+            return
+        }
 
-        // Dismiss the fragment after saving
-        dismissFragment()
+        currentEquipment?.let { equipment ->
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    val updatedEquipment = equipment.copy(
+                        name = name,
+                        description = description,
+                        active = isActive
+                    )
+                    val result = equipmentRepository.updateEquipment(updatedEquipment)
+                    withContext(Dispatchers.Main) {
+                        result.fold(
+                            onSuccess = {
+                                Toast.makeText(context, "Equipment updated successfully!", Toast.LENGTH_SHORT).show()
+                                dismissFragment()
+                            },
+                            onFailure = { error ->
+                                Toast.makeText(context, "Error: ${error.message}", Toast.LENGTH_SHORT).show()
+                            }
+                        )
+                    }
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
     }
 
-    // TODO: Add a method to receive equipment data when showing the fragment
-
     companion object {
-        fun newInstance(): EditEquipmentFragment {
-            return EditEquipmentFragment()
+        fun newInstance(equipmentName: String? = null): EditEquipmentFragment {
+            return EditEquipmentFragment().apply {
+                arguments = Bundle().apply {
+                    equipmentName?.let { putString("equipmentName", it) }
+                }
+            }
         }
     }
 } 

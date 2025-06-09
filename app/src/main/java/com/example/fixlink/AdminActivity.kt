@@ -245,7 +245,7 @@ class AdminActivity : AppCompatActivity() {
     private fun showEditFragment(equipmentName: String) {
         editFragmentContainer.visibility = View.VISIBLE
         supportFragmentManager.commit {
-            replace(R.id.editFragmentContainer, EditEquipmentFragment.newInstance())
+            replace(R.id.editFragmentContainer, EditEquipmentFragment.newInstance(equipmentName))
             addToBackStack(null)
         }
     }
