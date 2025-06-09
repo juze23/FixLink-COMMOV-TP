@@ -54,4 +54,20 @@ class MaintenanceRepository {
             Result.failure(e)
         }
     }
+
+    suspend fun getMaintenanceByTechnician(technicianId: String): Result<List<Maintenance>> = withContext(Dispatchers.IO) {
+        try {
+            val maintenance = SupabaseClient.supabase.postgrest["Maintenance"]
+                .select {
+                    filter {
+                        eq("id_technician", technicianId)
+                    }
+                    order("publication_date", Order.DESCENDING)
+                }
+                .decodeList<Maintenance>()
+            Result.success(maintenance)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }
