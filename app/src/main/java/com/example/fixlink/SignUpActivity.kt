@@ -99,7 +99,7 @@ class SignUpActivity : AppCompatActivity() {
         val password = passwordInput.text.toString()
 
         try {
-            val result = userRepository.signUp(email, password, phone)
+            val result = userRepository.signUp(email, password, phone, 1)
             result.fold(
                 onSuccess = {
                     withContext(Dispatchers.Main) {

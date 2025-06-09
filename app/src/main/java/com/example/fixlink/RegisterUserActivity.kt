@@ -212,7 +212,7 @@ class RegisterUserActivity : AppCompatActivity() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun registerUser() {
+    private fun registerUser    () {
         val email = emailInput.text.toString().trim()
         val phone = phoneInput.text.toString().trim()
         val password = passwordInput.text.toString().trim()

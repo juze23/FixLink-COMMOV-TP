@@ -7,11 +7,11 @@ import com.example.fixlink.supabaseConfig.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.Email
 import io.github.jan.supabase.postgrest.postgrest
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class UserRepository {
-    @RequiresApi(Build.VERSION_CODES.O)
     suspend fun signUp(email: String, password: String, phone: String, typeId: Int): Result<User> {
         return try {
             //creates the user in supabase auth
@@ -28,7 +28,8 @@ class UserRepository {
             val userId = response.id
 
             //creates user record in the database
-            val currentTime = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+            val currentTime = dateFormat.format(Date())
             val username = email.split("@")[0] // Get username from email prefix
             val user = User(
                 user_id = userId,
@@ -117,7 +118,8 @@ class UserRepository {
         phoneNumber: String
     ): Result<User> {
         return try {
-            val currentTime = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+            val currentTime = dateFormat.format(Date())
             val updatedUser = User(
                 user_id = userId,
                 name = name,
