@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@color/white"
-    android:padding="16dp">
+    android:background="@drawable/rounded_dialog_background"
+    android:padding="24dp">
 
     <TextView
         android:layout_width="wrap_content"
@@ -106,11 +106,10 @@
         android:textAppearance="?attr/textAppearanceTitleSmall" />
 
     <com.google.android.material.chip.ChipGroup
-        android:id="@+id/state_chip_group"
+        android:id="@+id/stateChipGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:singleSelection="false">
+        app:singleSelection="true">
 
         <com.google.android.material.chip.Chip
             android:id="@+id/state_pending_chip"
@@ -140,6 +139,36 @@
             android:layout_height="wrap_content"
             android:text="Resolved" />
 
+    </com.google.android.material.chip.ChipGroup>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textSize="20dp"
+        android:text="Equipment Status:"
+        android:textAppearance="?attr/textAppearanceTitleSmall" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/equipment_status_chip_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:singleSelection="true">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/status_active_chip"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Active" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/status_inactive_chip"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Inactive" />
     </com.google.android.material.chip.ChipGroup>
 
     <LinearLayout

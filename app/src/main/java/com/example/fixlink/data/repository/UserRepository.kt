@@ -169,6 +169,14 @@ class UserRepository {
         }
     }
 
+    suspend fun getCurrentUserId(): String? {
+        return try {
+            val currentUser = SupabaseClient.supabase.auth.currentUserOrNull()
+            currentUser?.id
+        } catch (e: Exception) {
+            null
+        }
+    }
 
     /*
         suspend fun getUserById(userId: String): Result<User> {
