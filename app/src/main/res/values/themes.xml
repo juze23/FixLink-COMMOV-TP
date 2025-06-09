@@ -47,4 +47,16 @@
     </style>
 
     <style name="Theme.FixLink" parent="Base.Theme.FixLink" />
+
+    <!-- AppBar overlay theme -->
+    <style name="Theme.FixLink.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <!-- Popup overlay theme -->
+    <style name="Theme.FixLink.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <!-- No ActionBar theme -->
+    <style name="Theme.FixLink.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
 </resources>

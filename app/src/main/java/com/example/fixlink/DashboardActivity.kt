@@ -1,18 +1,17 @@
 package com.example.fixlink
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.example.fixlink.NavigationUtils
+import androidx.fragment.app.Fragment
 import com.example.fixlink.data.preferences.LoginPreferences
 import com.example.fixlink.data.repository.UserRepository
+import com.example.fixlink.ui.filters.IssuesFilterDialogFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import android.content.Intent
-import android.widget.Toast
 
 class DashboardActivity : AppCompatActivity() {
     private val userRepository = UserRepository()
@@ -72,18 +71,17 @@ class DashboardActivity : AppCompatActivity() {
                 }
             }
         }
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
     }
 
     private fun loadContent() {
         // Add TopAppBarFragment
         supportFragmentManager.beginTransaction()
             .replace(R.id.topAppBarFragmentContainer, TopAppBarFragment())
+            .commit()
+
+        // Add AdminDashboardFragment
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.dashboardContainer, AdminDashboardFragment())
             .commit()
 
         // Add appropriate bottom navigation based on user type
@@ -100,6 +98,14 @@ class DashboardActivity : AppCompatActivity() {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.bottomNavigationContainer, bottomNavFragment)
                 .commit()
+        }
+    }
+
+    override fun onBackPressed() {
+        if (supportFragmentManager.backStackEntryCount > 0) {
+            supportFragmentManager.popBackStack()
+        } else {
+            super.onBackPressed()
         }
     }
 } 
