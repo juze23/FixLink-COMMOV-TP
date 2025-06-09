@@ -33,6 +33,7 @@ class IssueRepository {
     suspend fun createIssue(
         userId: String,
         equipmentId: Int,
+        title: String,
         description: String,
         locationId: Int,
         priorityId: Int,
@@ -60,6 +61,7 @@ class IssueRepository {
                 id_equipment = equipmentId,
                 publicationDate = currentTime,
                 state_id = 1,
+                title = title,
                 description = description,
                 report = null,
                 beginningDate = null,

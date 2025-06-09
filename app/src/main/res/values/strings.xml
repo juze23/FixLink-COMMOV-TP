@@ -57,6 +57,13 @@
     </string-array>
     <string name="button_register_issue">Register Issue</string>
 
+    <!-- Register Maintenance Page -->
+    <string name="page_title_register_maintenance">Schedule Maintenance</string>
+    <string name="hint_maintenance_title">Enter maintenance title</string>
+    <string name="hint_maintenance_description">Enter maintenance description</string>
+    <string name="label_maintenance_type">Maintenance Type</string>
+    <string name="button_schedule_maintenance">Schedule Maintenance</string>
+
     <!-- Bottom Navigation -->
     <string name="nav_my_tasks">My Tasks</string>
     <string name="nav_issues">Issues</string>

@@ -112,8 +112,9 @@ class MaintenanceContentFragment : Fragment() {
         } else {
             val searchQuery = query.lowercase()
             filteredMaintenanceList.addAll(maintenanceList.filter { maintenance ->
-                // Search in description
-                maintenance.description?.lowercase()?.contains(searchQuery) == true ||
+                // Search in title and description
+                (maintenance.title?.lowercase()?.contains(searchQuery) == true) ||
+                (maintenance.description?.lowercase()?.contains(searchQuery) == true) ||
                 // Search in equipment name
                 equipments.find { it.equipment_id == maintenance.id_equipment }?.name?.lowercase()?.contains(searchQuery) == true ||
                 // Search in location name

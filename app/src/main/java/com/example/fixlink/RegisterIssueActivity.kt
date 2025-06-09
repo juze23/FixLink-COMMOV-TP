@@ -311,6 +311,7 @@ class RegisterIssueActivity : AppCompatActivity() {
             return
         }
 
+        val title = titleEditText.text.toString()
         val description = descriptionEditText.text.toString()
         val equipmentId = selectedEquipment.equipment_id ?: run {
             Toast.makeText(this, "Invalid equipment selected", Toast.LENGTH_SHORT).show()
@@ -322,6 +323,7 @@ class RegisterIssueActivity : AppCompatActivity() {
                 val result = issueRepository.createIssue(
                     userId = userId,
                     equipmentId = equipmentId,
+                    title = title,
                     description = description,
                     locationId = selectedLocation.location_id,
                     priorityId = selectedPriority.priority_id,

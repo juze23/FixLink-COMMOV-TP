@@ -258,7 +258,7 @@ class MaintenanceDetailFragment : Fragment() {
         users: List<User>
     ) {
         // Set basic info
-        maintenanceTitle.text = maintenance.description ?: "(No description)"
+        maintenanceTitle.text = maintenance.title ?: "(No title)"
         
         // Set creator name
         val creatorName = users.find { it.user_id == maintenance.id_user }?.name ?: maintenance.id_user

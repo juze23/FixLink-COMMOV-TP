@@ -277,7 +277,8 @@ class IssuesContentFragment : Fragment() {
             val searchQuery = searchEditText.text.toString()
             if (searchQuery.isNotEmpty()) {
                 filteredIssues = filteredIssues.filter { issue ->
-                    issue.description?.contains(searchQuery, ignoreCase = true) == true
+                    (issue.title?.contains(searchQuery, ignoreCase = true) == true) ||
+                    (issue.description?.contains(searchQuery, ignoreCase = true) == true)
                 }.toMutableList()
             }
 

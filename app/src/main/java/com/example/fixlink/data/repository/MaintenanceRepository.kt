@@ -3,10 +3,14 @@ package com.example.fixlink.data.repository
 import android.util.Log
 import com.example.fixlink.data.entities.Maintenance
 import com.example.fixlink.supabaseConfig.SupabaseClient
+import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.query.Order
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.UUID
 
 class MaintenanceRepository {
     suspend fun getMaintenanceById(maintenanceId: String): Result<Maintenance> = withContext(Dispatchers.IO) {
@@ -149,6 +153,54 @@ class MaintenanceRepository {
             updateMaintenance(updatedMaintenance).map { Unit }
         } catch (e: Exception) {
             Log.e("MaintenanceRepository", "Error changing maintenance status: ", e)
+            Result.failure(e)
+        }
+    }
+
+    suspend fun createMaintenance(
+        userId: String,
+        equipmentId: Int,
+        title: String,
+        description: String,
+        locationId: Int,
+        priorityId: Int,
+        typeId: Int
+    ): Result<Maintenance> = withContext(Dispatchers.IO) {
+        try {
+            // Generate maintenance ID first
+            val maintenanceId = UUID.randomUUID().toString()
+            
+            // Get current timestamp
+            val currentTime = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)
+            
+            // Create maintenance object
+            val maintenance = Maintenance(
+                maintenance_id = maintenanceId,
+                id_user = userId,
+                id_technician = null,
+                id_equipment = equipmentId,
+                publicationDate = currentTime,
+                state_id = 1,
+                title = title,
+                description = description,
+                report = null,
+                beginningDate = null,
+                endingDate = null,
+                localization_id = locationId,
+                priority_id = priorityId,
+                type_id = typeId
+            )
+
+            try {
+                SupabaseClient.supabase.postgrest["Maintenance"]
+                    .insert(maintenance)
+                Result.success(maintenance)
+            } catch (e: Exception) {
+                Log.e("MaintenanceRepository", "Error inserting maintenance: ${e.message}", e)
+                Result.failure(e)
+            }
+        } catch (e: Exception) {
+            Log.e("MaintenanceRepository", "Error in createMaintenance: ${e.message}", e)
             Result.failure(e)
         }
     }

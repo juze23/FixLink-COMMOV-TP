@@ -63,13 +63,13 @@
 
             <!-- Title Input -->
             <EditText
-                android:id="@+id/title_input"
+                android:id="@+id/title_edit_text"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="32dp"
-                android:hint="Enter your issue title"
+                android:hint="Enter maintenance title"
                 android:inputType="textCapSentences"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
@@ -94,17 +94,17 @@
                 android:textColor="@color/purple_primary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/title_input" />
+                app:layout_constraintTop_toBottomOf="@+id/title_edit_text" />
 
             <!-- Description Input -->
             <EditText
-                android:id="@+id/description_input"
+                android:id="@+id/description_edit_text"
                 android:layout_width="0dp"
                 android:layout_height="100dp"
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="32dp"
-                android:hint="Enter your description"
+                android:hint="Enter maintenance description"
                 android:inputType="textCapSentences|textMultiLine"
                 android:gravity="top"
                 android:paddingStart="16dp"
@@ -130,23 +130,21 @@
                 android:textColor="@color/purple_primary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/description_input" />
+                app:layout_constraintTop_toBottomOf="@id/description_edit_text" />
 
-            <!-- Location Input -->
-            <EditText
-                android:id="@+id/location_input"
+            <!-- Location Spinner -->
+            <Spinner
+                android:id="@+id/location_spinner"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="32dp"
-                android:hint="Enter location"
-                android:inputType="textCapWords"
+                android:background="@drawable/rounded_edittext_background"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:background="@drawable/rounded_edittext_background"
+                android:spinnerMode="dropdown"
+                style="@style/Widget.AppCompat.Spinner"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/location_label" />
@@ -165,9 +163,9 @@
                 android:textColor="@color/purple_primary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/location_input" />
+                app:layout_constraintTop_toBottomOf="@id/location_spinner" />
 
-            <!-- Equipment Input (Spinner/Dropdown) -->
+            <!-- Equipment Spinner -->
             <Spinner
                 android:id="@+id/equipment_spinner"
                 android:layout_width="0dp"
@@ -184,6 +182,39 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/equipment_label" />
 
+            <!-- Type Label -->
+            <TextView
+                android:id="@+id/type_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="32dp"
+                android:text="Maintenance Type"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/purple_primary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/equipment_spinner" />
+
+            <!-- Type Spinner -->
+            <Spinner
+                android:id="@+id/type_spinner"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/rounded_edittext_background"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:spinnerMode="dropdown"
+                style="@style/Widget.AppCompat.Spinner"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/type_label" />
+
             <!-- Priority Label -->
             <TextView
                 android:id="@+id/priority_label"
@@ -198,9 +229,9 @@
                 android:textColor="@color/purple_primary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/equipment_spinner" />
+                app:layout_constraintTop_toBottomOf="@+id/type_spinner" />
 
-            <!-- Priority Input (Spinner/Dropdown) -->
+            <!-- Priority Spinner -->
             <Spinner
                 android:id="@+id/priority_spinner"
                 android:layout_width="0dp"
@@ -217,23 +248,9 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/priority_label" />
 
-            <!-- Add Image Placeholder -->
-            <ImageView
-                android:id="@+id/add_image_placeholder"
-                android:layout_width="150dp"
-                android:layout_height="100dp"
-                android:layout_marginTop="32dp"
-                android:background="@drawable/rounded_rect_dashed"
-                android:scaleType="center"
-                android:src="@drawable/ic_add"
-                app:tint="@color/gray_inactive"
-                app:layout_constraintTop_toBottomOf="@+id/priority_spinner"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-            <!-- Schedule Maintenance Button -->
+            <!-- Submit Button -->
             <Button
-                android:id="@+id/schedule_maintenance_button"
+                android:id="@+id/submit_button"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="32dp"
@@ -245,12 +262,12 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/add_image_placeholder" />
+                app:layout_constraintTop_toBottomOf="@+id/priority_spinner" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
-    <!-- Bottom Navigation Container (Fragment) -->
+    <!-- Bottom Navigation Container -->
     <FrameLayout
         android:id="@+id/bottomNavigationContainer"
         android:layout_width="0dp"

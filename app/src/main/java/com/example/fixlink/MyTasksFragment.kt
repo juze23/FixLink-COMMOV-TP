@@ -108,7 +108,8 @@ class MyTasksFragment : Fragment() {
             filteredMaintenanceList.addAll(maintenanceList)
         } else {
             filteredIssuesList.addAll(issuesList.filter { issue ->
-                issue.description?.lowercase()?.contains(searchQuery) == true ||
+                (issue.title?.lowercase()?.contains(searchQuery) == true) ||
+                (issue.description?.lowercase()?.contains(searchQuery) == true) ||
                 equipments.find { it.equipment_id == issue.id_equipment }?.name?.lowercase()?.contains(searchQuery) == true ||
                 locations.find { it.location_id == issue.localization_id }?.name?.lowercase()?.contains(searchQuery) == true ||
                 users.find { it.user_id == issue.id_user }?.name?.lowercase()?.contains(searchQuery) == true ||

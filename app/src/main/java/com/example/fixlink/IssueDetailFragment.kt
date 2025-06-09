@@ -252,7 +252,7 @@ class IssueDetailFragment : Fragment() {
         isAdmin: Boolean
     ) {
         // Set basic info
-        issueTitle.text = issue.description ?: "(No description)"
+        issueTitle.text = issue.title ?: "(No title)"
         
         // Set reporter name
         val reporterName = users.find { it.user_id == issue.id_user }?.name ?: issue.id_user

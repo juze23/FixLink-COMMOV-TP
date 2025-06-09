@@ -93,7 +93,7 @@ class MyTasksAdapter(
             users: List<User>
         ) {
             icon.setImageResource(R.drawable.ic_issues)
-            titleTextView.text = issue.description ?: "(Sem título)"
+            titleTextView.text = issue.title ?: "(Sem título)"
             val userName = users.find { it.user_id == issue.id_user }?.name ?: issue.id_user
             reporterTextView.text = "Utilizador: $userName"
             val priorityText = priorities.find { it.priority_id == issue.priority_id }?.priority ?: issue.priority_id.toString()
@@ -156,7 +156,7 @@ class MyTasksAdapter(
             users: List<User>
         ) {
             icon.setImageResource(R.drawable.ic_maintenance)
-            titleTextView.text = maintenance.description ?: "(Sem título)"
+            titleTextView.text = maintenance.title ?: "(Sem título)"
             val userName = users.find { it.user_id == maintenance.id_user }?.name ?: maintenance.id_user
             creatorTextView.text = "Utilizador: $userName"
             val priorityText = priorities.find { it.priority_id == maintenance.priority_id }?.priority ?: maintenance.priority_id.toString()

@@ -80,7 +80,7 @@ class MaintenanceAdapter(private val maintenances: List<Maintenance>) : Recycler
             states: List<State_maintenance>,
             users: List<User>
         ) {
-            titleTextView.text = maintenance.description ?: "(Sem título)"
+            titleTextView.text = maintenance.title ?: "(Sem título)"
             val userName = users.find { it.user_id == maintenance.id_user }?.name ?: maintenance.id_user
             creatorTextView.text = "Utilizador: $userName"
             val priorityText = priorities.find { it.priority_id == maintenance.priority_id }?.priority ?: maintenance.priority_id.toString()

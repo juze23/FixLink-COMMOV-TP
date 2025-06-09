@@ -15,6 +15,8 @@ data class Maintenance(
     val id_equipment: Int,
     @SerialName("publication_date")
     val publicationDate: String,
+    @SerialName("title")
+    val title: String,
     @SerialName("state_id")
     val state_id: Int,
     val description: String? = null,
