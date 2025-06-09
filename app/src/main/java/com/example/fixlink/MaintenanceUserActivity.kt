@@ -6,50 +6,110 @@ import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.fixlink.NavigationUtils
+import com.example.fixlink.data.preferences.LoginPreferences
+import com.example.fixlink.data.repository.UserRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import android.content.Intent
+import android.widget.Toast
 
 class MaintenanceUserActivity : AppCompatActivity() {
+    private val userRepository = UserRepository()
+    private lateinit var loginPreferences: LoginPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maintenance_user)
+
+        loginPreferences = LoginPreferences(this)
+
+        // Check user role before loading content
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val currentUser = userRepository.getCurrentUser().getOrNull()
+                if (currentUser == null) {
+                    // If we can't get the current user, try to use stored type
+                    val storedUserType = loginPreferences.getUserType()
+                    if (storedUserType == -1) {
+                        // If no stored type, clear preferences and go to login
+                        loginPreferences.clearLoginState()
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(this@MaintenanceUserActivity, "Session expired. Please login again.", Toast.LENGTH_SHORT).show()
+                            val intent = Intent(this@MaintenanceUserActivity, LoginActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            startActivity(intent)
+                            finish()
+                        }
+                        return@launch
+                    }
+                }
+
+                // If we have a user, verify their type
+                val userType = currentUser?.typeId ?: loginPreferences.getUserType()
+                if (userType != 1 && userType != 2 && userType != 3) { // 1 is regular user, 2 is technician, 3 is admin
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@MaintenanceUserActivity, "Access denied. Invalid user type.", Toast.LENGTH_SHORT).show()
+                        val intent = Intent(this@MaintenanceUserActivity, LoginActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
+                        finish()
+                    }
+                    return@launch
+                }
+
+                // If we get here, user is valid and has correct type, load the content
+                withContext(Dispatchers.Main) {
+                    loadContent()
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@MaintenanceUserActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this@MaintenanceUserActivity, LoginActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(intent)
+                    finish()
+                }
+            }
+        }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main_maintenance_host)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+    }
 
+    private fun loadContent() {
         // Add TopAppBarFragment
-        if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.topAppBarFragmentContainer, TopAppBarFragment())
-                .commit()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.topAppBarFragmentContainer, TopAppBarFragment())
+            .commit()
 
+        // Add MaintenanceContentFragment
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.maintenanceContentFragmentContainer, MaintenanceContentFragment())
+            .commit()
 
-
-            // Add MaintenanceContentFragment
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.maintenanceContentFragmentContainer, MaintenanceContentFragment())
-                .commit()
-
-            // Add appropriate bottom navigation based on user type
-            CoroutineScope(Dispatchers.Main).launch {
-                val bottomNavFragment = withContext(Dispatchers.IO) {
-                    NavigationUtils.getBottomNavigationFragment()
-                }
-                // Set the selected item to maintenance
-                if (bottomNavFragment is BottomNavigationAdminFragment) {
+        // Add appropriate bottom navigation based on user type
+        CoroutineScope(Dispatchers.Main).launch {
+            val bottomNavFragment = withContext(Dispatchers.IO) {
+                NavigationUtils.getBottomNavigationFragment()
+            }
+            // Set the selected item to maintenance for all navigation types
+            when (bottomNavFragment) {
+                is BottomNavigationUserFragment,
+                is BottomNavigationFragment,
+                is BottomNavigationAdminFragment -> {
                     bottomNavFragment.arguments = Bundle().apply {
                         putInt("selected_item", R.id.nav_maintenance)
                     }
                 }
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.bottomNavigationContainer, bottomNavFragment)
-                    .commit()
             }
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.bottomNavigationContainer, bottomNavFragment)
+                .commit()
         }
     }
 } 

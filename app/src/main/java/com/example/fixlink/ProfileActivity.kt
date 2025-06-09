@@ -18,6 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import androidx.fragment.app.commit
+import com.example.fixlink.data.preferences.LoginPreferences
 
 class ProfileActivity : AppCompatActivity() {
 
@@ -30,6 +31,7 @@ class ProfileActivity : AppCompatActivity() {
 
     private val userRepository = UserRepository()
     private var currentUser: User? = null
+    private lateinit var loginPreferences: LoginPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,6 +84,8 @@ class ProfileActivity : AppCompatActivity() {
 
         btnEditProfile.setOnClickListener { navigateToEditProfile() }
         btnLogout.setOnClickListener { handleLogout() }
+
+        loginPreferences = LoginPreferences(this)
     }
 
     private fun initializeViews() {
@@ -140,6 +144,9 @@ class ProfileActivity : AppCompatActivity() {
                 val result = userRepository.logout()
                 result.fold(
                     onSuccess = {
+                        // Clear login preferences
+                        loginPreferences.clearLoginState()
+                        
                         withContext(Dispatchers.Main) {
                             Toast.makeText(this@ProfileActivity, "Logged out successfully", Toast.LENGTH_SHORT).show()
                             val intent = Intent(this@ProfileActivity, LoginActivity::class.java).apply {
