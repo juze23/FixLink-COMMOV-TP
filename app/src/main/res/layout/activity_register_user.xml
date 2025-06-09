@@ -70,15 +70,15 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
-                <!-- Technician Label -->
+                <!-- User Type Label -->
                 <TextView
-                    android:id="@+id/technician_label"
+                    android:id="@+id/user_type_label"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
                     android:layout_marginTop="24dp"
                     android:layout_marginEnd="32dp"
-                    android:text="Technician"
+                    android:text="User Type"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="@color/purple_primary"
@@ -86,9 +86,9 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <!-- Technician Input (Spinner/Dropdown) -->
+                <!-- User Type Spinner -->
                 <Spinner
-                    android:id="@+id/technician_spinner"
+                    android:id="@+id/user_type_spinner"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_marginStart="32dp"
@@ -101,7 +101,7 @@
                     style="@style/Widget.AppCompat.Spinner"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/technician_label" />
+                    app:layout_constraintTop_toBottomOf="@+id/user_type_label" />
 
                 <!-- Email Label -->
                 <TextView
@@ -117,7 +117,7 @@
                     android:textColor="@color/purple_primary"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/technician_spinner" />
+                    app:layout_constraintTop_toBottomOf="@+id/user_type_spinner" />
 
                 <!-- Email Input -->
                 <EditText
@@ -156,7 +156,7 @@
 
                 <!-- Phone Number Input -->
                 <EditText
-                    android:id="@+id/phone_number_input"
+                    android:id="@+id/phone_input"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_marginStart="32dp"
@@ -173,6 +173,41 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/phone_number_label" />
 
+                <!-- Password Label -->
+                <TextView
+                    android:id="@+id/password_label"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginEnd="32dp"
+                    android:text="Password"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/purple_primary"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/phone_input" />
+
+                <!-- Password Input -->
+                <EditText
+                    android:id="@+id/password_input"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="32dp"
+                    android:hint="Enter password"
+                    android:inputType="textPassword"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:background="@drawable/rounded_edittext_background"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/password_label" />
+
                 <!-- Register User Button -->
                 <Button
                     android:id="@+id/register_user_button"
@@ -187,11 +222,11 @@
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/phone_number_input" />
+                    app:layout_constraintTop_toBottomOf="@+id/password_input" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- Equipment Form Layout -->
+            <!-- Equipment Form -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/equipmentFormLayout"
                 android:layout_width="0dp"
@@ -201,7 +236,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
-                <!-- Name Label -->
+                <!-- Equipment Name Label -->
                 <TextView
                     android:id="@+id/equipment_name_label"
                     android:layout_width="0dp"
@@ -209,7 +244,7 @@
                     android:layout_marginStart="32dp"
                     android:layout_marginTop="24dp"
                     android:layout_marginEnd="32dp"
-                    android:text="Name"
+                    android:text="Equipment Name"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="@color/purple_primary"
@@ -217,7 +252,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <!-- Name Input -->
+                <!-- Equipment Name Input -->
                 <EditText
                     android:id="@+id/equipment_name_input"
                     android:layout_width="0dp"
@@ -225,7 +260,7 @@
                     android:layout_marginStart="32dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="32dp"
-                    android:hint="Enter your equipment name"
+                    android:hint="Enter equipment name"
                     android:inputType="textCapSentences"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
@@ -252,16 +287,14 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/equipment_name_input" />
 
-                <!-- Location Input -->
-                <EditText
-                    android:id="@+id/equipment_location_input"
+                <!-- Location Spinner -->
+                <Spinner
+                    android:id="@+id/equipmentLocationSpinner"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_marginStart="32dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="32dp"
-                    android:hint="Enter equipment location"
-                    android:inputType="textCapWords"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:textColor="@color/black"
@@ -269,7 +302,7 @@
                     android:background="@drawable/rounded_edittext_background"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/equipment_location_label" />
+                    app:layout_constraintTop_toBottomOf="@+id/equipment_location_label" />
 
                 <!-- Register Equipment Button -->
                 <Button
@@ -283,9 +316,10 @@
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     android:textStyle="bold"
+                    android:backgroundTint="@color/purple_primary"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/equipment_location_input" />
+                    app:layout_constraintTop_toBottomOf="@+id/equipmentLocationSpinner" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

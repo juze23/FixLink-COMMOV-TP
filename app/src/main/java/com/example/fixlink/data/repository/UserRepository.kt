@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter
 
 class UserRepository {
     @RequiresApi(Build.VERSION_CODES.O)
-    suspend fun signUp(email: String, password: String, phone: String): Result<User> {
+    suspend fun signUp(email: String, password: String, phone: String, typeId: Int): Result<User> {
         return try {
             //creates the user in supabase auth
             val response = SupabaseClient.supabase.auth.signUpWith(Email) {
@@ -29,12 +29,13 @@ class UserRepository {
 
             //creates user record in the database
             val currentTime = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)
+            val username = email.split("@")[0] // Get username from email prefix
             val user = User(
                 user_id = userId,
-                name = email.split("@")[0], //CHANGE AFTER CHANGING REGISTER UI
+                name = username,
                 email = email,
                 phoneNumber = phone,
-                typeId = 1,
+                typeId = typeId, // Use provided typeId (2 for technician, 3 for admin)
                 createdAt = currentTime,
                 updatedAt = currentTime
             )

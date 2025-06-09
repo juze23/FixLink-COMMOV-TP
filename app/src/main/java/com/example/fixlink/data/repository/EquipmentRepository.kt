@@ -2,10 +2,15 @@ package com.example.fixlink.data.repository
 
 import android.util.Log
 import com.example.fixlink.data.entities.Equipment
-import com.example.fixlink.supabaseConfig.SupabaseClient
+import com.example.fixlink.supabaseConfig.SupabaseClient as SupabaseClient
 import io.github.jan.supabase.postgrest.postgrest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import io.github.jan.supabase.postgrest.query.Columns
+import io.github.jan.supabase.postgrest.query.Returning
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
 
 class EquipmentRepository {
     suspend fun getEquipmentList(): Result<List<Equipment>> = withContext(Dispatchers.IO) {
@@ -29,7 +34,35 @@ class EquipmentRepository {
         }
     }
 
+    suspend fun registerEquipment(name: String, description: String? = null): Result<Equipment> = withContext(Dispatchers.IO) {
+        try {
+            Log.d("EquipmentRepository", "Attempting to register new equipment: $name")
 
+            val equipment = Equipment(
+                name = name,
+                description = description,
+                active = true
+            )
 
+            // Insert into database
+            SupabaseClient.supabase.postgrest["Equipment"]
+                .insert(listOf(equipment))
 
+            // Get the created equipment by name
+            val response = SupabaseClient.supabase.postgrest["Equipment"]
+                .select {
+                    filter {
+                        eq("name", name)
+                    }
+                }
+                .decodeSingle<Equipment>()
+
+            Log.d("EquipmentRepository", "Successfully registered equipment: ${response.name}")
+            Result.success(response)
+        } catch (e: Exception) {
+            Log.e("EquipmentRepository", "Error registering equipment: ${e.message}", e)
+            Log.e("EquipmentRepository", "Error stack trace: ${e.stackTraceToString()}")
+            Result.failure(e)
+        }
+    }
 }

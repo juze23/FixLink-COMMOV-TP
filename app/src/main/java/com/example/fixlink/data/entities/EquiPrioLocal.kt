@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Equipment(
     @SerialName("equipment_id")
-    val equipment_id: Int,
+    val equipment_id: Int? = null,
     val name: String,
     val description: String? = null,
     val active: Boolean

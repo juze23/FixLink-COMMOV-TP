@@ -70,6 +70,12 @@
         <item>Technician 3</item>
     </string-array>
 
+    <string-array name="user_type_options">
+        <item>Select user type</item>
+        <item>Admin</item>
+        <item>Technician</item>
+    </string-array>
+
     <string-array name="equipment_statuses">
         <item>Active</item>
         <item>Inactive</item>

@@ -312,12 +312,16 @@ class RegisterIssueActivity : AppCompatActivity() {
         }
 
         val description = descriptionEditText.text.toString()
+        val equipmentId = selectedEquipment.equipment_id ?: run {
+            Toast.makeText(this, "Invalid equipment selected", Toast.LENGTH_SHORT).show()
+            return
+        }
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val result = issueRepository.createIssue(
                     userId = userId,
-                    equipmentId = selectedEquipment.equipment_id,
+                    equipmentId = equipmentId,
                     description = description,
                     locationId = selectedLocation.location_id,
                     priorityId = selectedPriority.priority_id,
