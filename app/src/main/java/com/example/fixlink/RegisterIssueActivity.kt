@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -32,6 +33,17 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.core.app.ActivityCompat
+import androidx.core.content.FileProvider
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 
 class RegisterIssueActivity : AppCompatActivity() {
 
@@ -50,25 +62,71 @@ class RegisterIssueActivity : AppCompatActivity() {
     private lateinit var issueTypeRepository: IssueTypeRepository
     private lateinit var stateIssueRepository: StateIssueRepository
     
+    private var currentPhotoPath: String? = null
     private var selectedImageUri: Uri? = null
     private var equipmentList: List<Equipment> = emptyList()
     private var priorityList: List<Priority> = emptyList()
     private var locationList: List<Location> = emptyList()
     private var issueTypeList: List<Issue_type> = emptyList()
 
+    private val requestCameraPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            dispatchTakePictureIntent()
+        } else {
+            Toast.makeText(this, "Camera permission is required to take photos", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private val takePictureLauncher = registerForActivityResult(
+        ActivityResultContracts.TakePicture()
+    ) { success ->
+        if (success) {
+            selectedImageUri?.let { uri ->
+                Log.d("RegisterIssueActivity", "Loading image from camera: $uri")
+                try {
+                    Glide.with(this)
+                        .load(uri)
+                        .apply(RequestOptions()
+                            .centerCrop()
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true)
+                            .placeholder(R.drawable.placeholder_printer_image)
+                            .error(R.drawable.placeholder_printer_image))
+                        .into(imageView)
+                    
+                    imageView.foreground = null
+                } catch (e: Exception) {
+                    Log.e("RegisterIssueActivity", "Error in image loading: ${e.message}", e)
+                    Toast.makeText(this@RegisterIssueActivity, "Error loading image: ${e.message}", Toast.LENGTH_SHORT).show()
+                    imageView.setImageResource(R.drawable.placeholder_printer_image)
+                }
+            }
+        }
+    }
+
     private val getContent = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             result.data?.data?.let { uri ->
+                Log.d("RegisterIssueActivity", "Loading image from gallery: $uri")
                 selectedImageUri = uri
                 try {
-                    imageView.apply {
-                        setImageURI(uri)
-                        scaleType = ImageView.ScaleType.FIT_CENTER
-                        background = null
-                        imageTintList = null // Remove o tint da imagem
-                    }
+                    Glide.with(this)
+                        .load(uri)
+                        .apply(RequestOptions()
+                            .centerCrop()
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true)
+                            .placeholder(R.drawable.placeholder_printer_image)
+                            .error(R.drawable.placeholder_printer_image))
+                        .into(imageView)
+                    
+                    imageView.foreground = null
                 } catch (e: Exception) {
-                    Log.e("RegisterIssueActivity", "Error loading image: ${e.message}", e)
+                    Log.e("RegisterIssueActivity", "Error in image loading: ${e.message}", e)
+                    Toast.makeText(this@RegisterIssueActivity, "Error loading image: ${e.message}", Toast.LENGTH_SHORT).show()
+                    imageView.setImageResource(R.drawable.placeholder_printer_image)
                 }
             }
         }
@@ -88,6 +146,12 @@ class RegisterIssueActivity : AppCompatActivity() {
             CoroutineScope(Dispatchers.Main).launch {
                 val bottomNavFragment = withContext(Dispatchers.IO) {
                     NavigationUtils.getBottomNavigationFragment()
+                }
+                // Set the selected item to issues
+                if (bottomNavFragment is BottomNavigationAdminFragment) {
+                    bottomNavFragment.arguments = Bundle().apply {
+                        putInt("selected_item", R.id.nav_issues)
+                    }
                 }
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.bottomNavigationContainer, bottomNavFragment)
@@ -230,18 +294,72 @@ class RegisterIssueActivity : AppCompatActivity() {
 
     private fun setupImageButton() {
         imageView.setOnClickListener {
-            if (selectedImageUri == null) {
-                imageView.apply {
-                    setImageResource(R.drawable.ic_add)
-                    background = ContextCompat.getDrawable(this@RegisterIssueActivity, R.drawable.rounded_rect_dashed)
-                    scaleType = ImageView.ScaleType.CENTER
-                    imageTintList = ContextCompat.getColorStateList(this@RegisterIssueActivity, R.color.gray_inactive)
+            showImageSourceDialog()
+        }
+    }
+
+    private fun showImageSourceDialog() {
+        val options = arrayOf("Take Photo", "Choose from Gallery", "Cancel")
+        AlertDialog.Builder(this)
+            .setTitle("Add Photo")
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> checkCameraPermissionAndTakePicture()
+                    1 -> openGallery()
+                    2 -> return@setItems
                 }
             }
-            
-            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-            getContent.launch(intent)
+            .show()
+    }
+
+    private fun checkCameraPermissionAndTakePicture() {
+        when {
+            ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                dispatchTakePictureIntent()
+            }
+            else -> {
+                requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+            }
         }
+    }
+
+    private fun dispatchTakePictureIntent() {
+        val photoFile: File? = try {
+            createImageFile()
+        } catch (ex: Exception) {
+            Toast.makeText(this, "Error creating image file", Toast.LENGTH_SHORT).show()
+            null
+        }
+
+        photoFile?.also {
+            val photoURI: Uri = FileProvider.getUriForFile(
+                this,
+                "${applicationContext.packageName}.fileprovider",
+                it
+            )
+            selectedImageUri = photoURI
+            takePictureLauncher.launch(photoURI)
+        }
+    }
+
+    private fun createImageFile(): File {
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        val storageDir: File? = getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES)
+        return File.createTempFile(
+            "JPEG_${timeStamp}_",
+            ".jpg",
+            storageDir
+        ).apply {
+            currentPhotoPath = absolutePath
+        }
+    }
+
+    private fun openGallery() {
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        getContent.launch(intent)
     }
 
     private fun setupSubmitButton() {

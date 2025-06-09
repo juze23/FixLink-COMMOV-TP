@@ -1,11 +1,16 @@
 package com.example.fixlink.data.repository
 
+import android.content.Context
+import android.net.Uri
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.example.fixlink.data.entities.Maintenance
 import com.example.fixlink.supabaseConfig.SupabaseClient
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.query.Order
+import io.github.jan.supabase.storage.storage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
@@ -157,6 +162,7 @@ class MaintenanceRepository {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     suspend fun createMaintenance(
         userId: String,
         equipmentId: Int,
@@ -164,11 +170,18 @@ class MaintenanceRepository {
         description: String,
         locationId: Int,
         priorityId: Int,
-        typeId: Int
+        typeId: Int,
+        imageUri: Uri?,
+        context: Context
     ): Result<Maintenance> = withContext(Dispatchers.IO) {
         try {
             // Generate maintenance ID first
             val maintenanceId = UUID.randomUUID().toString()
+            
+            // Upload image if provided
+            if (imageUri != null) {
+                uploadImage(imageUri, context, maintenanceId)
+            }
             
             // Get current timestamp
             val currentTime = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)
@@ -202,6 +215,44 @@ class MaintenanceRepository {
         } catch (e: Exception) {
             Log.e("MaintenanceRepository", "Error in createMaintenance: ${e.message}", e)
             Result.failure(e)
+        }
+    }
+
+    private suspend fun uploadImage(imageUri: Uri, context: Context, maintenanceId: String): String? {
+        return try {
+            // Use maintenance ID as filename
+            val fileName = "maintenance_${maintenanceId}.jpg"
+            
+            // Get the image bytes from the URI
+            val inputStream = context.contentResolver.openInputStream(imageUri)
+            if (inputStream == null) {
+                Log.e("MaintenanceRepository", "Failed to open input stream for image URI: $imageUri")
+                return null
+            }
+            
+            val imageBytes = inputStream.readBytes()
+            inputStream.close()
+            
+            if (imageBytes.isEmpty()) {
+                Log.e("MaintenanceRepository", "Image bytes are empty")
+                return null
+            }
+            
+            try {
+                // Upload to Supabase Storage in the 'Maintenance' folder
+                SupabaseClient.supabase.storage.from("fixlink")
+                    .upload("Maintenance/$fileName", imageBytes)
+                
+                // Return the public URL of the uploaded image
+                SupabaseClient.supabase.storage.from("fixlink")
+                    .publicUrl("Maintenance/$fileName")
+            } catch (e: Exception) {
+                Log.e("MaintenanceRepository", "Error during Supabase upload: ${e.message}", e)
+                null
+            }
+        } catch (e: Exception) {
+            Log.e("MaintenanceRepository", "Error in uploadImage: ${e.message}", e)
+            null
         }
     }
 }

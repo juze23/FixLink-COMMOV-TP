@@ -1,16 +1,29 @@
 package com.example.fixlink
 
+import android.Manifest
+import androidx.appcompat.app.AlertDialog
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
+import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.commit
 import com.example.fixlink.TopAppBarFragment
 import com.example.fixlink.BottomNavigationFragment
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.commit
 import android.widget.Button
 import android.widget.EditText
@@ -29,6 +42,10 @@ import com.example.fixlink.supabaseConfig.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.launch
 import android.annotation.SuppressLint
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class RegisterMaintenanceActivity : AppCompatActivity() {
 
@@ -39,6 +56,9 @@ class RegisterMaintenanceActivity : AppCompatActivity() {
     private lateinit var titleEditText: EditText
     private lateinit var descriptionEditText: EditText
     private lateinit var submitButton: Button
+    private lateinit var imageView: ImageView
+    private var currentPhotoPath: String? = null
+    private var selectedImageUri: Uri? = null
 
     private val equipmentRepository = EquipmentRepository()
     private val priorityRepository = PriorityRepository()
@@ -50,6 +70,45 @@ class RegisterMaintenanceActivity : AppCompatActivity() {
     private var priorityList: List<Priority> = emptyList()
     private var locationList: List<Location> = emptyList()
     private var typeList: List<Type_maintenance> = emptyList()
+
+    private val requestCameraPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            dispatchTakePictureIntent()
+        } else {
+            Toast.makeText(this, "Camera permission is required to take photos", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private val takePictureLauncher = registerForActivityResult(
+        ActivityResultContracts.TakePicture()
+    ) { success ->
+        if (success) {
+            selectedImageUri?.let { uri ->
+                imageView.apply {
+                    setImageURI(uri)
+                    scaleType = ImageView.ScaleType.CENTER_CROP
+                    background = null
+                    invalidate()
+                }
+            }
+        }
+    }
+
+    private val getContent = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            result.data?.data?.let { uri ->
+                selectedImageUri = uri
+                imageView.apply {
+                    setImageURI(uri)
+                    scaleType = ImageView.ScaleType.CENTER_CROP
+                    background = null
+                    invalidate()
+                }
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,6 +126,7 @@ class RegisterMaintenanceActivity : AppCompatActivity() {
         setupSpinners()
         loadAuxiliaryData()
         setupSubmitButton()
+        setupImageButton()
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -83,6 +143,7 @@ class RegisterMaintenanceActivity : AppCompatActivity() {
         titleEditText = findViewById(R.id.title_edit_text)
         descriptionEditText = findViewById(R.id.description_edit_text)
         submitButton = findViewById(R.id.submit_button)
+        imageView = findViewById(R.id.add_image_placeholder)
     }
 
     private fun setupSpinners() {
@@ -223,7 +284,77 @@ class RegisterMaintenanceActivity : AppCompatActivity() {
         return isValid
     }
 
-    @SuppressLint("NewApi")
+    private fun setupImageButton() {
+        imageView.setOnClickListener {
+            showImageSourceDialog()
+        }
+    }
+
+    private fun showImageSourceDialog() {
+        val options = arrayOf("Take Photo", "Choose from Gallery", "Cancel")
+        AlertDialog.Builder(this)
+            .setTitle("Add Photo")
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> checkCameraPermissionAndTakePicture()
+                    1 -> openGallery()
+                    2 -> return@setItems
+                }
+            }
+            .show()
+    }
+
+    private fun checkCameraPermissionAndTakePicture() {
+        when {
+            ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                dispatchTakePictureIntent()
+            }
+            else -> {
+                requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+            }
+        }
+    }
+
+    private fun dispatchTakePictureIntent() {
+        val photoFile: File? = try {
+            createImageFile()
+        } catch (ex: Exception) {
+            Toast.makeText(this, "Error creating image file", Toast.LENGTH_SHORT).show()
+            null
+        }
+
+        photoFile?.also {
+            val photoURI: Uri = FileProvider.getUriForFile(
+                this,
+                "${applicationContext.packageName}.fileprovider",
+                it
+            )
+            selectedImageUri = photoURI
+            takePictureLauncher.launch(photoURI)
+        }
+    }
+
+    private fun createImageFile(): File {
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        val storageDir: File? = getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES)
+        return File.createTempFile(
+            "JPEG_${timeStamp}_",
+            ".jpg",
+            storageDir
+        ).apply {
+            currentPhotoPath = absolutePath
+        }
+    }
+
+    private fun openGallery() {
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        getContent.launch(intent)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun submitMaintenance() {
         val currentUser = SupabaseClient.supabase.auth.currentUserOrNull()
         if (currentUser == null) {
@@ -258,7 +389,9 @@ class RegisterMaintenanceActivity : AppCompatActivity() {
                     description = description,
                     locationId = selectedLocation.location_id,
                     priorityId = selectedPriority.priority_id,
-                    typeId = selectedType.type_id
+                    typeId = selectedType.type_id,
+                    imageUri = selectedImageUri,
+                    context = this@RegisterMaintenanceActivity
                 )
 
                 result.onSuccess {
