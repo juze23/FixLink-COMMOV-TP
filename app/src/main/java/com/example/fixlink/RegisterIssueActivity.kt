@@ -178,6 +178,7 @@ class RegisterIssueActivity : AppCompatActivity() {
         setupImageButton()
         setupSubmitButton()
     }
+    
 
     private fun initializeViews() {
         Log.d("RegisterIssueActivity", "Initializing views")
@@ -488,5 +489,12 @@ class RegisterIssueActivity : AppCompatActivity() {
         equipmentLabel.setTextColor(purpleColor)
         priorityLabel.setTextColor(purpleColor)
         issueTypeLabel.setTextColor(purpleColor)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Show back button in top app bar
+        val topAppBarFragment = supportFragmentManager.findFragmentById(R.id.topAppBarFragmentContainer) as? TopAppBarFragment
+        topAppBarFragment?.showBackButton()
     }
 } 

@@ -28,6 +28,8 @@ class MaintenanceUserActivity : AppCompatActivity() {
                 .replace(R.id.topAppBarFragmentContainer, TopAppBarFragment())
                 .commit()
 
+
+
             // Add MaintenanceContentFragment
             supportFragmentManager.beginTransaction()
                 .replace(R.id.maintenanceContentFragmentContainer, MaintenanceContentFragment())

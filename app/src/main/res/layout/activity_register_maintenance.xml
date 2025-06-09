@@ -116,39 +116,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/description_label" />
 
-            <!-- Photo Label -->
-            <TextView
-                android:id="@+id/photo_label"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="32dp"
-                android:text="Photo"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="@color/purple_primary"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/description_edit_text" />
-
-            <!-- Photo ImageView -->
-            <ImageView
-                android:id="@+id/add_image_placeholder"
-                android:layout_width="0dp"
-                android:layout_height="200dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="32dp"
-                android:background="@drawable/rounded_rect_dashed"
-                android:scaleType="centerCrop"
-                android:adjustViewBounds="true"
-                android:src="@drawable/ic_add"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/photo_label"
-                app:tint="@color/gray_inactive" />
-
             <!-- Location Label -->
             <TextView
                 android:id="@+id/location_label"
@@ -163,7 +130,7 @@
                 android:textColor="@color/purple_primary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/add_image_placeholder" />
+                app:layout_constraintTop_toBottomOf="@+id/description_edit_text" />
 
             <!-- Location Spinner -->
             <Spinner
@@ -215,39 +182,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/equipment_label" />
 
-            <!-- Type Label -->
-            <TextView
-                android:id="@+id/type_label"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="32dp"
-                android:text="Maintenance Type"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="@color/purple_primary"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/equipment_spinner" />
-
-            <!-- Type Spinner -->
-            <Spinner
-                android:id="@+id/type_spinner"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="32dp"
-                android:background="@drawable/rounded_edittext_background"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:spinnerMode="dropdown"
-                style="@style/Widget.AppCompat.Spinner"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/type_label" />
-
             <!-- Priority Label -->
             <TextView
                 android:id="@+id/priority_label"
@@ -262,7 +196,7 @@
                 android:textColor="@color/purple_primary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/type_spinner" />
+                app:layout_constraintTop_toBottomOf="@+id/equipment_spinner" />
 
             <!-- Priority Spinner -->
             <Spinner
@@ -281,6 +215,74 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/priority_label" />
 
+            <!-- Type Label -->
+            <TextView
+                android:id="@+id/type_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="32dp"
+                android:text="Maintenance Type"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/purple_primary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/priority_spinner" />
+
+            <!-- Type Spinner -->
+            <Spinner
+                android:id="@+id/type_spinner"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/rounded_edittext_background"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:spinnerMode="dropdown"
+                style="@style/Widget.AppCompat.Spinner"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/type_label" />
+
+            <!-- Photo Label -->
+            <TextView
+                android:id="@+id/photo_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="32dp"
+                android:text="Photo"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/purple_primary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/type_spinner" />
+
+            <!-- Photo ImageView -->
+            <ImageView
+                android:id="@+id/add_image_placeholder"
+                android:layout_width="0dp"
+                android:layout_height="200dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="32dp"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
+                android:contentDescription="Maintenance image"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/rounded_rect_dashed"
+                android:padding="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/photo_label" />
+
             <!-- Submit Button -->
             <Button
                 android:id="@+id/submit_button"
@@ -295,7 +297,7 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/priority_spinner" />
+                app:layout_constraintTop_toBottomOf="@+id/add_image_placeholder" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

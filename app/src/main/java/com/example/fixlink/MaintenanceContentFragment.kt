@@ -58,6 +58,9 @@ class MaintenanceContentFragment : Fragment() {
 
     private lateinit var loadingProgressBar: View
     private lateinit var maintenanceContent: View
+    private lateinit var fabAddMaintenance: FloatingActionButton
+    private var isAdmin: Boolean = false
+    private var isTechnician: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -73,11 +76,43 @@ class MaintenanceContentFragment : Fragment() {
         val filterIcon: ImageView = view.findViewById(R.id.filterIcon)
         maintenanceRecyclerView = view.findViewById(R.id.maintenanceRecyclerView)
         searchEditText = view.findViewById(R.id.searchEditText)
+        fabAddMaintenance = view.findViewById(R.id.fabAddMaintenance)
         loadingProgressBar = view.findViewById(R.id.loadingProgressBar)
         maintenanceContent = view.findViewById(R.id.maintenanceContent)
 
+        // Get current user role
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val userResult = userRepository.getCurrentUser()
+                if (userResult.isSuccess) {
+                    val user = userResult.getOrNull()
+                    isAdmin = user?.typeId == 3  // 3 is the typeId for admin
+                    isTechnician = user?.typeId == 2  // 2 is the typeId for technician
+                    withContext(Dispatchers.Main) {
+                        // Show FAB only for admin and technician users
+                        fabAddMaintenance.visibility = if (isAdmin || isTechnician) View.VISIBLE else View.GONE
+                    }
+                    Log.d(TAG, "User typeId: ${user?.typeId}, isAdmin: $isAdmin, isTechnician: $isTechnician")
+                } else {
+                    Log.e(TAG, "Failed to get current user: ${userResult.exceptionOrNull()}")
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error getting user role", e)
+            }
+        }
+
         filterIcon.setOnClickListener {
             MaintenanceFilterDialogFragment().show(childFragmentManager, MaintenanceFilterDialogFragment.TAG)
+        }
+
+        // Setup FAB click listener
+        fabAddMaintenance.setOnClickListener {
+            if (isAdmin || isTechnician) {
+                val intent = Intent(requireContext(), RegisterMaintenanceActivity::class.java)
+                startActivity(intent)
+            } else {
+                Toast.makeText(requireContext(), "You don't have permission to register maintenance", Toast.LENGTH_SHORT).show()
+            }
         }
 
         // Setup RecyclerView

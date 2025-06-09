@@ -39,7 +39,26 @@ class EditProfileActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             supportFragmentManager.commit {
                 replace(R.id.topAppBarFragmentContainer, TopAppBarFragment())
-                replace(R.id.bottomNavigationContainer, BottomNavigationUserFragment())
+            }
+
+            // Add appropriate bottom navigation based on user type
+            CoroutineScope(Dispatchers.Main).launch {
+                val bottomNavFragment = withContext(Dispatchers.IO) {
+                    NavigationUtils.getBottomNavigationFragment()
+                }
+                // Set the selected item to profile
+                when (bottomNavFragment) {
+                    is BottomNavigationUserFragment,
+                    is BottomNavigationFragment,
+                    is BottomNavigationAdminFragment -> {
+                        bottomNavFragment.arguments = Bundle().apply {
+                            putInt("selected_item", R.id.nav_profile)
+                        }
+                    }
+                }
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.bottomNavigationContainer, bottomNavFragment)
+                    .commit()
             }
         }
 
@@ -171,5 +190,12 @@ class EditProfileActivity : AppCompatActivity() {
                 Toast.makeText(this@EditProfileActivity, "Failed to update profile: ${result.exceptionOrNull()?.message}", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Show back button in top app bar
+        val topAppBarFragment = supportFragmentManager.findFragmentById(R.id.topAppBarFragmentContainer) as? TopAppBarFragment
+        topAppBarFragment?.showBackButton()
     }
 } 

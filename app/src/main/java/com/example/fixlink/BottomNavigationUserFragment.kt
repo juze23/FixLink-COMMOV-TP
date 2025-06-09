@@ -45,6 +45,8 @@ class BottomNavigationUserFragment : Fragment() {
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
+            // Get selected item from arguments if provided
+            selectedItemId = it.getInt("selected_item", R.id.nav_issues)
         }
     }
 
@@ -72,36 +74,50 @@ class BottomNavigationUserFragment : Fragment() {
         textMaintenance = view.findViewById(R.id.text_maintenance)
         textProfile = view.findViewById(R.id.text_profile)
 
-        // Set initial selected item based on current activity
-        when (activity) {
-            is IssuesUserActivity -> selectedItemId = R.id.nav_issues
-            is MaintenanceUserActivity -> selectedItemId = R.id.nav_maintenance
-            is ProfileActivity -> selectedItemId = R.id.nav_profile
+        // Only set selected item based on activity if no selected item was provided in arguments
+        if (arguments?.getInt("selected_item", -1) == -1) {
+            selectedItemId = when (activity) {
+                is IssuesUserActivity -> R.id.nav_issues
+                is MaintenanceUserActivity -> R.id.nav_maintenance
+                is ProfileActivity -> R.id.nav_profile
+                else -> R.id.nav_issues
+            }
         }
         updateColors(selectedItemId)
 
-        // Set click listeners
+        // Set click listeners with visual feedback
         navIssues.setOnClickListener { 
             if (activity !is IssuesUserActivity) {
-                startActivity(Intent(activity, IssuesUserActivity::class.java))
-                activity?.overridePendingTransition(0, 0)
+                selectItem(R.id.nav_issues)
+                val intent = Intent(requireContext(), IssuesUserActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
                 activity?.finish()
             }
         }
         navMaintenance.setOnClickListener { 
-            if (activity !is RegisterIssueActivity) {
-                startActivity(Intent(activity, MaintenanceUserActivity::class.java))
-                activity?.overridePendingTransition(0, 0)
+            if (activity !is MaintenanceUserActivity) {
+                selectItem(R.id.nav_maintenance)
+                val intent = Intent(requireContext(), MaintenanceUserActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
                 activity?.finish()
             }
         }
         navProfile.setOnClickListener { 
             if (activity !is ProfileActivity) {
-                startActivity(Intent(activity, ProfileActivity::class.java))
-                activity?.overridePendingTransition(0, 0)
+                selectItem(R.id.nav_profile)
+                val intent = Intent(requireContext(), ProfileActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
                 activity?.finish()
             }
         }
+    }
+
+    private fun selectItem(itemId: Int) {
+        selectedItemId = itemId
+        updateColors(selectedItemId)
     }
 
     private fun updateColors(selectedItemId: Int) {

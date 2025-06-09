@@ -56,6 +56,20 @@ class ProfileActivity : AppCompatActivity() {
                 val bottomNavFragment = withContext(Dispatchers.IO) {
                     NavigationUtils.getBottomNavigationFragment()
                 }
+                // Set the selected item to profile
+                if (bottomNavFragment is BottomNavigationUserFragment) {
+                    bottomNavFragment.arguments = Bundle().apply {
+                        putInt("selected_item", R.id.nav_profile)
+                    }
+                } else if (bottomNavFragment is BottomNavigationFragment) {
+                    bottomNavFragment.arguments = Bundle().apply {
+                        putInt("selected_item", R.id.nav_profile)
+                    }
+                } else if (bottomNavFragment is BottomNavigationAdminFragment) {
+                    bottomNavFragment.arguments = Bundle().apply {
+                        putInt("selected_item", R.id.nav_profile)
+                    }
+                }
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.bottomNavigationContainer, bottomNavFragment)
                     .commit()

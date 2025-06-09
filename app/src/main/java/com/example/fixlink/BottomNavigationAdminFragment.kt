@@ -78,10 +78,17 @@ class BottomNavigationAdminFragment : Fragment() {
         textMaintenance = view.findViewById(R.id.text_maintenance)
         textAdmin = view.findViewById(R.id.text_admin)
 
-        // Update colors based on selected item
+        // Set initial selected item based on current activity
+        selectedItemId = when (activity) {
+            is DashboardActivity -> R.id.nav_dashboard
+            is IssuesUserActivity -> R.id.nav_issues
+            is MaintenanceUserActivity -> R.id.nav_maintenance
+            is AdminActivity -> R.id.nav_admin
+            else -> R.id.nav_dashboard
+        }
         updateColors(selectedItemId)
 
-        // Set click listeners
+        // Set click listeners with visual feedback
         navDashboard.setOnClickListener {
             if (activity !is DashboardActivity) {
                 selectItem(R.id.nav_dashboard)
@@ -121,10 +128,8 @@ class BottomNavigationAdminFragment : Fragment() {
     }
 
     private fun selectItem(itemId: Int) {
-        if (selectedItemId != itemId) {
-            selectedItemId = itemId
-            updateColors(selectedItemId)
-        }
+        selectedItemId = itemId
+        updateColors(selectedItemId)
     }
 
     private fun updateColors(selectedItemId: Int) {

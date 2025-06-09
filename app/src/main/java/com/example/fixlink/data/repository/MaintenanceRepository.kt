@@ -239,13 +239,13 @@ class MaintenanceRepository {
             }
             
             try {
-                // Upload to Supabase Storage in the 'Maintenance' folder
+                // Upload to Supabase Storage in the 'Maintenances' folder
                 SupabaseClient.supabase.storage.from("fixlink")
-                    .upload("Maintenance/$fileName", imageBytes)
+                    .upload("Maintenances/$fileName", imageBytes)
                 
                 // Return the public URL of the uploaded image
                 SupabaseClient.supabase.storage.from("fixlink")
-                    .publicUrl("Maintenance/$fileName")
+                    .publicUrl("Maintenances/$fileName")
             } catch (e: Exception) {
                 Log.e("MaintenanceRepository", "Error during Supabase upload: ${e.message}", e)
                 null

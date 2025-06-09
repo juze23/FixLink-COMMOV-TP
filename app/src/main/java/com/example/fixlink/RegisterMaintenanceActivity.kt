@@ -46,6 +46,12 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
+import kotlinx.coroutines.Dispatchers
+import android.util.Log
+import kotlinx.coroutines.withContext
 
 class RegisterMaintenanceActivity : AppCompatActivity() {
 
@@ -56,7 +62,7 @@ class RegisterMaintenanceActivity : AppCompatActivity() {
     private lateinit var titleEditText: EditText
     private lateinit var descriptionEditText: EditText
     private lateinit var submitButton: Button
-    private lateinit var imageView: ImageView
+    private lateinit var addImagePlaceholder: ImageView
     private var currentPhotoPath: String? = null
     private var selectedImageUri: Uri? = null
 
@@ -86,11 +92,13 @@ class RegisterMaintenanceActivity : AppCompatActivity() {
     ) { success ->
         if (success) {
             selectedImageUri?.let { uri ->
-                imageView.apply {
-                    setImageURI(uri)
-                    scaleType = ImageView.ScaleType.CENTER_CROP
-                    background = null
-                    invalidate()
+                Log.d("RegisterMaintenanceActivity", "Loading image from camera: $uri")
+                try {
+                    loadImage(uri)
+                } catch (e: Exception) {
+                    Log.e("RegisterMaintenanceActivity", "Error loading image from camera: ${e.message}", e)
+                    Toast.makeText(this, "Error loading image: ${e.message}", Toast.LENGTH_SHORT).show()
+                    addImagePlaceholder.setImageResource(R.drawable.ic_add)
                 }
             }
         }
@@ -99,12 +107,14 @@ class RegisterMaintenanceActivity : AppCompatActivity() {
     private val getContent = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             result.data?.data?.let { uri ->
+                Log.d("RegisterMaintenanceActivity", "Loading image from gallery: $uri")
                 selectedImageUri = uri
-                imageView.apply {
-                    setImageURI(uri)
-                    scaleType = ImageView.ScaleType.CENTER_CROP
-                    background = null
-                    invalidate()
+                try {
+                    loadImage(uri)
+                } catch (e: Exception) {
+                    Log.e("RegisterMaintenanceActivity", "Error loading image from gallery: ${e.message}", e)
+                    Toast.makeText(this, "Error loading image: ${e.message}", Toast.LENGTH_SHORT).show()
+                    addImagePlaceholder.setImageResource(R.drawable.ic_add)
                 }
             }
         }
@@ -143,7 +153,7 @@ class RegisterMaintenanceActivity : AppCompatActivity() {
         titleEditText = findViewById(R.id.title_edit_text)
         descriptionEditText = findViewById(R.id.description_edit_text)
         submitButton = findViewById(R.id.submit_button)
-        imageView = findViewById(R.id.add_image_placeholder)
+        addImagePlaceholder = findViewById(R.id.add_image_placeholder)
     }
 
     private fun setupSpinners() {
@@ -187,51 +197,94 @@ class RegisterMaintenanceActivity : AppCompatActivity() {
     private fun loadAuxiliaryData() {
         lifecycleScope.launch {
             try {
-                // Load equipment
-                equipmentRepository.getEquipmentList().onSuccess { equipment ->
-                    equipmentList = equipment
-                    val equipmentNames = listOf("Choose equipment") + equipment.map { it.name }
-                    (equipmentSpinner.adapter as ArrayAdapter<String>).apply {
-                        clear()
-                        addAll(equipmentNames)
-                        notifyDataSetChanged()
+                // Load equipment list
+                equipmentRepository.getEquipmentList().fold(
+                    onSuccess = { equipment ->
+                        equipmentList = equipment
+                        withContext(Dispatchers.Main) {
+                            try {
+                                val adapter = ArrayAdapter(
+                                    this@RegisterMaintenanceActivity,
+                                    android.R.layout.simple_spinner_item,
+                                    listOf("Select equipment") + equipment.map { it.name }
+                                ).apply {
+                                    setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                                }
+                                equipmentSpinner.adapter = adapter
+                            } catch (e: Exception) {
+                                Log.e("RegisterMaintenanceActivity", "Error setting adapter: ${e.message}", e)
+                            }
+                        }
+                    },
+                    onFailure = { error ->
+                        Log.e("RegisterMaintenanceActivity", "Error loading equipment: ${error.message}", error)
                     }
-                }
+                )
 
-                // Load priorities
-                priorityRepository.getPriorityList().onSuccess { priorities ->
-                    priorityList = priorities
-                    val priorityNames = listOf("Choose priority") + priorities.map { it.priority }
-                    (prioritySpinner.adapter as ArrayAdapter<String>).apply {
-                        clear()
-                        addAll(priorityNames)
-                        notifyDataSetChanged()
+                // Load priority list
+                priorityRepository.getPriorityList().fold(
+                    onSuccess = { priorities ->
+                        priorityList = priorities
+                        withContext(Dispatchers.Main) {
+                            val adapter = ArrayAdapter(
+                                this@RegisterMaintenanceActivity,
+                                android.R.layout.simple_spinner_item,
+                                listOf("Select priority") + priorities.map { it.priority }
+                            ).apply {
+                                setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                            }
+                            prioritySpinner.adapter = adapter
+                        }
+                    },
+                    onFailure = { error ->
+                        Log.e("RegisterMaintenanceActivity", "Error loading priorities: ${error.message}", error)
                     }
-                }
+                )
 
-                // Load locations
-                locationRepository.getLocationList().onSuccess { locations ->
-                    locationList = locations
-                    val locationNames = listOf("Choose location") + locations.map { it.name }
-                    (locationSpinner.adapter as ArrayAdapter<String>).apply {
-                        clear()
-                        addAll(locationNames)
-                        notifyDataSetChanged()
+                // Load location list
+                locationRepository.getLocationList().fold(
+                    onSuccess = { locations ->
+                        locationList = locations
+                        withContext(Dispatchers.Main) {
+                            val adapter = ArrayAdapter(
+                                this@RegisterMaintenanceActivity,
+                                android.R.layout.simple_spinner_item,
+                                listOf("Select location") + locations.map { it.name }
+                            ).apply {
+                                setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                            }
+                            locationSpinner.adapter = adapter
+                        }
+                    },
+                    onFailure = { error ->
+                        Log.e("RegisterMaintenanceActivity", "Error loading locations: ${error.message}", error)
                     }
-                }
+                )
 
                 // Load maintenance types
-                maintenanceTypeRepository.getMaintenanceTypes().onSuccess { types ->
-                    typeList = types
-                    val typeNames = listOf("Choose maintenance type") + types.map { it.type }
-                    (typeSpinner.adapter as ArrayAdapter<String>).apply {
-                        clear()
-                        addAll(typeNames)
-                        notifyDataSetChanged()
+                maintenanceTypeRepository.getMaintenanceTypes().fold(
+                    onSuccess = { types ->
+                        typeList = types
+                        withContext(Dispatchers.Main) {
+                            val adapter = ArrayAdapter(
+                                this@RegisterMaintenanceActivity,
+                                android.R.layout.simple_spinner_item,
+                                listOf("Select maintenance type") + types.map { it.type }
+                            ).apply {
+                                setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                            }
+                            typeSpinner.adapter = adapter
+                        }
+                    },
+                    onFailure = { error ->
+                        Log.e("RegisterMaintenanceActivity", "Error loading maintenance types: ${error.message}", error)
                     }
-                }
+                )
             } catch (e: Exception) {
-                Toast.makeText(this@RegisterMaintenanceActivity, "Error loading data: ${e.message}", Toast.LENGTH_LONG).show()
+                Log.e("RegisterMaintenanceActivity", "Error loading data: ${e.message}", e)
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@RegisterMaintenanceActivity, "Error loading data: ${e.message}", Toast.LENGTH_LONG).show()
+                }
             }
         }
     }
@@ -285,7 +338,7 @@ class RegisterMaintenanceActivity : AppCompatActivity() {
     }
 
     private fun setupImageButton() {
-        imageView.setOnClickListener {
+        addImagePlaceholder.setOnClickListener {
             showImageSourceDialog()
         }
     }
@@ -420,5 +473,40 @@ class RegisterMaintenanceActivity : AppCompatActivity() {
         locationLabel.setTextColor(purpleColor)
         equipmentLabel.setTextColor(purpleColor)
         priorityLabel.setTextColor(purpleColor)
+    }
+
+    private fun loadImage(uri: Uri) {
+        Glide.with(this)
+            .load(uri)
+            .apply(RequestOptions()
+                .centerCrop()
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                .placeholder(R.drawable.placeholder_printer_image)
+                .error(R.drawable.placeholder_printer_image))
+            .into(addImagePlaceholder)
+        
+        addImagePlaceholder.foreground = null
+    }
+
+    private fun loadImageFromFirebase(imageUrl: String) {
+        Glide.with(this)
+            .load(imageUrl)
+            .apply(RequestOptions()
+                .centerCrop()
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                .placeholder(R.drawable.placeholder_printer_image)
+                .error(R.drawable.placeholder_printer_image))
+            .into(addImagePlaceholder)
+        
+        addImagePlaceholder.foreground = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Show back button in top app bar
+        val topAppBarFragment = supportFragmentManager.findFragmentById(R.id.topAppBarFragmentContainer) as? TopAppBarFragment
+        topAppBarFragment?.showBackButton()
     }
 }

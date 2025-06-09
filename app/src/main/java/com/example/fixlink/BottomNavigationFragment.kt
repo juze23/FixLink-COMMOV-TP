@@ -58,6 +58,8 @@ class BottomNavigationFragment : Fragment() {
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
+            // Get selected item from arguments if provided
+            selectedItemId = it.getInt("selected_item", R.id.nav_my_tasks)
         }
     }
 
@@ -98,7 +100,7 @@ class BottomNavigationFragment : Fragment() {
         }
         updateColors(selectedItemId)
 
-        // Set click listeners
+        // Set click listeners with visual feedback
         navMyTasks.setOnClickListener { 
             if (activity !is MyTasksActivity) {
                 selectItem(R.id.nav_my_tasks)
@@ -138,10 +140,8 @@ class BottomNavigationFragment : Fragment() {
     }
 
     private fun selectItem(itemId: Int) {
-        if (selectedItemId != itemId) {
-            selectedItemId = itemId
-            updateColors(selectedItemId)
-        }
+        selectedItemId = itemId
+        updateColors(selectedItemId)
     }
 
     private fun updateColors(selectedItemId: Int) {
