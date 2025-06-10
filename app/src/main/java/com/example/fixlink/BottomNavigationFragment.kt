@@ -1,5 +1,6 @@
 package com.example.fixlink
 
+import android.app.ActivityOptions
 import android.content.Intent
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.os.Bundle
@@ -98,42 +99,59 @@ class BottomNavigationFragment : Fragment() {
             is ProfileActivity -> R.id.nav_profile
             else -> R.id.nav_my_tasks
         }
+
         updateColors(selectedItemId)
 
         // Set click listeners with visual feedback
         navMyTasks.setOnClickListener { 
             if (activity !is MyTasksActivity) {
                 selectItem(R.id.nav_my_tasks)
+                val options = ActivityOptions.makeCustomAnimation(
+                    context,
+                    0,
+                    0
+                )
                 val intent = Intent(requireContext(), MyTasksActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
+                startActivity(intent, options.toBundle())
                 activity?.finish()
             }
         }
         navIssues.setOnClickListener { 
             if (activity !is IssuesUserActivity) {
                 selectItem(R.id.nav_issues)
+                val options = ActivityOptions.makeCustomAnimation(
+                    context,
+                    0,
+                    0
+                )
                 val intent = Intent(requireContext(), IssuesUserActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
+                startActivity(intent, options.toBundle())
                 activity?.finish()
             }
         }
         navMaintenance.setOnClickListener { 
             if (activity !is MaintenanceUserActivity) {
                 selectItem(R.id.nav_maintenance)
+                val options = ActivityOptions.makeCustomAnimation(
+                    context,
+                    0,
+                    0
+                )
                 val intent = Intent(requireContext(), MaintenanceUserActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
+                startActivity(intent, options.toBundle())
                 activity?.finish()
             }
         }
         navProfile.setOnClickListener { 
             if (activity !is ProfileActivity) {
                 selectItem(R.id.nav_profile)
-                val intent = Intent(requireContext(), ProfileActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
+                val options = ActivityOptions.makeCustomAnimation(
+                    context,
+                    0,
+                    0
+                )
+                val intent = Intent(requireContext(), ProfileActivity::class.java, )
+                startActivity(intent, options.toBundle())
                 activity?.finish()
             }
         }
@@ -173,17 +191,17 @@ class BottomNavigationFragment : Fragment() {
                 textMyTasks.setTextColor(selectedColor)
             }
             R.id.nav_issues -> {
-                iconIssues.setImageResource(R.drawable.ic_issues)
+                iconIssues.setImageResource(R.drawable.ic_issues_outline)
                 iconIssues.setColorFilter(selectedColor)
                 textIssues.setTextColor(selectedColor)
             }
             R.id.nav_maintenance -> {
-                iconMaintenance.setImageResource(R.drawable.ic_maintenance)
+                iconMaintenance.setImageResource(R.drawable.ic_maintenace_outline)
                 iconMaintenance.setColorFilter(selectedColor)
                 textMaintenance.setTextColor(selectedColor)
             }
             R.id.nav_profile -> {
-                iconProfile.setImageResource(R.drawable.ic_profile)
+                iconProfile.setImageResource(R.drawable.ic_profile_outline)
                 iconProfile.setColorFilter(selectedColor)
                 textProfile.setTextColor(selectedColor)
             }

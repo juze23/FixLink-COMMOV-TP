@@ -90,6 +90,10 @@ class IssueDetailFragment : Fragment() {
     private lateinit var endTaskButton: Button
     private lateinit var assignTechnicianButton: Button
     private lateinit var viewReportButton: Button
+    private lateinit var assignYourselfButton: Button
+
+    private var isTechnician: Boolean = false
+    private var currentUserId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -162,12 +166,16 @@ class IssueDetailFragment : Fragment() {
         endTaskButton = view.findViewById(R.id.endTaskButton)
         assignTechnicianButton = view.findViewById(R.id.assignTechnicianButton)
         viewReportButton = view.findViewById(R.id.viewReportButton)
+        assignYourselfButton = view.findViewById(R.id.assignYourselfButton)
 
         // Set click listener for assign technician button
         assignTechnicianButton.setOnClickListener {
             val intent = Intent(requireContext(), ChooseTechnicianActivity::class.java)
             intent.putExtra("ISSUE_ID", issueId)
             startActivityForResult(intent, REQUEST_ASSIGN_TECHNICIAN)
+        }
+        assignYourselfButton.setOnClickListener {
+            showAssignYourselfDialog()
         }
     }
 
@@ -176,6 +184,9 @@ class IssueDetailFragment : Fragment() {
         if (requestCode == REQUEST_ASSIGN_TECHNICIAN && resultCode == Activity.RESULT_OK) {
             // Refresh the issue data to show the assigned technician
             loadIssueData()
+        }
+        if (requestCode == 2001 && resultCode == Activity.RESULT_OK) {
+            assignYourselfToIssue()
         }
     }
 
@@ -226,11 +237,19 @@ class IssueDetailFragment : Fragment() {
                 // Buscar utilizador atual
                 val currentUserResult = userRepository.getCurrentUser()
                 val isAdmin = currentUserResult.isSuccess && currentUserResult.getOrNull()?.typeId == 3
+                val user = currentUserResult.getOrNull()
+                if (user != null) {
+                    isTechnician = user.typeId == 2
+                    currentUserId = user.user_id
+                }
 
                 withContext(Dispatchers.Main) {
                     displayIssueData(issue, priorities, equipments, locations, states, users, isAdmin)
                     // Mostrar botão Assign Technician só para admin e quando não há técnico atribuído
                     assignTechnicianButton.visibility = if (isAdmin && issue.id_technician == null) View.VISIBLE else View.GONE
+                    val statusText = states.find { it.state_id == issue.state_id }?.state ?: ""
+                    val showAssignYourself = isTechnician && issue.id_technician == null && statusText.lowercase() == "pending"
+                    assignYourselfButton.visibility = if (showAssignYourself) View.VISIBLE else View.GONE
                     showLoading(false)
                 }
             } catch (e: Exception) {
@@ -446,9 +465,39 @@ class IssueDetailFragment : Fragment() {
             Toast.makeText(requireContext(), "Invalid state.", Toast.LENGTH_SHORT).show()
             return
         }
+
+        // Get current date in ISO format using Calendar
+        val calendar = java.util.Calendar.getInstance()
+        val dateFormat = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.getDefault())
+        dateFormat.timeZone = java.util.TimeZone.getTimeZone("UTC")
+        val currentDate = dateFormat.format(calendar.time)
+
+        // Update dates based on status change
+        val updatedIssue = when (newStatus.lowercase()) {
+            "under repair", "em andamento", "em reparacao" -> {
+                issue.copy(
+                    state_id = newState.state_id,
+                    report = report ?: issue.report,
+                    beginningDate = currentDate
+                )
+            }
+            "resolved", "resolvido" -> {
+                issue.copy(
+                    state_id = newState.state_id,
+                    report = report ?: issue.report,
+                    endingDate = currentDate
+                )
+            }
+            else -> {
+                issue.copy(
+                    state_id = newState.state_id,
+                    report = report ?: issue.report
+                )
+            }
+        }
+
         showLoading(true)
         CoroutineScope(Dispatchers.IO).launch {
-            val updatedIssue = issue.copy(state_id = newState.state_id, report = report ?: issue.report)
             val result = issueRepository.updateIssue(updatedIssue)
             withContext(Dispatchers.Main) {
                 showLoading(false)
@@ -457,6 +506,30 @@ class IssueDetailFragment : Fragment() {
                     loadIssueData()
                 } else {
                     Toast.makeText(requireContext(), "Failed to update status.", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun showAssignYourselfDialog() {
+        val fragment = AssignTaskFragment()
+        fragment.setTargetFragment(this, 2001)
+        fragment.show(parentFragmentManager, "AssignTaskFragment")
+    }
+
+    private fun assignYourselfToIssue() {
+        val issueId = issueId ?: return
+        val technicianId = currentUserId ?: return
+        showLoading(true)
+        CoroutineScope(Dispatchers.IO).launch {
+            val result = issueRepository.assignTechnicianToIssue(issueId, technicianId)
+            withContext(Dispatchers.Main) {
+                showLoading(false)
+                if (result.isSuccess) {
+                    Toast.makeText(requireContext(), "You have been assigned to this issue!", Toast.LENGTH_SHORT).show()
+                    loadIssueData()
+                } else {
+                    Toast.makeText(requireContext(), "Failed to assign yourself.", Toast.LENGTH_SHORT).show()
                 }
             }
         }

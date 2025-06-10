@@ -68,6 +68,8 @@ class MaintenanceDetailFragment : Fragment() {
     private lateinit var stateMaintenanceRepository: StateMaintenanceRepository
     private lateinit var userRepository: UserRepository
     private var isAdmin: Boolean = false
+    private var isTechnician: Boolean = false
+    private var currentUserId: String? = null
 
     // Views
     private lateinit var maintenanceTitle: TextView
@@ -86,6 +88,7 @@ class MaintenanceDetailFragment : Fragment() {
     private lateinit var endTaskButton: Button
     private lateinit var assignTechnicianButton: Button
     private lateinit var viewReportButton: Button
+    private lateinit var assignYourselfButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -175,12 +178,17 @@ class MaintenanceDetailFragment : Fragment() {
         endTaskButton = view.findViewById(R.id.endTaskButton)
         assignTechnicianButton = view.findViewById(R.id.assignTechnicianButton)
         viewReportButton = view.findViewById(R.id.viewReportButton)
+        assignYourselfButton = view.findViewById(R.id.assignYourselfButton)
 
         // Set click listener for assign technician button
         assignTechnicianButton.setOnClickListener {
             val intent = Intent(requireContext(), ChooseTechnicianActivity::class.java)
             intent.putExtra("MAINTENANCE_ID", maintenanceId)
             startActivityForResult(intent, REQUEST_ASSIGN_TECHNICIAN)
+        }
+
+        assignYourselfButton.setOnClickListener {
+            showAssignYourselfDialog()
         }
     }
 
@@ -189,6 +197,9 @@ class MaintenanceDetailFragment : Fragment() {
         if (requestCode == REQUEST_ASSIGN_TECHNICIAN && resultCode == Activity.RESULT_OK) {
             // Refresh maintenance data after technician assignment
             loadMaintenanceData()
+        }
+        if (requestCode == 2002 && resultCode == Activity.RESULT_OK) {
+            assignYourselfToMaintenance()
         }
     }
 
@@ -204,15 +215,18 @@ class MaintenanceDetailFragment : Fragment() {
             try {
                 // Load maintenance
                 val maintenanceResult = maintenanceRepository.getMaintenanceById(maintenanceId)
-                if (maintenanceResult.isFailure) {
+                val userResult = userRepository.getCurrentUser()
+                if (maintenanceResult.isFailure || userResult.isFailure) {
                     withContext(Dispatchers.Main) {
                         showLoading(false)
-                        Toast.makeText(requireContext(), "Error loading maintenance", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Error loading maintenance or user", Toast.LENGTH_SHORT).show()
                     }
                     return@launch
                 }
-
-                val maintenance = maintenanceResult.getOrNull() ?: return@launch
+                val maintenance = maintenanceResult.getOrNull()!!
+                val user = userResult.getOrNull()!!
+                isTechnician = user.typeId == 2
+                currentUserId = user.user_id
 
                 // Load auxiliary data
                 val prioritiesResult = priorityRepository.getPriorityList()
@@ -238,6 +252,10 @@ class MaintenanceDetailFragment : Fragment() {
 
                 withContext(Dispatchers.Main) {
                     displayMaintenanceData(maintenance, priorities, equipments, locations, states, users)
+                    assignTechnicianButton.visibility = if (isAdmin && maintenance.id_technician == null) View.VISIBLE else View.GONE
+                    val statusText = states.find { it.state_id == maintenance.state_id }?.state ?: ""
+                    val showAssignYourself = isTechnician && maintenance.id_technician == null && statusText.lowercase() == "pending"
+                    assignYourselfButton.visibility = if (showAssignYourself) View.VISIBLE else View.GONE
                     showLoading(false)
                 }
             } catch (e: Exception) {
@@ -380,6 +398,10 @@ class MaintenanceDetailFragment : Fragment() {
             startActivity(intent)
         }
 
+        assignYourselfButton.setOnClickListener {
+            showAssignYourselfDialog()
+        }
+
         // Load maintenance image
         try {
             CoroutineScope(Dispatchers.IO).launch {
@@ -459,9 +481,39 @@ class MaintenanceDetailFragment : Fragment() {
             Toast.makeText(requireContext(), "Invalid state.", Toast.LENGTH_SHORT).show()
             return
         }
+
+        // Get current date in ISO format using Calendar
+        val calendar = java.util.Calendar.getInstance()
+        val dateFormat = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.getDefault())
+        dateFormat.timeZone = java.util.TimeZone.getTimeZone("UTC")
+        val currentDate = dateFormat.format(calendar.time)
+
+        // Update dates based on status change
+        val updatedMaintenance = when (newStatus.lowercase()) {
+            "ongoing", "em curso" -> {
+                maintenance.copy(
+                    state_id = newState.state_id,
+                    report = report ?: maintenance.report,
+                    beginningDate = currentDate
+                )
+            }
+            "completed", "concluído", "concluido" -> {
+                maintenance.copy(
+                    state_id = newState.state_id,
+                    report = report ?: maintenance.report,
+                    endingDate = currentDate
+                )
+            }
+            else -> {
+                maintenance.copy(
+                    state_id = newState.state_id,
+                    report = report ?: maintenance.report
+                )
+            }
+        }
+
         showLoading(true)
         CoroutineScope(Dispatchers.IO).launch {
-            val updatedMaintenance = maintenance.copy(state_id = newState.state_id, report = report ?: maintenance.report)
             val result = maintenanceRepository.updateMaintenance(updatedMaintenance)
             withContext(Dispatchers.Main) {
                 showLoading(false)
@@ -470,6 +522,30 @@ class MaintenanceDetailFragment : Fragment() {
                     loadMaintenanceData()
                 } else {
                     Toast.makeText(requireContext(), "Failed to update status.", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun showAssignYourselfDialog() {
+        val fragment = AssignTaskFragment()
+        fragment.setTargetFragment(this, 2002)
+        fragment.show(parentFragmentManager, "AssignTaskFragment")
+    }
+
+    private fun assignYourselfToMaintenance() {
+        val maintenanceId = maintenanceId ?: return
+        val technicianId = currentUserId ?: return
+        showLoading(true)
+        CoroutineScope(Dispatchers.IO).launch {
+            val result = maintenanceRepository.assignTechnicianToMaintenance(maintenanceId, technicianId)
+            withContext(Dispatchers.Main) {
+                showLoading(false)
+                if (result.isSuccess) {
+                    Toast.makeText(requireContext(), "You have been assigned to this maintenance!", Toast.LENGTH_SHORT).show()
+                    loadMaintenanceData()
+                } else {
+                    Toast.makeText(requireContext(), "Failed to assign yourself.", Toast.LENGTH_SHORT).show()
                 }
             }
         }

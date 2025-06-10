@@ -1,5 +1,6 @@
 package com.example.fixlink
 
+import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -89,28 +90,37 @@ class BottomNavigationUserFragment : Fragment() {
         navIssues.setOnClickListener { 
             if (activity !is IssuesUserActivity) {
                 selectItem(R.id.nav_issues)
+                val options = ActivityOptions.makeCustomAnimation(
+                    context,
+                    0,
+                    0
+                )
                 val intent = Intent(requireContext(), IssuesUserActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
-                activity?.finish()
+                startActivity(intent, options.toBundle())
             }
         }
         navMaintenance.setOnClickListener { 
             if (activity !is MaintenanceUserActivity) {
                 selectItem(R.id.nav_maintenance)
+                val options = ActivityOptions.makeCustomAnimation(
+                    context,
+                    0,
+                    0
+                )
                 val intent = Intent(requireContext(), MaintenanceUserActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
-                activity?.finish()
+                startActivity(intent, options.toBundle())
             }
         }
         navProfile.setOnClickListener { 
             if (activity !is ProfileActivity) {
                 selectItem(R.id.nav_profile)
+                val options = ActivityOptions.makeCustomAnimation(
+                    context,
+                    0,
+                    0
+                )
                 val intent = Intent(requireContext(), ProfileActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
-                activity?.finish()
+                startActivity(intent, options.toBundle())
             }
         }
     }

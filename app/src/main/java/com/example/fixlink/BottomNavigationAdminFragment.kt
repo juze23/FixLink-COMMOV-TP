@@ -1,5 +1,6 @@
 package com.example.fixlink
 
+import android.app.ActivityOptions
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -28,16 +29,19 @@ class BottomNavigationAdminFragment : Fragment() {
     private lateinit var navIssues: LinearLayout
     private lateinit var navMaintenance: LinearLayout
     private lateinit var navAdmin: LinearLayout
+    private lateinit var navProfile: LinearLayout
 
     private lateinit var iconDashboard: ImageView
     private lateinit var iconIssues: ImageView
     private lateinit var iconMaintenance: ImageView
     private lateinit var iconAdmin: ImageView
+    private lateinit var iconProfile: ImageView
 
     private lateinit var textDashboard: TextView
     private lateinit var textIssues: TextView
     private lateinit var textMaintenance: TextView
     private lateinit var textAdmin: TextView
+    private lateinit var textProfile: TextView
 
     private var selectedItemId: Int = R.id.nav_dashboard // Default selected item
 
@@ -67,16 +71,19 @@ class BottomNavigationAdminFragment : Fragment() {
         navIssues = view.findViewById(R.id.nav_issues)
         navMaintenance = view.findViewById(R.id.nav_maintenance)
         navAdmin = view.findViewById(R.id.nav_admin)
+        navProfile = view.findViewById(R.id.nav_profile)
 
         iconDashboard = view.findViewById(R.id.icon_dashboard)
         iconIssues = view.findViewById(R.id.icon_issues)
         iconMaintenance = view.findViewById(R.id.icon_maintenance)
         iconAdmin = view.findViewById(R.id.icon_admin)
+        iconProfile = view.findViewById(R.id.icon_profile)
 
         textDashboard = view.findViewById(R.id.text_dashboard)
         textIssues = view.findViewById(R.id.text_issues)
         textMaintenance = view.findViewById(R.id.text_maintenance)
         textAdmin = view.findViewById(R.id.text_admin)
+        textProfile = view.findViewById(R.id.text_profile)
 
         // Set initial selected item based on current activity
         selectedItemId = when (activity) {
@@ -84,6 +91,7 @@ class BottomNavigationAdminFragment : Fragment() {
             is IssuesUserActivity -> R.id.nav_issues
             is MaintenanceUserActivity -> R.id.nav_maintenance
             is AdminActivity -> R.id.nav_admin
+            is ProfileActivity -> R.id.nav_profile
             else -> R.id.nav_dashboard
         }
         updateColors(selectedItemId)
@@ -92,36 +100,66 @@ class BottomNavigationAdminFragment : Fragment() {
         navDashboard.setOnClickListener {
             if (activity !is DashboardActivity) {
                 selectItem(R.id.nav_dashboard)
+                val options = ActivityOptions.makeCustomAnimation(
+                    context,
+                    0,
+                    0
+                )
                 val intent = Intent(requireContext(), DashboardActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
+                startActivity(intent, options.toBundle())
                 activity?.finish()
             }
         }
         navIssues.setOnClickListener {
             if (activity !is IssuesUserActivity) {
                 selectItem(R.id.nav_issues)
+                val options = ActivityOptions.makeCustomAnimation(
+                    context,
+                    0,
+                    0
+                )
                 val intent = Intent(requireContext(), IssuesUserActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
+                startActivity(intent, options.toBundle())
                 activity?.finish()
             }
         }
         navMaintenance.setOnClickListener {
             if (activity !is MaintenanceUserActivity) {
                 selectItem(R.id.nav_maintenance)
+                val options = ActivityOptions.makeCustomAnimation(
+                    context,
+                    0,
+                    0
+                )
                 val intent = Intent(requireContext(), MaintenanceUserActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
+                startActivity(intent, options.toBundle())
                 activity?.finish()
             }
         }
         navAdmin.setOnClickListener {
             if (activity !is AdminActivity) {
                 selectItem(R.id.nav_admin)
+                val options = ActivityOptions.makeCustomAnimation(
+                    context,
+                    0,
+                    0
+                )
                 val intent = Intent(requireContext(), AdminActivity::class.java)
+                startActivity(intent, options.toBundle())
+                activity?.finish()
+            }
+        }
+        navProfile.setOnClickListener {
+            if (activity !is ProfileActivity) {
+                selectItem(R.id.nav_profile)
+                val options = ActivityOptions.makeCustomAnimation(
+                    context,
+                    0,
+                    0
+                )
+                val intent = Intent(requireContext(), ProfileActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
+                startActivity(intent, options.toBundle())
                 activity?.finish()
             }
         }
@@ -145,6 +183,8 @@ class BottomNavigationAdminFragment : Fragment() {
         textMaintenance.setTextColor(defaultColor)
         iconAdmin.setColorFilter(defaultColor)
         textAdmin.setTextColor(defaultColor)
+        iconProfile.setColorFilter(defaultColor)
+        textProfile.setTextColor(defaultColor)
 
         // Set selected item color
         when (selectedItemId) {
@@ -163,6 +203,10 @@ class BottomNavigationAdminFragment : Fragment() {
             R.id.nav_admin -> {
                 iconAdmin.setColorFilter(selectedColor)
                 textAdmin.setTextColor(selectedColor)
+            }
+            R.id.nav_profile -> {
+                iconProfile.setColorFilter(selectedColor)
+                textProfile.setTextColor(selectedColor)
             }
         }
     }

@@ -137,6 +137,37 @@
 
         </LinearLayout>
 
+        <!-- Profile -->
+        <LinearLayout
+            android:id="@+id/nav_profile"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless">
+
+            <ImageView
+                android:id="@+id/icon_profile"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginBottom="5dp"
+                android:src="@drawable/ic_profile_outline"
+                app:tint="#666666" />
+
+            <TextView
+                android:id="@+id/text_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Profile"
+                android:textColor="#666666"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
 </FrameLayout>

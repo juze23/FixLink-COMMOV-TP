@@ -52,9 +52,8 @@
                         android:id="@+id/profile_image"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@color/gray_inactive"
-                        android:src="@drawable/ic_person"
-                        android:scaleType="centerCrop"
+                        android:src="@drawable/default_profile_image"
+                        android:scaleType="fitCenter"
                         android:contentDescription="Profile Picture" />
 
                 </androidx.cardview.widget.CardView>

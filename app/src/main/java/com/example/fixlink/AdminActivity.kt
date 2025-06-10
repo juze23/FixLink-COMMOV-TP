@@ -38,7 +38,6 @@ class AdminActivity : AppCompatActivity() {
     private lateinit var viewAllTechnicians: TextView
     private lateinit var viewAllEquipments: TextView
     private lateinit var addFab: FloatingActionButton
-    private lateinit var icon_profile: ImageView
     private lateinit var editFragmentContainer: FrameLayout
     private lateinit var contentScrollView: ScrollView
     private lateinit var viewAllListFragmentContainer: FrameLayout
@@ -70,7 +69,6 @@ class AdminActivity : AppCompatActivity() {
         viewAllTechnicians = findViewById(R.id.viewAllTechnicians)
         viewAllEquipments = findViewById(R.id.viewAllEquipments)
         addFab = findViewById(R.id.addFab)
-        icon_profile = findViewById(R.id.icon_profile)
         editFragmentContainer = findViewById(R.id.editFragmentContainer)
         contentScrollView = findViewById(R.id.contentScrollView)
         viewAllListFragmentContainer = findViewById(R.id.viewAllListFragmentContainer)
@@ -83,12 +81,6 @@ class AdminActivity : AppCompatActivity() {
         viewAllTechnicians.setOnClickListener { showViewAllListFragment("technicians") }
         viewAllEquipments.setOnClickListener { showViewAllListFragment("equipments") }
         addFab.setOnClickListener { navigateToAddItem() }
-        icon_profile.setOnClickListener { 
-            val intent = Intent(this, ProfileActivity::class.java).apply {
-                putExtra("FROM_ADMIN", true)
-            }
-            startActivity(intent)
-        }
         // Add listeners for search and filter if needed
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
