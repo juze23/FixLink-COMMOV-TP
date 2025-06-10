@@ -22,7 +22,7 @@
         android:id="@+id/adminPlaceholder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Admin Page"
+        android:text="@string/text_admin"
         android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="@color/black"

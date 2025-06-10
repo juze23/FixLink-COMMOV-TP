@@ -38,9 +38,9 @@
                 android:id="@+id/text_dashboard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Dashboard"
+                android:text="@string/text_nav_dashboard"
                 android:textColor="#666666"
-                android:textSize="12sp" />
+                android:textSize="10sp" />
 
         </LinearLayout>
 
@@ -69,9 +69,9 @@
                 android:id="@+id/text_issues"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Issues"
+                android:text="@string/text_nav_issues"
                 android:textColor="#666666"
-                android:textSize="12sp" />
+                android:textSize="10sp" />
 
         </LinearLayout>
 
@@ -100,9 +100,9 @@
                 android:id="@+id/text_maintenance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Maintenance"
+                android:text="@string/text_nav_maintenance"
                 android:textColor="#666666"
-                android:textSize="12sp" />
+                android:textSize="10sp" />
 
         </LinearLayout>
 
@@ -131,9 +131,9 @@
                 android:id="@+id/text_admin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Admin"
+                android:text="@string/text_nav_admin"
                 android:textColor="#666666"
-                android:textSize="12sp" />
+                android:textSize="10sp" />
 
         </LinearLayout>
 
@@ -162,9 +162,9 @@
                 android:id="@+id/text_profile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Profile"
+                android:text="@string/text_nav_profile"
                 android:textColor="#666666"
-                android:textSize="12sp" />
+                android:textSize="10sp" />
 
         </LinearLayout>
 

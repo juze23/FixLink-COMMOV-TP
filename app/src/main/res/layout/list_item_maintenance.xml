@@ -28,7 +28,7 @@
                 android:id="@+id/maintenanceTitleTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Maintenance Title"
+                android:text="@string/text_maintenance_title"
                 android:textStyle="bold"
                 android:textSize="16sp"
                 android:textColor="@color/black" />
@@ -38,7 +38,7 @@
             android:id="@+id/maintenanceCreatorTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Creator Name"
+            android:text="@string/text_creator_name"
             android:textSize="14sp"
             android:textColor="@android:color/darker_gray"
             android:drawableLeft="@drawable/ic_person_outline"
@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Priority"
+                android:text="@string/text_priority"
                 android:textSize="14sp"
                 android:textColor="@color/black" />
 
@@ -73,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Status"
+                android:text="@string/text_status"
                 android:textSize="14sp"
                 android:textColor="@color/black" />
 
@@ -88,7 +88,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Equipment"
+                android:text="@string/text_equipment"
                 android:textSize="14sp"
                 android:textColor="@color/black" />
         </LinearLayout>
@@ -107,7 +107,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Priority"
+                android:text="@string/text_priority"
                 android:textSize="12sp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
@@ -121,7 +121,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Status"
+                android:text="@string/text_status"
                 android:textSize="12sp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
@@ -135,7 +135,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Equipment"
+                android:text="@string/text_equipment"
                 android:textSize="12sp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
@@ -154,14 +154,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_location_on"
-                android:contentDescription="Location Icon"
+                android:contentDescription="@string/text_location"
                 android:layout_marginEnd="4dp" />
 
             <TextView
                 android:id="@+id/locationTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Location"
+                android:text="@string/text_location"
                 android:textSize="14sp"
                 android:textColor="@android:color/darker_gray" />
         </LinearLayout>

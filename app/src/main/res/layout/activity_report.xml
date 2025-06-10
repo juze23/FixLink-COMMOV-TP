@@ -24,7 +24,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Report"
+                android:text="@string/text_report"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="16dp"/>
@@ -32,7 +32,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Description"
+                android:text="@string/label_description"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                 android:layout_marginBottom="8dp"/>
 
@@ -40,7 +40,7 @@
                 android:id="@+id/reportEditText"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:hint="Please Enter Your Description"
+                android:hint="@string/hint_report_description"
                 android:background="@drawable/edittext_background"
                 android:gravity="top|start"
                 android:inputType="textMultiLine"
@@ -52,7 +52,7 @@
                 android:id="@+id/sendReportButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Send Report"
+                android:text="@string/button_send_report"
                 android:backgroundTint="@color/purple_primary"
                 android:textColor="@android:color/white"/>
         </LinearLayout>

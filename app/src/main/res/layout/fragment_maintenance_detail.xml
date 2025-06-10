@@ -46,7 +46,7 @@
                         android:id="@+id/maintenanceTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Fire Extinguisher Inspection"
+                        android:text="@string/text_maintenance_title"
                         android:textAppearance="@style/TextAppearance.AppCompat.Title"
                         android:layout_marginBottom="4dp"/>
 
@@ -54,7 +54,7 @@
                         android:id="@+id/maintenanceCreator"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Luís Santos"
+                        android:text="@string/text_creator_name"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:textColor="@android:color/darker_gray"
                         android:layout_marginBottom="16dp"/>
@@ -84,7 +84,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Description:"
+                            android:text="@string/label_description"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                             android:textColor="@android:color/black" />
                     </LinearLayout>
@@ -92,7 +92,7 @@
                         android:id="@+id/maintenanceDescription"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Monthly inspection of all fire extinguishers on the ground floor. The inspection includes checking pressure levels, expiry dates, physical condition, and seal integrity."
+                        android:text="@string/text_maintenance_description"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:layout_marginBottom="16dp"/>
 
@@ -112,7 +112,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Location:"
+                            android:text="@string/label_location"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                             android:textColor="@android:color/black" />
                     </LinearLayout>
@@ -120,7 +120,7 @@
                         android:id="@+id/maintenanceLocation"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Ground Floor – Hallways, Meeting Rooms"
+                        android:text="@string/text_maintenance_location"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:layout_marginBottom="16dp"/>
 
@@ -140,7 +140,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Responsible Technician:"
+                            android:text="@string/label_responsible_technician_with_colon"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                             android:textColor="@color/black" />
                     </LinearLayout>
@@ -148,7 +148,7 @@
                         android:id="@+id/responsibleTechnician"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Luís Fernandes"
+                        android:text="@string/text_responsible_technician"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:layout_marginBottom="16dp"/>
 
@@ -168,7 +168,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Date:"
+                            android:text="@string/label_date"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                             android:textColor="@android:color/black" />
                     </LinearLayout>
@@ -176,7 +176,7 @@
                         android:id="@+id/maintenanceDate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="28/05/2025"
+                        android:text="@string/text_maintenance_date"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:layout_marginBottom="16dp"/>
 
@@ -191,7 +191,7 @@
                             android:id="@+id/priorityChip"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Priority"
+                            android:text="@string/label_priority"
                             android:textColor="@color/black"
                             android:paddingLeft="12dp"
                             android:paddingRight="12dp"
@@ -204,7 +204,7 @@
                             android:id="@+id/statusChip"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Status"
+                            android:text="@string/label_status"
                             android:textColor="@color/black"
                             android:paddingLeft="12dp"
                             android:paddingRight="12dp"
@@ -217,7 +217,7 @@
                             android:id="@+id/equipmentChip"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Equipment"
+                            android:text="@string/label_equipment"
                             android:textColor="@color/black"
                             android:paddingLeft="12dp"
                             android:paddingRight="12dp"
@@ -239,7 +239,7 @@
                             android:id="@+id/startTaskButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Start Task"
+                            android:text="@string/button_start_task"
                             android:visibility="gone"
                             android:backgroundTint="@color/purple_primary"
                             android:textColor="@android:color/white"
@@ -249,7 +249,7 @@
                             android:id="@+id/endTaskButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="End Task"
+                            android:text="@string/button_end_task"
                             android:visibility="gone"
                             android:backgroundTint="@color/purple_primary"
                             android:textColor="@android:color/white"
@@ -259,7 +259,7 @@
                             android:id="@+id/assignTechnicianButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Assign Technician"
+                            android:text="@string/button_assign_technician"
                             android:visibility="gone"
                             android:backgroundTint="@color/purple_primary"
                             android:textColor="@android:color/white"
@@ -269,7 +269,7 @@
                             android:id="@+id/assignYourselfButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Assign yourself"
+                            android:text="@string/button_assign_yourself"
                             android:backgroundTint="@color/purple_primary"
                             android:textColor="@android:color/white"
                             android:layout_marginBottom="8dp"
@@ -279,7 +279,7 @@
                             android:id="@+id/viewReportButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="View Report"
+                            android:text="@string/button_view_report"
                             android:visibility="gone"
                             android:backgroundTint="@color/purple_primary"
                             android:textColor="@android:color/white"/>

@@ -344,14 +344,16 @@ class MaintenanceDetailFragment : Fragment() {
             }
             "assigned", "atribuído", "atribuido" -> {
                 assignTechnicianButton.visibility = View.GONE
-                startTaskButton.visibility = View.VISIBLE
+                // Only show start task button for admin or the assigned technician
+                startTaskButton.visibility = if (isAdmin || (isTechnician && maintenance.id_technician == currentUserId)) View.VISIBLE else View.GONE
                 endTaskButton.visibility = View.GONE
                 viewReportButton.visibility = View.GONE
             }
-            "ongoing", "em curso", "em reparacao" -> {
+            "ongoing", "em curso", "em reparacao", "em reparação", "under repair", "em andamento" -> {
                 assignTechnicianButton.visibility = View.GONE
                 startTaskButton.visibility = View.GONE
-                endTaskButton.visibility = View.VISIBLE
+                // Only show end task button for admin or the assigned technician
+                endTaskButton.visibility = if (isAdmin || (isTechnician && maintenance.id_technician == currentUserId)) View.VISIBLE else View.GONE
                 viewReportButton.visibility = View.GONE
             }
             "completed", "concluído", "concluido" -> {

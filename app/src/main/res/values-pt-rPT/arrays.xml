@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Equipment Options -->
+    <string-array name="equipment_options">
+        <item>Escolha o equipamento</item>
+        <item>Projetor</item>
+        <item>Computador</item>
+        <item>Impressora</item>
+        <item>Dispositivo de Rede</item>
+        <item>Outro</item>
+    </string-array>
+
+    <!-- Priority Options -->
+    <string-array name="priority_options">
+        <item>Escolha a prioridade</item>
+        <item>Baixa</item>
+        <item>Média</item>
+        <item>Alta</item>
+        <item>Urgente</item>
+    </string-array>
+
+    <!-- Technician Options -->
+    <string-array name="technician_options">
+        <item>Escolha o técnico</item>
+        <item>Técnico 1</item>
+        <item>Técnico 2</item>
+        <item>Técnico 3</item>
+    </string-array>
+
+    <!-- User Type Options -->
+    <string-array name="user_type_options">
+        <item>Selecione o tipo de utilizador</item>
+        <item>Administrador</item>
+        <item>Técnico</item>
+    </string-array>
+
+    <!-- Equipment Statuses -->
+    <string-array name="equipment_statuses">
+        <item>Ativo</item>
+        <item>Inativo</item>
+    </string-array>
+
+    <!-- Maintenance Types -->
+    <string-array name="maintenance_types">
+        <item>Escolha o tipo de manutenção</item>
+        <item>Preventiva</item>
+        <item>Corretiva</item>
+        <item>Preditiva</item>
+        <item>Baseada em Condição</item>
+    </string-array>
+
+    <!-- Issue Types -->
+    <string-array name="issue_types">
+        <item>Escolha o tipo de avaria</item>
+        <item>Hardware</item>
+        <item>Software</item>
+        <item>Rede</item>
+        <item>Outro</item>
+    </string-array>
+</resources> 

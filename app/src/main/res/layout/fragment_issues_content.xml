@@ -42,7 +42,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Search"
+                android:hint="@string/hint_search"
                 android:inputType="text"
                 android:minHeight="48dp" />
 
@@ -50,7 +50,8 @@
                 android:id="@+id/filterIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_filter"/>
+                android:src="@drawable/ic_filter"
+                android:contentDescription="@string/text_filter_issues" />
         </LinearLayout>
 
         <!-- Issues List -->

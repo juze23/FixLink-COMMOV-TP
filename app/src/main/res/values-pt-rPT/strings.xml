@@ -5,9 +5,15 @@
     <string name="hello_blank_fragment">Olá fragmento em branco</string>
 
     <!-- Comum -->
-    <string name="button_login">Login</string>
+    <string name="button_login">Iniciar Sessão</string>
     <string name="text_already_have_account">Já tem uma conta?</string>
     <string name="text_dont_have_account">Não tem uma conta?</string>
+    <string name="button_cancel">Cancelar</string>
+    <string name="button_confirm">Confirmar</string>
+    <string name="button_save">Guardar</string>
+    <string name="button_edit">Editar</string>
+    <string name="button_delete">Eliminar</string>
+    <string name="button_back">Voltar</string>
 
     <!-- Página de Login -->
     <string name="label_email">Email</string>
@@ -16,6 +22,7 @@
     <string name="hint_password_login">Por favor, insira a sua palavra-passe</string>
     <string name="text_forgot_password">Esqueceu-se da palavra-passe</string>
     <string name="text_remember_me">Lembrar-me</string>
+    <string name="text_first_login">Primeiro Acesso</string>
 
     <!-- Página de Cadastro -->
     <string name="label_email_address">Endereço de Email</string>
@@ -23,43 +30,268 @@
     <string name="label_phone_number">Número de Telefone</string>
     <string name="hint_phone_number">Insira o seu número de telefone</string>
     <string name="label_confirm_password">Confirmar Palavra-passe</string>
-    <string name="hint_confirm_password_signup">Por favor, confirme a sua nova palavra-passe</string>
+    <string name="hint_confirm_password_signup">Por favor, confirme a sua palavra-passe</string>
     <string name="button_sign_up">Registar</string>
+    <string name="label_first_name">Nome Próprio</string>
+    <string name="hint_first_name">Insira o nome próprio</string>
+    <string name="label_last_name">Apelido</string>
+    <string name="hint_last_name">Insira o apelido</string>
+    <string name="label_equipment_name">Nome do Equipamento</string>
+    <string name="hint_equipment_name">Insira o nome do equipamento</string>
 
     <!-- Página de Esqueceu Palavra-passe -->
     <string name="button_change_password">Alterar Palavra-passe</string>
+    <string name="text_change_password_confirmation">Tem a certeza que pretende alterar a sua palavra-passe?</string>
 
-    <!-- Página de Registrar Issue -->
-    <string name="page_title_register_issue">Registrar uma Issue</string>
+    <!-- Página de Registrar Avaria -->
+    <string name="page_title_register_issue">Registar uma Avaria</string>
     <string name="label_title">Título</string>
-    <string name="hint_issue_title">Insira o título da issue</string>
+    <string name="hint_issue_title">Insira o título da avaria</string>
     <string name="label_description">Descrição</string>
     <string name="hint_description">Insira a sua descrição</string>
     <string name="label_location">Localização</string>
     <string name="hint_location">Insira a localização</string>
     <string name="label_equipment">Equipamento</string>
-    <string-array name="equipment_options">
-        <item>Escolha o equipamento</item>
-        <item>Projetor</item>
-        <item>Computador</item>
-        <item>Impressora</item>
-        <item>Dispositivo de Rede</item>
-        <item>Outro</item>
-    </string-array>
+    <string name="label_issue_type">Tipo de Avaria</string>
     <string name="label_priority">Prioridade</string>
-    <string-array name="priority_options">
-        <item>Escolha a prioridade</item>
-        <item>Baixa</item>
-        <item>Média</item>
-        <item>Alta</item>
-        <item>Urgente</item>
-    </string-array>
-    <string name="button_register_issue">Registrar Issue</string>
+    <string name="button_register_issue">Registar Avaria</string>
+
+    <!-- Página de Registrar Manutenção -->
+    <string name="page_title_register_maintenance">Agendar Manutenção</string>
+    <string name="hint_maintenance_title">Insira o título da manutenção</string>
+    <string name="hint_maintenance_description">Insira a descrição da manutenção</string>
+    <string name="label_maintenance_type">Tipo de Manutenção</string>
+    <string name="button_schedule_maintenance">Agendar Manutenção</string>
+    <string name="label_responsible_technician">Técnico Responsável</string>
+    <string name="label_maintenance_status">Estado da Manutenção</string>
+
+    <!-- Item de Lista de Manutenção -->
+    <string name="text_maintenance_title">Título da Manutenção</string>
+    <string name="text_creator_name">Nome do Criador</string>
+    <string name="text_priority">Prioridade</string>
+    <string name="text_status">Estado</string>
+    <string name="text_equipment">Equipamento</string>
+    <string name="text_location">Localização</string>
+
+    <!-- Página de Perfil -->
+    <string name="text_profile">Perfil</string>
+    <string name="text_phone">Telefone</string>
+    <string name="text_email">Email</string>
+    <string name="text_name">Nome</string>
+    <string name="text_role">Função</string>
 
     <!-- Navegação Inferior -->
     <string name="nav_my_tasks">Minhas Tarefas</string>
-    <string name="nav_issues">Issues</string>
+    <string name="nav_issues">Avarias</string>
     <string name="nav_maintenance">Manutenção</string>
     <string name="nav_profile">Perfil</string>
+
+    <!-- Diálogo de Alteração de Estado -->
+    <string name="text_change_status_title">Alterar Estado para %1$s</string>
+    <string name="text_change_status_message">Tem a certeza que pretende alterar o estado desta tarefa para %1$s? Não poderá desfazer esta ação posteriormente.</string>
+    <string name="text_change_maintenance_status_title">Alterar Estado da Manutenção</string>
+    <string name="text_change_maintenance_status_message">Tem a certeza que pretende alterar o estado desta tarefa de manutenção?</string>
+
+    <!-- Tipos de Estado -->
+    <string name="status_pending">Pendente</string>
+    <string name="status_in_progress">Em Progresso</string>
+    <string name="status_completed">Concluído</string>
+    <string name="status_cancelled">Cancelado</string>
+
+    <!-- Diálogo de Filtros -->
+    <string name="text_filters">Filtros</string>
+    <string name="text_publication_date">Data de Publicação</string>
+    <string name="text_state">Estado</string>
+    <string name="button_clear">Limpar</string>
+    <string name="button_apply">Aplicar</string>
+
+    <!-- Painel de Administrador -->
+    <string name="text_total_issues">Total de Avarias</string>
+    <string name="text_open_issues">%1$d em aberto</string>
+    <string name="text_total_users">Total de Utilizadores</string>
+    <string name="text_active_users">%1$d ativos hoje</string>
+    <string name="text_total_locations">Total de Localizações</string>
+    <string name="text_active_locations">%1$d com avarias ativas</string>
+
+    <!-- Visualização de Relatório -->
+    <string name="text_report_content">Conteúdo do relatório aqui...</string>
+
+    <!-- Diálogo de Atribuição de Tarefa -->
+    <string name="text_assign_task_title">Atribuir Tarefa a Si</string>
+    <string name="text_assign_task_message">Tem a certeza que pretende ser atribuído a esta tarefa? Não poderá desfazer esta ação posteriormente.</string>
+
+    <!-- Etiquetas Comuns -->
+    <string name="label_name">Nome</string>
+
+    <!-- Detalhe da Avaria -->
+    <string name="text_issue_description">Descrição da avaria</string>
+    <string name="label_responsible_technician_with_colon">Técnico Responsável:</string>
+    <string name="text_technician_name">Nome do Técnico</string>
+
+    <!-- Detalhe da Manutenção -->
+    <string name="text_maintenance_description">Inspeção mensal de todos os extintores no piso térreo. A inspeção inclui verificação dos níveis de pressão, datas de validade, estado físico e integridade do selo.</string>
+    <string name="text_maintenance_location">Piso Térreo – Corredores, Salas de Reunião</string>
+
+    <!-- Atividade de Relatório -->
+    <string name="text_report">Relatório</string>
+    <string name="hint_report_description">Por favor, insira a sua descrição</string>
+    <string name="button_send_report">Enviar Relatório</string>
+
+    <!-- Item de Lista de Administrador -->
+    <string name="text_edit">Editar</string>
+    <string name="text_delete">Eliminar</string>
+
+    <!-- Fragmento de Edição de Equipamento -->
+    <string name="hint_equipment_description">Insira a descrição do equipamento</string>
+    <string name="label_status">Estado</string>
+
+    <!-- Atividade de Registar Avaria -->
+    <string name="text_issue_image">Imagem da avaria</string>
+    <string name="text_maintenance_image">Imagem da manutenção</string>
+    <string name="label_photo">Foto</string>
+
+    <!-- Atividade de Cadastro -->
+    <string name="text_country_code">+351</string>
+    <string name="hint_password_signup">Insira a sua palavra-passe</string>
+    <string name="text_sign_up_title">Criar Conta</string>
+    <string name="text_sign_up_subtitle">Por favor, preencha o formulário para criar a sua conta</string>
+    <string name="text_password_requirements">A palavra-passe deve ter pelo menos 8 caracteres e conter pelo menos uma letra maiúscula, uma letra minúscula, um número e um carácter especial</string>
+    <string name="text_passwords_dont_match">As palavras-passe não coincidem</string>
+    <string name="text_invalid_email">Endereço de email inválido</string>
+    <string name="text_invalid_phone">Número de telefone inválido</string>
+    <string name="text_invalid_name">Nome inválido</string>
+    <string name="text_account_created">Conta criada com sucesso</string>
+    <string name="text_error_creating_account">Erro ao criar conta</string>
+
+    <!-- Fragmento de Detalhe de Manutenção -->
+    <string name="text_responsible_technician">Luís Fernandes</string>
+    <string name="label_date">Data:</string>
+    <string name="text_maintenance_date">28/05/2025</string>
+    <string name="button_start_task">Iniciar Tarefa</string>
+    <string name="button_end_task">Terminar Tarefa</string>
+    <string name="button_assign_technician">Atribuir Técnico</string>
+    <string name="button_assign_yourself">Atribuir-se a si mesmo</string>
+    <string name="button_view_report">Ver Relatório</string>
+
+    <!-- Fragmento de Detalhe da Avaria -->
+    <string name="text_issue_title">Título da Avaria</string>
+    <string name="text_reporter_name">Nome do Reportador</string>
+    <string name="text_date">Data</string>
+    <string name="text_status_information">Informação do Estado</string>
+
+    <!-- Diálogo de Filtros de Avarias -->
+    <string name="text_ownership">Propriedade:</string>
+    <string name="text_all_issues">Todas as Avarias</string>
+    <string name="text_my_issues">Minhas Avarias</string>
+    <string name="text_priority_low">Baixa</string>
+    <string name="text_priority_medium">Média</string>
+    <string name="text_priority_high">Alta</string>
+    <string name="hint_select_date">Selecionar Data</string>
+    <string name="text_state_pending">Pendente</string>
+    <string name="text_state_assigned">Atribuída</string>
+    <string name="text_state_under_repair">Em Reparação</string>
+    <string name="text_state_resolved">Resolvida</string>
+    <string name="text_equipment_status">Estado do Equipamento:</string>
+    <string name="text_status_active">Ativo</string>
+    <string name="text_status_inactive">Inativo</string>
+
+    <!-- Fragmento de Conteúdo de Avarias -->
+    <string name="text_filter_issues">Filtrar Avarias</string>
+
+    <!-- Item de Lista de Avaria -->
+    <string name="text_location_icon">Ícone de Localização</string>
+
+    <!-- Atividade de Registo de Utilizador -->
+    <string name="text_user">Utilizador</string>
+    <string name="label_user_type">Tipo de Utilizador</string>
+    <string name="button_register_user">Registar Utilizador</string>
+    <string name="button_register_equipment">Registar Equipamento</string>
+
+    <!-- Atividade de Perfil -->
+    <string name="text_profile_picture">Foto de Perfil</string>
+    <string name="text_full_name">Nome Completo</string>
+    <string name="button_edit_profile">Editar Perfil</string>
+
+    <!-- Admin Activity -->
+    <string name="hint_search">Pesquisar</string>
+    <string name="text_filter_list">Filtrar lista</string>
+    <string name="text_technicians">Técnicos</string>
+    <string name="text_equipments">Equipamentos</string>
+    <string name="text_view_all">Ver Todos</string>
+    <string name="text_add_new_item">Adicionar novo item</string>
+
+    <!-- Admin Fragment -->
+    <string name="text_admin">Painel de Administrador</string>
+
+    <!-- Bottom Navigation -->
+    <string name="text_nav_dashboard">Dashboard</string>
+    <string name="text_nav_issues">Avarias</string>
+    <string name="text_nav_maintenance">Manutenção</string>
+    <string name="text_nav_admin">Admin</string>
+    <string name="text_nav_profile">Perfil</string>
+
+    <!-- Strings Adicionais -->
+    <string name="text_profile_updated">Perfil atualizado com sucesso</string>
+    <string name="text_error_updating_profile">Erro ao atualizar perfil</string>
+    <string name="text_profile_title">Perfil</string>
+    <string name="text_profile_subtitle">Ver e editar informações do seu perfil</string>
+    <string name="text_edit_profile_title">Editar Perfil</string>
+    <string name="text_edit_profile_subtitle">Atualizar informações do seu perfil</string>
+    <string name="hint_full_name">Insira seu nome completo</string>
+    <string name="hint_email_profile">Insira seu email</string>
+    <string name="hint_phone_profile">Insira seu número de telefone</string>
+    <string name="button_save_profile">Guardar Alterações</string>
+    <string name="button_cancel_edit">Cancelar</string>
+    <string name="text_first_name">Nome</string>
+    <string name="text_last_name">Apelido</string>
+    <string name="text_phone_number">Número de Telefone</string>
+    <string name="button_change_password_edit">Alterar Palavra-passe</string>
+    <string name="button_save_edit">Guardar</string>
+    <string name="button_cancel_edit_profile">Cancelar</string>
+    <string name="hint_current_password">Palavra-passe Atual</string>
+    <string name="hint_new_password">Nova Palavra-passe</string>
+    <string name="hint_confirm_new_password">Confirmar Nova Palavra-passe</string>
+    <string name="text_password_changed">Palavra-passe alterada com sucesso</string>
+    <string name="text_error_changing_password">Erro ao alterar palavra-passe. Por favor, tente novamente.</string>
+    <string name="text_current_password_incorrect">Palavra-passe atual incorreta</string>
+    <string name="text_password_reset_success">Palavra-passe redefinida com sucesso. Pode agora iniciar sessão com a nova palavra-passe.</string>
+    <string name="text_error_resetting_password">Erro ao redefinir palavra-passe. Por favor, tente novamente.</string>
+    <string name="text_password_requirements_forgot">A sua nova palavra-passe deve ter pelo menos 8 caracteres e conter pelo menos uma letra maiúscula, uma letra minúscula, um número e um carácter especial</string>
+    <string name="text_first_login_title">Primeiro Acesso</string>
+    <string name="text_first_login_subtitle">Por favor, altere a sua palavra-passe por razões de segurança</string>
+    <string name="text_password_changed_first_login">Palavra-passe alterada com sucesso. Pode agora iniciar sessão com a nova palavra-passe.</string>
+    <string name="text_error_changing_password_first_login">Erro ao alterar palavra-passe. Por favor, tente novamente.</string>
+    <string name="text_password_requirements_first_login">A sua nova palavra-passe deve ter pelo menos 8 caracteres e conter pelo menos uma letra maiúscula, uma letra minúscula, um número e um carácter especial</string>
+    <string name="text_passwords_dont_match_first_login">As palavras-passe não coincidem. Por favor, tente novamente.</string>
+    <string name="text_back_button">Botão voltar</string>
+    <string name="text_fixlink_logo">Logo FixLink</string>
+    <string name="hint_search_maintenance">Pesquisar tarefas de manutenção</string>
+    <string name="text_filter_maintenance">Filtrar tarefas de manutenção</string>
+    <string name="hint_search_tasks">Pesquisar tarefas</string>
+    <string name="text_filter_tasks">Filtrar tarefas</string>
+    <string name="text_back_arrow">Voltar</string>
+    <string name="hint_equipment">Selecionar equipamento</string>
+    <string name="hint_priority">Selecionar prioridade</string>
+    <string name="button_add_image">Adicionar Imagem</string>
+    <string name="button_remove_image">Remover Imagem</string>
+    <string name="text_image_preview">Pré-visualização da Imagem</string>
+    <string name="text_forgot_password_title">Esqueceu a Palavra-passe</string>
+    <string name="text_forgot_password_subtitle">Insira a sua nova palavra-passe abaixo</string>
+    <string name="hint_issue_description">Insira a descrição da avaria</string>
+    <string name="register_maintenance_equipment_label">Equipamento</string>
+    <string name="register_maintenance_button">Registar Manutenção</string>
+    <string name="hint_maintenance_type">Selecionar tipo de manutenção</string>
+    <string name="hint_issue_type">Selecionar tipo de avaria</string>
+
+    <!-- Maintenance Filter Dialog -->
+    <string name="priority_low">Baixa</string>
+    <string name="priority_medium">Média</string>
+    <string name="priority_high">Alta</string>
+    <string name="status_assigned">Atribuído</string>
+
+    <!-- Bottom Navigation User -->
+    <string name="text_issues">Avarias</string>
+    <string name="text_maintenance">Manutenção</string>
+
 
 </resources> 

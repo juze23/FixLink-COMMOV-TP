@@ -19,7 +19,7 @@
             android:id="@+id/equipmentNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Equipment Name"
+            android:text="@string/label_equipment_name"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@color/black"/>
@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Name"
+            android:text="@string/label_name"
             android:textSize="14sp"
             android:textColor="@color/purple_primary"/>
 
@@ -38,7 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:hint="Enter Name"
+            android:hint="@string/hint_equipment_name"
             android:padding="12dp"
             android:background="@drawable/rounded_edittext_background"/>
 
@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Description"
+            android:text="@string/label_description"
             android:textSize="14sp"
             android:textColor="@color/purple_primary"/>
 
@@ -56,7 +56,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:hint="Enter Description"
+            android:hint="@string/hint_equipment_description"
             android:padding="12dp"
             android:background="@drawable/rounded_edittext_background"/>
 
@@ -65,7 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Status"
+            android:text="@string/label_status"
             android:textSize="14sp"
             android:textColor="@color/purple_primary"/>
 
@@ -90,7 +90,7 @@
                 android:id="@+id/cancelButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Cancel"
+                android:text="@string/button_cancel"
                 style="?attr/materialButtonOutlinedStyle"
                 android:textColor="@color/purple_primary"/>
 
@@ -99,7 +99,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:text="Save"/>
+                android:text="@string/button_save"/>
         </LinearLayout>
 
     </LinearLayout>

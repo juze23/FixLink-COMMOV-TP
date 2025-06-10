@@ -31,25 +31,78 @@ class ReportActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_report)
 
-        // Add fragments
-        if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.topAppBarFragmentContainer, TopAppBarFragment())
-                .commit()
+        // Get IDs from intent first to determine if it's maintenance or issue
+        issueId = intent.getStringExtra("ISSUE_ID")
+        maintenanceId = intent.getStringExtra("MAINTENANCE_ID")
+        isMaintenance = maintenanceId != null
 
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.bottomNavigationContainer, BottomNavigationAdminFragment().apply {
-                    arguments = Bundle().apply {
-                        // Set the selected item based on whether this is for maintenance or issue
-                        putInt("selected_item", if (isMaintenance) R.id.nav_maintenance else R.id.nav_issues)
-                    }
-                })
-                .commit()
+        if (issueId == null && maintenanceId == null) {
+            Toast.makeText(this, "Error: No task ID provided", Toast.LENGTH_SHORT).show()
+            finish()
+            return
         }
 
-        // Initialize views and load data
+        // Check user role before proceeding
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val userResult = userRepository.getCurrentUser()
+                if (userResult.isSuccess) {
+                    val user = userResult.getOrNull()
+                    val isAdmin = user?.typeId == 3
+                    val isTechnician = user?.typeId == 2
+                    
+                    if (!isAdmin && !isTechnician) {
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(this@ReportActivity, "Access denied. Only administrators and technicians can send reports.", Toast.LENGTH_SHORT).show()
+                            finish()
+                        }
+                        return@launch
+                    }
+
+                    // Add fragments after user role check
+                    withContext(Dispatchers.Main) {
+                        if (savedInstanceState == null) {
+                            // Add top app bar
+                            supportFragmentManager.beginTransaction()
+                                .replace(R.id.topAppBarFragmentContainer, TopAppBarFragment())
+                                .commit()
+
+                            // Add bottom navigation with the correct fragment based on user role
+                            val selectedItem = if (isMaintenance) R.id.nav_maintenance else R.id.nav_issues
+                            val bottomNavFragment = if (isAdmin) {
+                                BottomNavigationAdminFragment().apply {
+                                    arguments = Bundle().apply {
+                                        putInt("selected_item", selectedItem)
+                                    }
+                                }
+                            } else {
+                                BottomNavigationFragment().apply {
+                                    arguments = Bundle().apply {
+                                        putInt("selected_item", selectedItem)
+                                    }
+                                }
+                            }
+                            supportFragmentManager.beginTransaction()
+                                .replace(R.id.bottomNavigationContainer, bottomNavFragment)
+                                .commit()
+                        }
+                    }
+                } else {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@ReportActivity, "Error: Could not verify user permissions", Toast.LENGTH_SHORT).show()
+                        finish()
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@ReportActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+            }
+        }
+
+        // Initialize views
         initializeViews()
-        loadData()
     }
 
     private fun initializeViews() {
@@ -63,19 +116,6 @@ class ReportActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this, "Please enter a report", Toast.LENGTH_SHORT).show()
             }
-        }
-    }
-
-    private fun loadData() {
-        // Get IDs from intent
-        issueId = intent.getStringExtra("ISSUE_ID")
-        maintenanceId = intent.getStringExtra("MAINTENANCE_ID")
-        isMaintenance = maintenanceId != null
-
-        if (issueId == null && maintenanceId == null) {
-            Toast.makeText(this, "Error: No task ID provided", Toast.LENGTH_SHORT).show()
-            finish()
-            return
         }
     }
 

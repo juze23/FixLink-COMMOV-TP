@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.fixlink.data.repository.IssueRepository
 import com.example.fixlink.data.repository.MaintenanceRepository
+import com.example.fixlink.data.repository.UserRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -14,6 +15,7 @@ import kotlinx.coroutines.withContext
 class ViewReportActivity : AppCompatActivity() {
     private val issueRepository = IssueRepository()
     private val maintenanceRepository = MaintenanceRepository()
+    private val userRepository = UserRepository()
     private var issueId: String? = null
     private var maintenanceId: String? = null
     private var isMaintenance: Boolean = false
@@ -22,7 +24,39 @@ class ViewReportActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_report)
 
-        // Get IDs from intent first to determine the type
+        // Check user role before proceeding
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val userResult = userRepository.getCurrentUser()
+                if (userResult.isSuccess) {
+                    val user = userResult.getOrNull()
+                    val isAdmin = user?.typeId == 3
+                    val isTechnician = user?.typeId == 2
+                    
+                    if (!isAdmin && !isTechnician) {
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(this@ViewReportActivity, "Access denied. Only administrators and technicians can view reports.", Toast.LENGTH_SHORT).show()
+                            finish()
+                        }
+                        return@launch
+                    }
+                } else {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@ViewReportActivity, "Error: Could not verify user permissions", Toast.LENGTH_SHORT).show()
+                        finish()
+                    }
+                    return@launch
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@ViewReportActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+                return@launch
+            }
+        }
+
+        // Get IDs from intent
         issueId = intent.getStringExtra("ISSUE_ID")
         maintenanceId = intent.getStringExtra("MAINTENANCE_ID")
         isMaintenance = maintenanceId != null

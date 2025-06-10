@@ -43,7 +43,7 @@
                         android:id="@+id/issueTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Issue Title"
+                        android:text="@string/text_issue_title"
                         android:textAppearance="@style/TextAppearance.AppCompat.Title"
                         android:layout_marginBottom="4dp"/>
 
@@ -51,7 +51,7 @@
                         android:id="@+id/issueReporter"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Reporter Name"
+                        android:text="@string/text_reporter_name"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:textColor="@android:color/darker_gray"
                         android:layout_marginBottom="16dp"/>
@@ -62,6 +62,7 @@
                         android:layout_height="200dp"
                         android:scaleType="centerCrop"
                         android:src="@drawable/placeholder_printer_image"
+                        android:contentDescription="@string/text_issue_image"
                         android:layout_marginBottom="16dp"/>
 
                     <LinearLayout
@@ -79,7 +80,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Description:"
+                            android:text="@string/label_description"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                             android:textColor="@android:color/black" />
                     </LinearLayout>
@@ -87,7 +88,7 @@
                         android:id="@+id/issueDescription"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Issue description"
+                        android:text="@string/text_issue_description"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:layout_marginBottom="16dp"/>
 
@@ -106,7 +107,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Location:"
+                            android:text="@string/label_location"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                             android:textColor="@android:color/black" />
                     </LinearLayout>
@@ -114,7 +115,7 @@
                         android:id="@+id/issueLocation"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Location"
+                        android:text="@string/text_location"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:layout_marginBottom="16dp"/>
 
@@ -133,7 +134,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Responsible Technician:"
+                            android:text="@string/label_responsible_technician_with_colon"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                             android:textColor="@color/black" />
                     </LinearLayout>
@@ -141,7 +142,7 @@
                         android:id="@+id/responsibleTechnician"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Technician Name"
+                        android:text="@string/text_technician_name"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:layout_marginBottom="16dp"/>
 
@@ -160,7 +161,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Date:"
+                            android:text="@string/label_date"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                             android:textColor="@android:color/black" />
                     </LinearLayout>
@@ -168,14 +169,14 @@
                         android:id="@+id/issueDate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Date"
+                        android:text="@string/text_date"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:layout_marginBottom="16dp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Status Information"
+                        android:text="@string/text_status_information"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                         android:textColor="@android:color/black"
                         android:layout_marginBottom="8dp"/>
@@ -191,7 +192,7 @@
                             android:id="@+id/statusMedium"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Priority"
+                            android:text="@string/text_priority"
                             android:textColor="@color/black"
                             android:paddingLeft="12dp"
                             android:paddingRight="12dp"
@@ -204,7 +205,7 @@
                             android:id="@+id/statusPending"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Status"
+                            android:text="@string/text_status"
                             android:textColor="@color/black"
                             android:paddingLeft="12dp"
                             android:paddingRight="12dp"
@@ -217,7 +218,7 @@
                             android:id="@+id/statusActive"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Equipment"
+                            android:text="@string/text_equipment"
                             android:textColor="@color/black"
                             android:paddingLeft="12dp"
                             android:paddingRight="12dp"
@@ -239,7 +240,7 @@
                             android:id="@+id/startTaskButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Start Task"
+                            android:text="@string/button_start_task"
                             android:visibility="gone"
                             android:backgroundTint="@color/purple_primary"
                             android:textColor="@android:color/white"
@@ -249,7 +250,7 @@
                             android:id="@+id/endTaskButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="End Task"
+                            android:text="@string/button_end_task"
                             android:visibility="gone"
                             android:backgroundTint="@color/purple_primary"
                             android:textColor="@android:color/white"/>
@@ -258,7 +259,7 @@
                             android:id="@+id/assignTechnicianButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Assign Technician"
+                            android:text="@string/button_assign_technician"
                             android:backgroundTint="@color/purple_primary"
                             android:textColor="@android:color/white"
                             android:layout_marginBottom="8dp"
@@ -268,7 +269,7 @@
                             android:id="@+id/assignYourselfButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Assign yourself"
+                            android:text="@string/button_assign_yourself"
                             android:backgroundTint="@color/purple_primary"
                             android:textColor="@android:color/white"
                             android:layout_marginBottom="8dp"
@@ -278,7 +279,7 @@
                             android:id="@+id/viewReportButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="View Report"
+                            android:text="@string/button_view_report"
                             android:backgroundTint="@color/purple_primary"
                             android:textColor="@android:color/white"
                             android:layout_marginBottom="8dp"

@@ -28,7 +28,7 @@
                 android:id="@+id/issueTitleTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Issue Title"
+                android:text="@string/text_issue_title"
                 android:textStyle="bold"
                 android:textSize="16sp"
                 android:textColor="@color/black" />
@@ -38,7 +38,7 @@
             android:id="@+id/issueReporterTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Reporter Name"
+            android:text="@string/text_reporter_name"
             android:textSize="14sp"
             android:textColor="@android:color/darker_gray"
             android:drawableLeft="@drawable/ic_person_outline"
@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Priority"
+                android:text="@string/text_priority"
                 android:textSize="14sp"
                 android:textColor="@color/black" />
 
@@ -73,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Status"
+                android:text="@string/text_state"
                 android:textSize="14sp"
                 android:textColor="@color/black" />
 
@@ -88,7 +88,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Equipment"
+                android:text="@string/text_equipment"
                 android:textSize="14sp"
                 android:textColor="@color/black" />
         </LinearLayout>
@@ -107,7 +107,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Medium"
+                android:text="@string/text_priority_medium"
                 android:textColor="@color/black"
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp"
@@ -122,7 +122,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Pending"
+                android:text="@string/text_state_pending"
                 android:textColor="@color/black"
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp"
@@ -137,7 +137,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Active"
+                android:text="@string/text_status_active"
                 android:textColor="@color/black"
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp"
@@ -157,14 +157,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_location_on"
-                android:contentDescription="Location Icon"
+                android:contentDescription="@string/text_location_icon"
                 android:layout_marginEnd="4dp" />
 
             <TextView
                 android:id="@+id/locationTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Location"
+                android:text="@string/text_location"
                 android:textSize="14sp"
                 android:textColor="@android:color/darker_gray" />
         </LinearLayout>

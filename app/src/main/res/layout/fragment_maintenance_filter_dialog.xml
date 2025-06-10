@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Filters"
+        android:text="@string/text_filters"
         android:textSize="32dp"
         android:textAppearance="?attr/textAppearanceHeadlineSmall" />
 
@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:textSize="20dp"
-        android:text="Priority:"
+        android:text="@string/text_priority"
         android:textAppearance="?attr/textAppearanceTitleSmall" />
 
     <com.google.android.material.chip.ChipGroup
@@ -34,21 +34,21 @@
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Low" />
+            android:text="@string/priority_low" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/priority_medium_chip"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Medium" />
+            android:text="@string/priority_medium" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/priority_high_chip"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="High" />
+            android:text="@string/priority_high" />
     </com.google.android.material.chip.ChipGroup>
 
     <TextView
@@ -56,7 +56,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:textSize="20dp"
-        android:text="Publication Date:"
+        android:text="@string/text_publication_date"
         android:textAppearance="?attr/textAppearanceTitleSmall" />
 
     <EditText
@@ -65,14 +65,14 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:focusable="false"
-        android:hint="Select Date" />
+        android:hint="@string/hint_select_date" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:textSize="20dp"
-        android:text="State:"
+        android:text="@string/text_state"
         android:textAppearance="?attr/textAppearanceTitleSmall" />
 
     <com.google.android.material.chip.ChipGroup
@@ -87,28 +87,28 @@
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Pending" />
+            android:text="@string/status_pending" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/state_assigned_chip"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Assigned" />
+            android:text="@string/status_assigned" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/state_ongoing_chip"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ongoing" />
+            android:text="@string/status_in_progress" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/state_completed_chip"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Completed" />
+            android:text="@string/status_completed" />
     </com.google.android.material.chip.ChipGroup>
 
     <LinearLayout
@@ -123,14 +123,14 @@
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Clear" />
+            android:text="@string/button_clear" />
 
         <Button
             android:id="@+id/apply_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="Apply" />
+            android:text="@string/button_apply" />
     </LinearLayout>
 
 </LinearLayout> 

@@ -152,7 +152,7 @@ class RegisterMaintenanceActivity : AppCompatActivity() {
         typeSpinner = findViewById(R.id.type_spinner)
         titleEditText = findViewById(R.id.title_edit_text)
         descriptionEditText = findViewById(R.id.description_edit_text)
-        submitButton = findViewById(R.id.submit_button)
+        submitButton = findViewById(R.id.register_button)
         addImagePlaceholder = findViewById(R.id.add_image_placeholder)
     }
 

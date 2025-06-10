@@ -21,7 +21,6 @@
 
     <!-- Technician Options -->
     <string-array name="technician_options">
-        <item>Select technician</item>
         <item>Technician 1</item>
         <item>Technician 2</item>
         <item>Technician 3</item>
@@ -38,23 +37,5 @@
     <string-array name="equipment_statuses">
         <item>Active</item>
         <item>Inactive</item>
-    </string-array>
-
-    <!-- Maintenance Types -->
-    <string-array name="maintenance_types">
-        <item>Select maintenance type</item>
-        <item>Preventive</item>
-        <item>Corrective</item>
-        <item>Predictive</item>
-        <item>Condition-based</item>
-    </string-array>
-
-    <!-- Issue Types -->
-    <string-array name="issue_types">
-        <item>Select issue type</item>
-        <item>Hardware</item>
-        <item>Software</item>
-        <item>Network</item>
-        <item>Other</item>
     </string-array>
 </resources> 

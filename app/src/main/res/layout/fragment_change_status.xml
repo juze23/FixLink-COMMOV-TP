@@ -16,7 +16,7 @@
             android:id="@+id/dialogTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Change Status to [Status Name]"
+            android:text="@string/text_change_status_title"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:gravity="center"
             android:layout_marginBottom="16dp"/>
@@ -25,7 +25,7 @@
             android:id="@+id/dialogMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Are you sure you want to change the status of this task to [Status Name]? You won't be able to undo it afterwards."
+            android:text="@string/text_change_status_message"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:gravity="center"
             android:layout_marginBottom="24dp"/>
@@ -42,7 +42,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Cancel"
+                android:text="@string/button_cancel"
                 android:textColor="?attr/colorPrimary" />
 
             <Button
@@ -50,7 +50,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Start Task"
+                android:text="@string/button_confirm"
                 android:backgroundTint="?attr/colorPrimary"
                 android:textColor="@android:color/white" />
         </LinearLayout>

@@ -36,7 +36,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.8"
-            android:hint="Search"
+            android:hint="@string/hint_search"
             android:padding="12dp"
             android:drawableStart="@drawable/ic_search"
             android:drawablePadding="8dp"
@@ -50,7 +50,7 @@
             android:padding="8dp"
             android:clickable="true"
             android:focusable="true"
-            android:contentDescription="Filter list"
+            android:contentDescription="@string/text_filter_list"
             android:layout_marginStart="8dp"/>
     </LinearLayout>
 
@@ -89,7 +89,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Technicians"
+                        android:text="@string/text_technicians"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         android:textColor="@color/black"/>
@@ -105,7 +105,7 @@
                         android:id="@+id/viewAllTechnicians"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="View All"
+                        android:text="@string/text_view_all"
                         android:textColor="@color/purple_primary"
                         android:layout_gravity="end"
                         android:layout_marginTop="8dp"/>
@@ -130,7 +130,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Equipments"
+                        android:text="@string/text_equipments"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         android:textColor="@color/black"
@@ -147,7 +147,7 @@
                         android:id="@+id/viewAllEquipments"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="View All"
+                        android:text="@string/text_view_all"
                         android:textColor="@color/purple_primary"
                         android:layout_gravity="end"
                         android:layout_marginTop="8dp"/>
@@ -179,7 +179,7 @@
         android:src="@drawable/ic_add"
         app:tint="@android:color/white"
         app:backgroundTint="@color/purple_primary"
-        android:contentDescription="Add new item"
+        android:contentDescription="@string/text_add_new_item"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationContainer"
         app:layout_constraintEnd_toEndOf="parent"/>
 
