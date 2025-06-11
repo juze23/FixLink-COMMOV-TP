@@ -87,7 +87,7 @@ class MaintenanceAdapter(private val maintenances: List<Maintenance>) : Recycler
             val creatorName = if (creator != null) {
                 if (creator.lastname.isNullOrEmpty()) creator.firstname else "${creator.firstname} ${creator.lastname}"
             } else maintenance.id_user
-            creatorTextView.text = "Creator: $creatorName"
+            creatorTextView.text = "${itemView.context.getString(R.string.text_user_label)} $creatorName"
 
             val priorityText = when (maintenance.priority_id) {
                 1 -> itemView.context.getString(R.string.text_priority_low)

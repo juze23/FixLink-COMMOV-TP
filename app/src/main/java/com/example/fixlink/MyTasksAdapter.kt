@@ -116,7 +116,7 @@ class MyTasksAdapter(
             titleTextView.text = issue.title ?: "(Sem título)"
             val user = users.find { it.user_id == issue.id_user }
             val userName = if (user != null) "${user.firstname} ${user.lastname}" else issue.id_user
-            reporterTextView.text = "Utilizador: $userName"
+            reporterTextView.text = "${itemView.context.getString(R.string.text_user_label)} $userName"
             val statusText = when (issue.state_id) {
                 1 -> itemView.context.getString(R.string.text_state_pending)
                 2 -> itemView.context.getString(R.string.text_state_assigned)
@@ -189,7 +189,7 @@ class MyTasksAdapter(
             val userName = if (user != null) {
                 if (user.lastname.isNullOrEmpty()) user.firstname else "${user.firstname} ${user.lastname}"
             } else maintenance.id_user
-            creatorTextView.text = "Utilizador: $userName"
+            creatorTextView.text = "${itemView.context.getString(R.string.text_user_label)} $userName"
             val priorityText = when (maintenance.priority_id) {
                 1 -> itemView.context.getString(R.string.text_priority_low)
                 2 -> itemView.context.getString(R.string.text_priority_medium)

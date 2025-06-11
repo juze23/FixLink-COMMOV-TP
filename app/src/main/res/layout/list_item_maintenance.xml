@@ -38,7 +38,7 @@
             android:id="@+id/maintenanceCreatorTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/text_creator_name"
+            android:text="@string/text_user"
             android:textSize="14sp"
             android:textColor="@android:color/darker_gray"
             android:drawableLeft="@drawable/ic_person_outline"

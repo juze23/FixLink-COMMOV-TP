@@ -104,7 +104,7 @@ class IssueAdapter(private val issues: MutableList<Issue>) : RecyclerView.Adapte
             val userName = if (user != null) {
                 if (user.lastname.isNullOrEmpty()) user.firstname else "${user.firstname} ${user.lastname}"
             } else issue.id_user
-            reporterTextView.text = "Reporter: $userName"
+            reporterTextView.text = "${itemView.context.getString(R.string.text_user_label)} $userName"
             val priorityText = when (issue.priority_id) {
                 1 -> itemView.context.getString(R.string.text_priority_low)
                 2 -> itemView.context.getString(R.string.text_priority_medium)

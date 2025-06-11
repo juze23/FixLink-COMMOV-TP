@@ -106,15 +106,15 @@
     <string name="button_apply">Aplicar</string>
 
     <!-- Painel de Administrador -->
-    <string name="text_total_issues">Total de Problemas</string>
+    <string name="text_total_issues">Total de Avarias</string>
     <string name="text_open_issues">%1$d em aberto</string>
     <string name="text_total_users">Total de Utilizadores</string>
     <string name="text_active_users">%1$d ativos hoje</string>
     <string name="text_total_locations">Total de Localizações</string>
     <string name="text_active_locations">%1$d com problemas ativos</string>
     <string name="text_active_equipment">Equipamentos Ativos</string>
-    <string name="text_chart_issues_by_status">Problemas por Estado</string>
-    <string name="text_chart_issues_by_priority">Problemas por Prioridade</string>
+    <string name="text_chart_issues_by_status">Avarias por Estado</string>
+    <string name="text_chart_issues_by_priority">Avarias por Prioridade</string>
     <string name="text_chart_maintenance_by_status">Manutenções por Estado</string>
     <string name="text_recent_activity">Atividade Recente</string>
     <string name="text_view_all_activity">Ver Todas</string>
@@ -318,5 +318,8 @@
     <string name="text_assigned_to_issue">Foi atribuído a esta avaria!</string>
     <string name="text_assigned_to_maintenance">Foi atribuído a esta manutenção!</string>
     <string name="text_error_assigning">Erro ao atribuir a si mesmo.</string>
+
+    <!-- Strings Adicionais -->
+    <string name="text_user_label">Utilizador:</string>
 
 </resources> 

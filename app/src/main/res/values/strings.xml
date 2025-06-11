@@ -352,4 +352,7 @@
     <string name="text_assigned_to_maintenance">You have been assigned to this maintenance!</string>
     <string name="text_error_assigning">Failed to assign yourself.</string>
 
+    <!-- Additional Strings -->
+    <string name="text_user_label">User:</string>
+
 </resources> 

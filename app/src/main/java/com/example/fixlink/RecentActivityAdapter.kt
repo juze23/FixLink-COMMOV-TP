@@ -44,9 +44,11 @@ class RecentActivityAdapter(
 
         // Get creator name
         val creator = users.find { it.user_id == issue.id_user }
-        holder.creator.text = creator?.let {
-            if (it.lastname.isNullOrEmpty()) it.firstname else "${it.firstname} ${it.lastname}"
-        } ?: "Unknown User"
+        holder.creator.text = "${holder.itemView.context.getString(R.string.text_user_label)} ${
+            creator?.let {
+                if (it.lastname.isNullOrEmpty()) it.firstname else "${it.firstname} ${it.lastname}"
+            } ?: "Unknown User"
+        }"
     }
 
     override fun getItemCount() = issues.size
