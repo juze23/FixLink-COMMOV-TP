@@ -98,10 +98,17 @@ class IssuesUserActivity : AppCompatActivity() {
             val bottomNavFragment = withContext(Dispatchers.IO) {
                 NavigationUtils.getBottomNavigationFragment()
             }
-            // Set the selected item to issues
-            if (bottomNavFragment is BottomNavigationAdminFragment) {
-                bottomNavFragment.arguments = Bundle().apply {
-                    putInt("selected_item", R.id.nav_issues)
+            // Set the selected item to issues for both admin and technician navigation
+            when (bottomNavFragment) {
+                is BottomNavigationAdminFragment -> {
+                    bottomNavFragment.arguments = Bundle().apply {
+                        putInt("selected_item", R.id.nav_issues)
+                    }
+                }
+                is BottomNavigationFragment -> {
+                    bottomNavFragment.arguments = Bundle().apply {
+                        putInt("selected_item", R.id.nav_issues)
+                    }
                 }
             }
             supportFragmentManager.beginTransaction()

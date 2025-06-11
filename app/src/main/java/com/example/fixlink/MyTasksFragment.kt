@@ -30,7 +30,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import com.example.fixlink.supabaseConfig.SupabaseClient
-import com.example.fixlink.ui.filters.IssuesFilterDialogFragment
+import com.example.fixlink.ui.filters.MyTasksFilterDialogFragment
+import kotlinx.coroutines.Job
+import java.text.SimpleDateFormat
+import java.util.*
+import android.util.Log
 
 class MyTasksFragment : Fragment() {
     private lateinit var issuesRecyclerView: RecyclerView
@@ -60,6 +64,9 @@ class MyTasksFragment : Fragment() {
     private lateinit var tasksRecyclerView: RecyclerView
     private lateinit var tasksAdapter: MyTasksAdapter
 
+    private var currentFilterOptions = MyTasksFilterDialogFragment.FilterOptions()
+    private var filterJob: Job? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -77,7 +84,7 @@ class MyTasksFragment : Fragment() {
 
         val filterIcon: ImageView = view.findViewById(R.id.filterIcon)
         filterIcon.setOnClickListener {
-            IssuesFilterDialogFragment().show(childFragmentManager, IssuesFilterDialogFragment.TAG)
+            showFilterDialog()
         }
 
         tasksAdapter = MyTasksAdapter(filteredIssuesList, filteredMaintenanceList, priorities, equipments, locations, states, users, maintenanceStates)
@@ -99,15 +106,192 @@ class MyTasksFragment : Fragment() {
         })
     }
 
+    private fun showFilterDialog() {
+        val dialog = MyTasksFilterDialogFragment().apply {
+            setCurrentFilterOptions(currentFilterOptions)
+            setOnFilterAppliedListener { options ->
+                currentFilterOptions = options
+                applyFilters()
+            }
+        }
+        dialog.show(childFragmentManager, MyTasksFilterDialogFragment.TAG)
+    }
+
+    private fun applyFilters() {
+        filterJob?.cancel()
+        filterJob = CoroutineScope(Dispatchers.Default).launch {
+            val filteredIssues = issuesList.filter { issue ->
+                var matches = true
+
+                // Filter by task type
+                if (!currentFilterOptions.showIssues) {
+                    matches = false
+                }
+
+                // Filter by priority
+                if (matches && currentFilterOptions.selectedPriority != null) {
+                    matches = priorities.find { it.priority_id == issue.priority_id }?.priority == currentFilterOptions.selectedPriority
+                    Log.d(TAG, "Priority filter: ${priorities.find { it.priority_id == issue.priority_id }?.priority} == ${currentFilterOptions.selectedPriority} -> $matches")
+                }
+
+                // Filter by state
+                if (matches && currentFilterOptions.selectedState != null) {
+                    matches = states.find { it.state_id == issue.state_id }?.state == currentFilterOptions.selectedState
+                    Log.d(TAG, "State filter: ${states.find { it.state_id == issue.state_id }?.state} == ${currentFilterOptions.selectedState} -> $matches")
+                }
+
+                // Filter by publication date
+                if (matches && currentFilterOptions.selectedDate != null) {
+                    try {
+                        val inputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                        val outputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                        val selectedDate = inputFormat.parse(currentFilterOptions.selectedDate)
+                        val selectedDateStr = selectedDate?.let { outputFormat.format(it) }
+
+                        val issueDate = issue.publicationDate.split("T")[0] // Get just the date part
+                        matches = issueDate == selectedDateStr
+                        Log.d(TAG, "Date filter: $issueDate == $selectedDateStr -> $matches")
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Error parsing date: ${e.message}")
+                        matches = false
+                    }
+                }
+
+                // Filter by equipment status
+                if (matches && currentFilterOptions.equipmentStatus != null) {
+                    matches = equipments.find { it.equipment_id == issue.id_equipment }?.active == currentFilterOptions.equipmentStatus
+                    Log.d(TAG, "Equipment status filter: ${equipments.find { it.equipment_id == issue.id_equipment }?.active} == ${currentFilterOptions.equipmentStatus} -> $matches")
+                }
+
+                matches
+            }
+
+            val filteredMaintenance = maintenanceList.filter { maintenance ->
+                var matches = true
+
+                // Filter by task type
+                if (!currentFilterOptions.showMaintenance) {
+                    matches = false
+                }
+
+                // Filter by priority
+                if (matches && currentFilterOptions.selectedPriority != null) {
+                    matches = priorities.find { it.priority_id == maintenance.priority_id }?.priority == currentFilterOptions.selectedPriority
+                    Log.d(TAG, "Priority filter: ${priorities.find { it.priority_id == maintenance.priority_id }?.priority} == ${currentFilterOptions.selectedPriority} -> $matches")
+                }
+
+                // Filter by state
+                if (matches && currentFilterOptions.selectedState != null) {
+                    matches = maintenanceStates.find { it.state_id == maintenance.state_id }?.state == currentFilterOptions.selectedState
+                    Log.d(TAG, "State filter: ${maintenanceStates.find { it.state_id == maintenance.state_id }?.state} == ${currentFilterOptions.selectedState} -> $matches")
+                }
+
+                // Filter by publication date
+                if (matches && currentFilterOptions.selectedDate != null) {
+                    try {
+                        val inputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                        val outputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                        val selectedDate = inputFormat.parse(currentFilterOptions.selectedDate)
+                        val selectedDateStr = selectedDate?.let { outputFormat.format(it) }
+
+                        val maintenanceDate = maintenance.publicationDate.split("T")[0] // Get just the date part
+                        matches = maintenanceDate == selectedDateStr
+                        Log.d(TAG, "Date filter: $maintenanceDate == $selectedDateStr -> $matches")
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Error parsing date: ${e.message}")
+                        matches = false
+                    }
+                }
+
+                // Filter by equipment status
+                if (matches && currentFilterOptions.equipmentStatus != null) {
+                    matches = equipments.find { it.equipment_id == maintenance.id_equipment }?.active == currentFilterOptions.equipmentStatus
+                    Log.d(TAG, "Equipment status filter: ${equipments.find { it.equipment_id == maintenance.id_equipment }?.active} == ${currentFilterOptions.equipmentStatus} -> $matches")
+                }
+
+                matches
+            }
+
+            withContext(Dispatchers.Main) {
+                filteredIssuesList.clear()
+                filteredIssuesList.addAll(filteredIssues)
+                filteredMaintenanceList.clear()
+                filteredMaintenanceList.addAll(filteredMaintenance)
+                tasksAdapter.notifyDataSetChanged()
+            }
+        }
+    }
+
     private fun searchTasks(query: String) {
         filteredIssuesList.clear()
         filteredMaintenanceList.clear()
         val searchQuery = query.lowercase()
+
+        // First apply filters
+        val filteredIssues = issuesList.filter { issue ->
+            val matchesTaskType = currentFilterOptions.showIssues
+            val matchesPriority = currentFilterOptions.selectedPriority?.let { priority ->
+                priorities.find { it.priority_id == issue.priority_id }?.priority == priority
+            } ?: true
+            val matchesState = currentFilterOptions.selectedState?.let { state ->
+                states.find { it.state_id == issue.state_id }?.state == state
+            } ?: true
+            val matchesDate = currentFilterOptions.selectedDate?.let { date ->
+                try {
+                    val inputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                    val outputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                    val selectedDate = inputFormat.parse(date)
+                    val selectedDateStr = selectedDate?.let { outputFormat.format(it) }
+
+                    val issueDate = issue.publicationDate.split("T")[0] // Get just the date part
+                    issueDate == selectedDateStr
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error parsing date: ${e.message}")
+                    false
+                }
+            } ?: true
+            val matchesEquipmentStatus = currentFilterOptions.equipmentStatus?.let { status ->
+                equipments.find { it.equipment_id == issue.id_equipment }?.active == status
+            } ?: true
+
+            matchesTaskType && matchesPriority && matchesState && matchesDate && matchesEquipmentStatus
+        }
+
+        val filteredMaintenance = maintenanceList.filter { maintenance ->
+            val matchesTaskType = currentFilterOptions.showMaintenance
+            val matchesPriority = currentFilterOptions.selectedPriority?.let { priority ->
+                priorities.find { it.priority_id == maintenance.priority_id }?.priority == priority
+            } ?: true
+            val matchesState = currentFilterOptions.selectedState?.let { state ->
+                maintenanceStates.find { it.state_id == maintenance.state_id }?.state == state
+            } ?: true
+            val matchesDate = currentFilterOptions.selectedDate?.let { date ->
+                try {
+                    val inputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                    val outputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                    val selectedDate = inputFormat.parse(date)
+                    val selectedDateStr = selectedDate?.let { outputFormat.format(it) }
+
+                    val maintenanceDate = maintenance.publicationDate.split("T")[0] // Get just the date part
+                    maintenanceDate == selectedDateStr
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error parsing date: ${e.message}")
+                    false
+                }
+            } ?: true
+            val matchesEquipmentStatus = currentFilterOptions.equipmentStatus?.let { status ->
+                equipments.find { it.equipment_id == maintenance.id_equipment }?.active == status
+            } ?: true
+
+            matchesTaskType && matchesPriority && matchesState && matchesDate && matchesEquipmentStatus
+        }
+
+        // Then apply search
         if (query.isEmpty()) {
-            filteredIssuesList.addAll(issuesList)
-            filteredMaintenanceList.addAll(maintenanceList)
+            filteredIssuesList.addAll(filteredIssues)
+            filteredMaintenanceList.addAll(filteredMaintenance)
         } else {
-            filteredIssuesList.addAll(issuesList.filter { issue ->
+            filteredIssuesList.addAll(filteredIssues.filter { issue ->
                 (issue.title?.lowercase()?.contains(searchQuery) == true) ||
                 (issue.description?.lowercase()?.contains(searchQuery) == true) ||
                 equipments.find { it.equipment_id == issue.id_equipment }?.name?.lowercase()?.contains(searchQuery) == true ||
@@ -118,7 +302,8 @@ class MyTasksFragment : Fragment() {
                 states.find { it.state_id == issue.state_id }?.state?.lowercase()?.contains(searchQuery) == true ||
                 priorities.find { it.priority_id == issue.priority_id }?.priority?.lowercase()?.contains(searchQuery) == true
             })
-            filteredMaintenanceList.addAll(maintenanceList.filter { maintenance ->
+
+            filteredMaintenanceList.addAll(filteredMaintenance.filter { maintenance ->
                 maintenance.description?.lowercase()?.contains(searchQuery) == true ||
                 equipments.find { it.equipment_id == maintenance.id_equipment }?.name?.lowercase()?.contains(searchQuery) == true ||
                 locations.find { it.location_id == maintenance.localization_id }?.name?.lowercase()?.contains(searchQuery) == true ||
@@ -213,5 +398,9 @@ class MyTasksFragment : Fragment() {
     private suspend fun getLoggedInUserId(): String {
         val result = userRepository.getCurrentUser()
         return result.getOrNull()?.user_id ?: throw Exception("User not found")
+    }
+
+    companion object {
+        private const val TAG = "MyTasksFragment"
     }
 } 

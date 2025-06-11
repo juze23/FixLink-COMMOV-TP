@@ -328,4 +328,10 @@
     <string name="text_select_issue_type">Selecionar tipo de avaria</string>
     <string name="text_select_location">Selecionar localização</string>
 
+    <!-- My Tasks Filter Dialog -->
+    <string name="text_task_type">Tipo de Tarefa</string>
+    <string name="text_all_tasks">Todas as Tarefas</string>
+    <string name="text_clear">Limpar</string>
+    <string name="text_apply">Aplicar</string>
+
 </resources> 

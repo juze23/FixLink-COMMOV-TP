@@ -326,5 +326,9 @@
     <string name="text_select_maintenance_type">Select maintenance type</string>
     <string name="text_select_issue_type">Select isssue type</string>
     <string name="text_select_location">Select location</string>
+    <string name="text_task_type">Task Type</string>
+    <string name="text_all_tasks">All Tasks</string>
+    <string name="text_clear">Clear</string>
+    <string name="text_apply">Apply</string>
 
 </resources> 
