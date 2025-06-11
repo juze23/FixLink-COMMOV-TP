@@ -19,6 +19,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import androidx.fragment.app.commit
 import com.example.fixlink.data.preferences.LoginPreferences
+import com.example.fixlink.data.preferences.ProfilePreferences
+import android.net.ConnectivityManager
+import android.content.Context
+import android.net.NetworkCapabilities
+import com.google.android.material.snackbar.Snackbar
+import android.view.View
+import android.widget.ProgressBar
 
 class ProfileActivity : AppCompatActivity() {
 
@@ -27,11 +34,14 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var nameTextView: TextView
     private lateinit var emailTextView: TextView
     private lateinit var phoneTextView: TextView
+    private lateinit var syncStatusTextView: TextView
+    private lateinit var syncProgressBar: ProgressBar
     private var isFromAdmin: Boolean = false
 
     private val userRepository = UserRepository()
     private var currentUser: User? = null
     private lateinit var loginPreferences: LoginPreferences
+    private lateinit var profilePreferences: ProfilePreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +52,9 @@ class ProfileActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        profilePreferences = ProfilePreferences(this)
+        loginPreferences = LoginPreferences(this)
 
         // Check if coming from admin
         isFromAdmin = intent.getBooleanExtra("FROM_ADMIN", false)
@@ -85,7 +98,8 @@ class ProfileActivity : AppCompatActivity() {
         btnEditProfile.setOnClickListener { navigateToEditProfile() }
         btnLogout.setOnClickListener { handleLogout() }
 
-        loginPreferences = LoginPreferences(this)
+        // Check for pending updates
+        checkPendingUpdates()
     }
 
     private fun initializeViews() {
@@ -94,9 +108,16 @@ class ProfileActivity : AppCompatActivity() {
         nameTextView = findViewById(R.id.edit_name)
         emailTextView = findViewById(R.id.edit_email)
         phoneTextView = findViewById(R.id.edit_phone)
+        syncStatusTextView = findViewById(R.id.syncStatusTextView)
+        syncProgressBar = findViewById(R.id.syncProgressBar)
     }
 
     private fun loadUserData() {
+        // Show loading state
+        syncProgressBar.visibility = View.VISIBLE
+        syncStatusTextView.visibility = View.VISIBLE
+        syncStatusTextView.text = "Loading profile..."
+
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val result = userRepository.getCurrentUser()
@@ -105,17 +126,38 @@ class ProfileActivity : AppCompatActivity() {
                         currentUser = user
                         withContext(Dispatchers.Main) {
                             updateUI(user)
+                            hideSyncStatus()
                         }
                     },
                     onFailure = { error ->
                         withContext(Dispatchers.Main) {
-                            Toast.makeText(this@ProfileActivity, "Error loading profile: ${error.message}", Toast.LENGTH_SHORT).show()
+                            // If we have cached data, show it
+                            if (currentUser != null) {
+                                updateUI(currentUser!!)
+                                if (!isNetworkAvailable()) {
+                                    showOfflineSyncStatus()
+                                }
+                            } else {
+                                // Only show error if we have no cached data
+                                Toast.makeText(this@ProfileActivity, "Error loading profile: ${error.message}", Toast.LENGTH_SHORT).show()
+                            }
+                            hideSyncStatus()
                         }
                     }
                 )
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@ProfileActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                    // If we have cached data, show it
+                    if (currentUser != null) {
+                        updateUI(currentUser!!)
+                        if (!isNetworkAvailable()) {
+                            showOfflineSyncStatus()
+                        }
+                    } else {
+                        // Only show error if we have no cached data
+                        Toast.makeText(this@ProfileActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+                    hideSyncStatus()
                 }
             }
         }
@@ -178,6 +220,76 @@ class ProfileActivity : AppCompatActivity() {
         if (isFromAdmin) {
             val topAppBarFragment = supportFragmentManager.findFragmentById(R.id.topAppBarFragmentContainer) as? TopAppBarFragment
             topAppBarFragment?.showBackButton()
+        }
+    }
+
+    private fun isNetworkAvailable(): Boolean {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = connectivityManager.activeNetwork ?: return false
+        val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
+
+    private fun checkPendingUpdates() {
+        if (profilePreferences.hasPendingUpdates()) {
+            val pendingUpdate = profilePreferences.getPendingProfileUpdate()
+            if (pendingUpdate != null) {
+                if (isNetworkAvailable()) {
+                    syncPendingUpdate(pendingUpdate)
+                } else {
+                    showOfflineSyncStatus()
+                }
+            }
+        } else {
+            hideSyncStatus()
+        }
+    }
+
+    private fun showOfflineSyncStatus() {
+        syncStatusTextView.visibility = View.VISIBLE
+        syncStatusTextView.text = "Changes saved offline - Will sync when online"
+        syncProgressBar.visibility = View.GONE
+    }
+
+    private fun showSyncingStatus() {
+        syncStatusTextView.visibility = View.VISIBLE
+        syncStatusTextView.text = "Syncing changes..."
+        syncProgressBar.visibility = View.VISIBLE
+    }
+
+    private fun hideSyncStatus() {
+        syncStatusTextView.visibility = View.GONE
+        syncProgressBar.visibility = View.GONE
+    }
+
+    private fun syncPendingUpdate(update: ProfilePreferences.ProfileUpdate) {
+        showSyncingStatus()
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val result = userRepository.updateUserProfile(
+                    userId = update.userId,
+                    firstname = update.firstname,
+                    lastname = update.lastname,
+                    email = update.email,
+                    phone = update.phone
+                )
+
+                withContext(Dispatchers.Main) {
+                    if (result.isSuccess) {
+                        profilePreferences.clearPendingUpdates()
+                        hideSyncStatus()
+                        loadUserData() // Reload user data to show updated info
+                    } else {
+                        // If sync fails, show offline status
+                        showOfflineSyncStatus()
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    // If any error occurs, show offline status
+                    showOfflineSyncStatus()
+                }
+            }
         }
     }
 }

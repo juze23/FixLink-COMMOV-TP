@@ -17,6 +17,10 @@ import android.app.AlertDialog
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.lifecycle.lifecycleScope
+import android.net.ConnectivityManager
+import android.content.Context
+import android.net.NetworkCapabilities
+import com.example.fixlink.data.preferences.ProfilePreferences
 
 class EditProfileActivity : AppCompatActivity() {
 
@@ -29,11 +33,14 @@ class EditProfileActivity : AppCompatActivity() {
     private lateinit var saveButton: Button
 
     private val userRepository = UserRepository()
+    private lateinit var profilePreferences: ProfilePreferences
     private var userId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_profile)
+
+        profilePreferences = ProfilePreferences(this)
 
         // Initialize fragments
         if (savedInstanceState == null) {
@@ -66,7 +73,7 @@ class EditProfileActivity : AppCompatActivity() {
         initializeViews()
 
         // Get user data from intent
-        val userId = intent.getStringExtra("USER_ID")
+        userId = intent.getStringExtra("USER_ID")
         val fullName = intent.getStringExtra("USER_NAME") ?: ""
         val email = intent.getStringExtra("USER_EMAIL") ?: ""
         val phone = intent.getStringExtra("USER_PHONE") ?: ""
@@ -86,6 +93,9 @@ class EditProfileActivity : AppCompatActivity() {
         changePasswordButton.setOnClickListener { showChangePasswordDialog() }
         cancelButton.setOnClickListener { finish() }
         saveButton.setOnClickListener { updateProfile() }
+
+        // Check for pending updates when activity starts
+        checkPendingUpdates()
     }
 
     private fun initializeViews() {
@@ -152,8 +162,47 @@ class EditProfileActivity : AppCompatActivity() {
         }
     }
 
+    private fun isNetworkAvailable(): Boolean {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = connectivityManager.activeNetwork ?: return false
+        val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
+
+    private fun checkPendingUpdates() {
+        if (profilePreferences.hasPendingUpdates()) {
+            val pendingUpdate = profilePreferences.getPendingProfileUpdate()
+            if (pendingUpdate != null && isNetworkAvailable()) {
+                syncPendingUpdate(pendingUpdate)
+            }
+        }
+    }
+
+    private fun syncPendingUpdate(update: ProfilePreferences.ProfileUpdate) {
+        lifecycleScope.launch {
+            try {
+                val result = userRepository.updateUserProfile(
+                    userId = update.userId,
+                    firstname = update.firstname,
+                    lastname = update.lastname,
+                    email = update.email,
+                    phone = update.phone
+                )
+
+                if (result.isSuccess) {
+                    profilePreferences.clearPendingUpdates()
+                    Toast.makeText(this@EditProfileActivity, "Pending profile updates synced successfully", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this@EditProfileActivity, "Failed to sync pending updates: ${result.exceptionOrNull()?.message}", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(this@EditProfileActivity, "Error syncing updates: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     private fun updateProfile() {
-        val userId = intent.getStringExtra("USER_ID") ?: return
+        val userId = userId ?: return
         val firstname = firstnameEditText.text.toString().trim()
         val lastname = lastnameEditText.text.toString().trim()
         val email = emailEditText.text.toString().trim()
@@ -174,21 +223,35 @@ class EditProfileActivity : AppCompatActivity() {
             return
         }
 
-        lifecycleScope.launch {
-            val result = userRepository.updateUserProfile(
+        if (isNetworkAvailable()) {
+            // Online update
+            lifecycleScope.launch {
+                val result = userRepository.updateUserProfile(
+                    userId = userId,
+                    firstname = firstname,
+                    lastname = lastname,
+                    email = email,
+                    phone = phone
+                )
+
+                if (result.isSuccess) {
+                    Toast.makeText(this@EditProfileActivity, "Profile updated successfully", Toast.LENGTH_SHORT).show()
+                    finish()
+                } else {
+                    Toast.makeText(this@EditProfileActivity, "Failed to update profile: ${result.exceptionOrNull()?.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        } else {
+            // Offline update
+            profilePreferences.savePendingProfileUpdate(
                 userId = userId,
                 firstname = firstname,
                 lastname = lastname,
                 email = email,
                 phone = phone
             )
-
-            if (result.isSuccess) {
-                Toast.makeText(this@EditProfileActivity, "Profile updated successfully", Toast.LENGTH_SHORT).show()
-                finish()
-            } else {
-                Toast.makeText(this@EditProfileActivity, "Failed to update profile: ${result.exceptionOrNull()?.message}", Toast.LENGTH_SHORT).show()
-            }
+            Toast.makeText(this, "Profile changes saved offline. Will sync when internet is available.", Toast.LENGTH_LONG).show()
+            finish()
         }
     }
 
