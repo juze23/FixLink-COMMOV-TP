@@ -319,5 +319,12 @@
     <string name="text_assigned_to_issue">You have been assigned to this issue!</string>
     <string name="text_assigned_to_maintenance">You have been assigned to this maintenance!</string>
     <string name="text_error_assigning">Failed to assign yourself.</string>
+    <string name="text_select_equipment">Select equipment</string>
+    <string name="text_user_label">User:</string>
+    <string name="text_select_priority">Select priority</string>
+    <string name="text_select_type">Select type</string>
+    <string name="text_select_maintenance_type">Select maintenance type</string>
+    <string name="text_select_issue_type">Select isssue type</string>
+    <string name="text_select_location">Select location</string>
 
 </resources> 

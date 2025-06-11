@@ -213,7 +213,7 @@ class RegisterIssueActivity : AppCompatActivity() {
                                 val adapter = ArrayAdapter(
                                     this@RegisterIssueActivity,
                                     android.R.layout.simple_spinner_item,
-                                    listOf("Select equipment") + equipment.map { it.name }
+                                    listOf(getString(R.string.text_select_equipment)) + equipment.map { it.name }
                                 ).apply {
                                     setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                                 }
@@ -236,7 +236,7 @@ class RegisterIssueActivity : AppCompatActivity() {
                             val adapter = ArrayAdapter(
                                 this@RegisterIssueActivity,
                                 android.R.layout.simple_spinner_item,
-                                listOf("Select priority") + priorities.map { it.priority }
+                                listOf(getString(R.string.text_select_priority)) + priorities.map { it.priority }
                             ).apply {
                                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                             }
@@ -256,7 +256,7 @@ class RegisterIssueActivity : AppCompatActivity() {
                             val adapter = ArrayAdapter(
                                 this@RegisterIssueActivity,
                                 android.R.layout.simple_spinner_item,
-                                listOf("Select location") + locations.map { it.name }
+                                listOf(getString(R.string.text_select_location)) + locations.map { it.name }
                             ).apply {
                                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                             }
@@ -276,7 +276,7 @@ class RegisterIssueActivity : AppCompatActivity() {
                             val adapter = ArrayAdapter(
                                 this@RegisterIssueActivity,
                                 android.R.layout.simple_spinner_item,
-                                listOf("Select issue type") + types.map { it.type }
+                                listOf(getString(R.string.text_select_issue_type)) + types.map { it.type }
                             ).apply {
                                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                             }

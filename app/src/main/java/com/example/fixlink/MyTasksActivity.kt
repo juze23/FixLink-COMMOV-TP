@@ -2,6 +2,7 @@ package com.example.fixlink
 
 import android.os.Bundle
 import android.view.View
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -20,10 +21,9 @@ import android.widget.Toast
 class MyTasksActivity : AppCompatActivity() {
     private val userRepository = UserRepository()
     private lateinit var loginPreferences: LoginPreferences
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+        enableEdgeToEdge()
         // Enable edge-to-edge display
         WindowCompat.setDecorFitsSystemWindows(window, false)
         

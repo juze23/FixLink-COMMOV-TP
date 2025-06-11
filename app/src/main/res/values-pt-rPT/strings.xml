@@ -321,5 +321,11 @@
 
     <!-- Strings Adicionais -->
     <string name="text_user_label">Utilizador:</string>
+    <string name="text_select_equipment">Selecionar equipamento</string>
+    <string name="text_select_priority">Selecionar prioridade</string>
+    <string name="text_select_type">Selecionar tipo</string>
+    <string name="text_select_maintenance_type">Selecionar tipo de manutenção</string>
+    <string name="text_select_issue_type">Selecionar tipo de avaria</string>
+    <string name="text_select_location">Selecionar localização</string>
 
 </resources> 

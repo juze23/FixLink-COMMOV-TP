@@ -178,7 +178,7 @@ class AdminActivity : AppCompatActivity() {
         }
 
         // Update "View All" text to show total count
-        viewAllTechnicians.text = "View All (${technicians.size})"
+        viewAllTechnicians.text = getString(R.string.text_view_all) + " (${technicians.size})"
     }
 
     private fun populateEquipmentsList(equipments: List<Equipment>) {
@@ -208,7 +208,7 @@ class AdminActivity : AppCompatActivity() {
         }
 
         // Update "View All" text to show total count
-        viewAllEquipments.text = "View All (${equipments.size})"
+        viewAllEquipments.text = getString(R.string.text_view_all) + " (${equipments.size})"
     }
 
     private fun showViewAllListFragment(listType: String) {

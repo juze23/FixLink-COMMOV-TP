@@ -152,7 +152,7 @@ class RegisterMaintenanceActivity : AppCompatActivity() {
         typeSpinner = findViewById(R.id.type_spinner)
         titleEditText = findViewById(R.id.title_edit_text)
         descriptionEditText = findViewById(R.id.description_edit_text)
-        submitButton = findViewById(R.id.register_button)
+        submitButton = findViewById(R.id.register_maintenance_button)
         addImagePlaceholder = findViewById(R.id.add_image_placeholder)
     }
 
@@ -206,7 +206,7 @@ class RegisterMaintenanceActivity : AppCompatActivity() {
                                 val adapter = ArrayAdapter(
                                     this@RegisterMaintenanceActivity,
                                     android.R.layout.simple_spinner_item,
-                                    listOf("Select equipment") + equipment.map { it.name }
+                                    listOf(getString(R.string.text_select_equipment)) + equipment.map { it.name }
                                 ).apply {
                                     setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                                 }
@@ -229,7 +229,7 @@ class RegisterMaintenanceActivity : AppCompatActivity() {
                             val adapter = ArrayAdapter(
                                 this@RegisterMaintenanceActivity,
                                 android.R.layout.simple_spinner_item,
-                                listOf("Select priority") + priorities.map { it.priority }
+                                listOf(getString(R.string.text_select_priority)) + priorities.map { it.priority }
                             ).apply {
                                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                             }
@@ -249,7 +249,7 @@ class RegisterMaintenanceActivity : AppCompatActivity() {
                             val adapter = ArrayAdapter(
                                 this@RegisterMaintenanceActivity,
                                 android.R.layout.simple_spinner_item,
-                                listOf("Select location") + locations.map { it.name }
+                                listOf(getString(R.string.text_select_location)) + locations.map { it.name }
                             ).apply {
                                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                             }
@@ -269,7 +269,7 @@ class RegisterMaintenanceActivity : AppCompatActivity() {
                             val adapter = ArrayAdapter(
                                 this@RegisterMaintenanceActivity,
                                 android.R.layout.simple_spinner_item,
-                                listOf("Select maintenance type") + types.map { it.type }
+                                listOf(getString(R.string.text_select_maintenance_type)) + types.map { it.type }
                             ).apply {
                                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                             }

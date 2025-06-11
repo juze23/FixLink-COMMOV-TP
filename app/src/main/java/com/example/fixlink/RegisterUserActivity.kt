@@ -63,8 +63,16 @@ class RegisterUserActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager.commit {
-                replace(R.id.topAppBarFragmentContainer, TopAppBarFragment())
-                replace(R.id.bottomNavigationContainer, BottomNavigationAdminFragment())
+                replace(R.id.topAppBarFragmentContainer, TopAppBarFragment().apply {
+                    arguments = Bundle().apply {
+                        putBoolean("show_back_button", true)
+                    }
+                })
+                replace(R.id.bottomNavigationContainer, BottomNavigationAdminFragment().apply {
+                    arguments = Bundle().apply {
+                        putInt("selected_item", R.id.nav_admin)
+                    }
+                })
             }
         }
 
@@ -97,6 +105,13 @@ class RegisterUserActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Show back button in top app bar
+        val topAppBarFragment = supportFragmentManager.findFragmentById(R.id.topAppBarFragmentContainer) as? TopAppBarFragment
+        topAppBarFragment?.showBackButton()
+    }
+
     private fun setupUserTypeSpinner() {
         val userTypeAdapter = ArrayAdapter.createFromResource(
             this,
@@ -117,7 +132,7 @@ class RegisterUserActivity : AppCompatActivity() {
                             val adapter = ArrayAdapter(
                                 this@RegisterUserActivity,
                                 android.R.layout.simple_spinner_item,
-                                listOf("Select location") + locations.map { it.name }
+                                listOf(getString(R.string.text_select_location)) + locations.map { it.name }
                             ).apply {
                                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                             }
