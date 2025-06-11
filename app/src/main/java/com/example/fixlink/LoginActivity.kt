@@ -77,6 +77,7 @@ class LoginActivity : AppCompatActivity() {
         passwordInput = findViewById(R.id.password_input)
         loginButton = findViewById(R.id.login_button)
         rememberMeCheckbox = findViewById(R.id.remember_checkbox)
+        rememberMeCheckbox.isChecked = true
     }
 
     private fun setupClickListeners() {

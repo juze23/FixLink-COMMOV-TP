@@ -28,6 +28,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import androidx.activity.enableEdgeToEdge
 
 class AdminActivity : AppCompatActivity() {
 
@@ -47,7 +48,14 @@ class AdminActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContentView(R.layout.activity_admin)
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
 
         if (savedInstanceState == null) {
             supportFragmentManager.commit {
@@ -82,12 +90,6 @@ class AdminActivity : AppCompatActivity() {
         viewAllEquipments.setOnClickListener { showViewAllListFragment("equipments") }
         addFab.setOnClickListener { navigateToAddItem() }
         // Add listeners for search and filter if needed
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
 
         // Handle back button press
         onBackPressedDispatcher.addCallback(this) {

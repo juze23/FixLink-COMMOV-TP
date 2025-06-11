@@ -21,6 +21,7 @@ class IssuesUserActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContentView(R.layout.activity_issues_user)
 
         loginPreferences = LoginPreferences(this)

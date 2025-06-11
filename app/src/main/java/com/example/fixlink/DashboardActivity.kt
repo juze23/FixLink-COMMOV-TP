@@ -2,8 +2,12 @@ package com.example.fixlink
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.WindowInsets
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.example.fixlink.data.preferences.LoginPreferences
 import com.example.fixlink.data.repository.UserRepository
@@ -12,6 +16,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import androidx.activity.enableEdgeToEdge
 
 class DashboardActivity : AppCompatActivity() {
     private val userRepository = UserRepository()
@@ -19,7 +24,14 @@ class DashboardActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContentView(R.layout.activity_dashboard)
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
 
         loginPreferences = LoginPreferences(this)
 

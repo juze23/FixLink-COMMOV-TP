@@ -13,24 +13,34 @@
         android:id="@+id/topAppBarFragmentContainer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="@color/purple_secondary"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Placeholder for admin content -->
-    <TextView
-        android:id="@+id/adminPlaceholder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/text_admin"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="@color/black"
+    <!-- Admin Content Container -->
+    <FrameLayout
+        android:id="@+id/adminContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/topAppBarFragmentContainer"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/bottomNavigationContainer"
-        android:layout_marginTop="32dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Placeholder for admin content -->
+        <TextView
+            android:id="@+id/adminPlaceholder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_admin"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_gravity="center"
+            android:layout_marginTop="32dp"/>
+
+    </FrameLayout>
 
     <!-- Bottom Navigation Container (Fragment) -->
     <FrameLayout
