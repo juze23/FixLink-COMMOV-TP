@@ -18,10 +18,8 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-class IssuesFilterDialogFragment : DialogFragment() {
-
-    private val TAG = "IssuesFilterDialogFragment"
-    private lateinit var ownershipChipGroup: ChipGroup
+class MaintenanceFilterDialogFragment : DialogFragment() {
+    private val TAG = "MaintenanceFilterDialogFragment"
     private lateinit var priorityChipGroup: ChipGroup
     private lateinit var stateChipGroup: ChipGroup
     private lateinit var equipmentStatusChipGroup: ChipGroup
@@ -31,13 +29,11 @@ class IssuesFilterDialogFragment : DialogFragment() {
     private val calendar = Calendar.getInstance()
     private val dateFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
-    private var currentOwnership: String? = null
     private var currentPriority: String? = null
     private var currentState: String? = null
     private var currentDate: String? = null
     private var currentEquipmentStatus: Boolean? = null
 
-    private var ownershipCallback: ((String?) -> Unit)? = null
     private var priorityCallback: ((String?) -> Unit)? = null
     private var stateCallback: ((String?) -> Unit)? = null
     private var dateCallback: ((String?) -> Unit)? = null
@@ -45,23 +41,20 @@ class IssuesFilterDialogFragment : DialogFragment() {
     private var clearCallback: (() -> Unit)? = null
 
     companion object {
-        const val TAG = "IssuesFilterDialogFragment"
-        private const val ARG_OWNERSHIP = "ownership"
+        const val TAG = "MaintenanceFilterDialogFragment"
         private const val ARG_PRIORITY = "priority"
         private const val ARG_STATE = "state"
         private const val ARG_DATE = "date"
         private const val ARG_EQUIPMENT_STATUS = "equipment_status"
 
         fun newInstance(
-            ownership: String? = null,
             priority: String? = null,
             state: String? = null,
             date: String? = null,
             equipmentStatus: Boolean? = null
-        ): IssuesFilterDialogFragment {
-            return IssuesFilterDialogFragment().apply {
+        ): MaintenanceFilterDialogFragment {
+            return MaintenanceFilterDialogFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_OWNERSHIP, ownership)
                     putString(ARG_PRIORITY, priority)
                     putString(ARG_STATE, state)
                     putString(ARG_DATE, date)
@@ -76,16 +69,11 @@ class IssuesFilterDialogFragment : DialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let { args ->
-            currentOwnership = args.getString(ARG_OWNERSHIP)
             currentPriority = args.getString(ARG_PRIORITY)
             currentState = args.getString(ARG_STATE)
             currentDate = args.getString(ARG_DATE)
             currentEquipmentStatus = if (args.containsKey(ARG_EQUIPMENT_STATUS)) args.getBoolean(ARG_EQUIPMENT_STATUS) else null
         }
-    }
-
-    fun setOwnershipCallback(callback: (String?) -> Unit) {
-        ownershipCallback = callback
     }
 
     fun setPriorityCallback(callback: (String?) -> Unit) {
@@ -113,7 +101,7 @@ class IssuesFilterDialogFragment : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_issues_filter_dialog, container, false)
+        return inflater.inflate(R.layout.fragment_maintenance_filter_dialog, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -124,38 +112,26 @@ class IssuesFilterDialogFragment : DialogFragment() {
     }
 
     private fun initializeViews(view: View) {
-        // Initialize all views first
-        ownershipChipGroup = view.findViewById(R.id.ownership_chip_group)
         priorityChipGroup = view.findViewById(R.id.priority_chip_group)
-        stateChipGroup = view.findViewById(R.id.stateChipGroup)
+        stateChipGroup = view.findViewById(R.id.state_chip_group)
         equipmentStatusChipGroup = view.findViewById(R.id.equipment_status_chip_group)
         publicationDateEditText = view.findViewById(R.id.publication_date_edit_text)
         clearButton = view.findViewById(R.id.clear_button)
         applyButton = view.findViewById(R.id.apply_button)
 
         // Set chip texts using localized strings
-        view.findViewById<Chip>(R.id.ownership_all_chip)?.text = getString(R.string.text_all_issues)
-        view.findViewById<Chip>(R.id.ownership_my_chip)?.text = getString(R.string.text_my_issues)
         view.findViewById<Chip>(R.id.priority_low_chip)?.text = getString(R.string.text_priority_low)
         view.findViewById<Chip>(R.id.priority_medium_chip)?.text = getString(R.string.text_priority_medium)
         view.findViewById<Chip>(R.id.priority_high_chip)?.text = getString(R.string.text_priority_high)
         view.findViewById<Chip>(R.id.state_pending_chip)?.text = getString(R.string.text_state_pending)
         view.findViewById<Chip>(R.id.state_assigned_chip)?.text = getString(R.string.text_state_assigned)
-        view.findViewById<Chip>(R.id.state_under_repair_chip)?.text = getString(R.string.text_state_under_repair)
-        view.findViewById<Chip>(R.id.state_resolved_chip)?.text = getString(R.string.text_state_resolved)
+        view.findViewById<Chip>(R.id.state_ongoing_chip)?.text = getString(R.string.text_state_ongoing)
+        view.findViewById<Chip>(R.id.state_completed_chip)?.text = getString(R.string.text_state_completed)
         view.findViewById<Chip>(R.id.status_active_chip)?.text = getString(R.string.text_status_active)
         view.findViewById<Chip>(R.id.status_inactive_chip)?.text = getString(R.string.text_status_inactive)
     }
 
     private fun setupListeners() {
-        ownershipChipGroup.setOnCheckedChangeListener { group, checkedId ->
-            currentOwnership = when (checkedId) {
-                R.id.ownership_all_chip -> FilterConstants.OWNERSHIP_ALL
-                R.id.ownership_my_chip -> FilterConstants.OWNERSHIP_MY
-                else -> null
-            }
-        }
-
         priorityChipGroup.setOnCheckedChangeListener { group, checkedId ->
             currentPriority = when (checkedId) {
                 R.id.priority_low_chip -> FilterConstants.PRIORITY_LOW
@@ -169,8 +145,8 @@ class IssuesFilterDialogFragment : DialogFragment() {
             currentState = when (checkedId) {
                 R.id.state_pending_chip -> FilterConstants.STATE_PENDING
                 R.id.state_assigned_chip -> FilterConstants.STATE_ASSIGNED
-                R.id.state_under_repair_chip -> FilterConstants.STATE_UNDER_REPAIR
-                R.id.state_resolved_chip -> FilterConstants.STATE_RESOLVED
+                R.id.state_ongoing_chip -> FilterConstants.STATE_ONGOING
+                R.id.state_completed_chip -> FilterConstants.STATE_COMPLETED
                 else -> null
             }
         }
@@ -198,13 +174,6 @@ class IssuesFilterDialogFragment : DialogFragment() {
     }
 
     private fun setupInitialSelections() {
-        // Ownership
-        when (currentOwnership) {
-            FilterConstants.OWNERSHIP_ALL -> ownershipChipGroup.check(R.id.ownership_all_chip)
-            FilterConstants.OWNERSHIP_MY -> ownershipChipGroup.check(R.id.ownership_my_chip)
-            else -> ownershipChipGroup.clearCheck()
-        }
-
         // Priority
         when (currentPriority) {
             FilterConstants.PRIORITY_LOW -> priorityChipGroup.check(R.id.priority_low_chip)
@@ -217,8 +186,8 @@ class IssuesFilterDialogFragment : DialogFragment() {
         when (currentState) {
             FilterConstants.STATE_PENDING -> stateChipGroup.check(R.id.state_pending_chip)
             FilterConstants.STATE_ASSIGNED -> stateChipGroup.check(R.id.state_assigned_chip)
-            FilterConstants.STATE_UNDER_REPAIR -> stateChipGroup.check(R.id.state_under_repair_chip)
-            FilterConstants.STATE_RESOLVED -> stateChipGroup.check(R.id.state_resolved_chip)
+            FilterConstants.STATE_ONGOING -> stateChipGroup.check(R.id.state_ongoing_chip)
+            FilterConstants.STATE_COMPLETED -> stateChipGroup.check(R.id.state_completed_chip)
             else -> stateChipGroup.clearCheck()
         }
 
@@ -234,13 +203,11 @@ class IssuesFilterDialogFragment : DialogFragment() {
     }
 
     private fun clearFilters() {
-        ownershipChipGroup.clearCheck()
         priorityChipGroup.clearCheck()
         stateChipGroup.clearCheck()
         equipmentStatusChipGroup.clearCheck()
         publicationDateEditText.text.clear()
         currentDate = null
-        currentOwnership = null
         currentPriority = null
         currentState = null
         currentEquipmentStatus = null
@@ -269,12 +236,10 @@ class IssuesFilterDialogFragment : DialogFragment() {
     }
 
     private fun applyFilters() {
-        ownershipCallback?.invoke(currentOwnership)
         priorityCallback?.invoke(currentPriority)
         stateCallback?.invoke(currentState)
         dateCallback?.invoke(currentDate)
         equipmentStatusCallback?.invoke(currentEquipmentStatus)
-
         dismiss()
     }
 

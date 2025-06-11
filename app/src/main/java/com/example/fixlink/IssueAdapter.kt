@@ -14,7 +14,7 @@ import android.graphics.drawable.GradientDrawable
 import android.graphics.Color
 import com.example.fixlink.data.entities.User
 
-class IssueAdapter(private val issues: List<Issue>) : RecyclerView.Adapter<IssueAdapter.IssueViewHolder>() {
+class IssueAdapter(private val issues: MutableList<Issue>) : RecyclerView.Adapter<IssueAdapter.IssueViewHolder>() {
     private var priorities: List<Priority> = emptyList()
     private var equipments: List<Equipment> = emptyList()
     private var locations: List<Location> = emptyList()
@@ -33,6 +33,13 @@ class IssueAdapter(private val issues: List<Issue>) : RecyclerView.Adapter<Issue
         this.locations = locations
         this.states = states
         this.users = users
+        notifyDataSetChanged()
+    }
+
+    fun updateIssues(newIssues: List<Issue>) {
+        issues.clear()
+        issues.addAll(newIssues)
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IssueViewHolder {

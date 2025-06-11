@@ -62,9 +62,29 @@ class MyTasksAdapter(
         if (holder is IssueViewHolder) {
             val issue = issues[position]
             holder.bind(issue, priorities, equipments, locations, states, users)
+            
+            // Add click listener to navigate to issue details
+            holder.itemView.setOnClickListener {
+                val fragment = IssueDetailFragment.newInstance(issue.issue_id)
+                val activity = holder.itemView.context as? androidx.fragment.app.FragmentActivity
+                activity?.supportFragmentManager?.beginTransaction()
+                    ?.replace(R.id.myTasksContentFragmentContainer, fragment)
+                    ?.addToBackStack(null)
+                    ?.commit()
+            }
         } else if (holder is MaintenanceViewHolder) {
             val maintenance = maintenances[position - issues.size]
             holder.bind(maintenance, priorities, equipments, locations, maintenanceStates, users)
+            
+            // Add click listener to navigate to maintenance details
+            holder.itemView.setOnClickListener {
+                val fragment = MaintenanceDetailFragment.newInstance(maintenance.maintenance_id)
+                val activity = holder.itemView.context as? androidx.fragment.app.FragmentActivity
+                activity?.supportFragmentManager?.beginTransaction()
+                    ?.replace(R.id.myTasksContentFragmentContainer, fragment)
+                    ?.addToBackStack(null)
+                    ?.commit()
+            }
         }
     }
 

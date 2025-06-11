@@ -34,21 +34,21 @@
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/priority_low" />
+            android:text="@string/text_priority_low" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/priority_medium_chip"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/priority_medium" />
+            android:text="@string/text_priority_medium" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/priority_high_chip"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/priority_high" />
+            android:text="@string/text_priority_high" />
     </com.google.android.material.chip.ChipGroup>
 
     <TextView
@@ -80,35 +80,65 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        app:singleSelection="false">
+        app:singleSelection="true">
 
         <com.google.android.material.chip.Chip
             android:id="@+id/state_pending_chip"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/status_pending" />
+            android:text="@string/text_state_pending" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/state_assigned_chip"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/status_assigned" />
+            android:text="@string/text_state_assigned" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/state_ongoing_chip"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/status_in_progress" />
+            android:text="@string/text_state_ongoing" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/state_completed_chip"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/status_completed" />
+            android:text="@string/text_state_completed" />
+    </com.google.android.material.chip.ChipGroup>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textSize="20dp"
+        android:text="@string/text_equipment_status"
+        android:textAppearance="?attr/textAppearanceTitleSmall" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/equipment_status_chip_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:singleSelection="true">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/status_active_chip"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_status_active" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/status_inactive_chip"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_status_inactive" />
     </com.google.android.material.chip.ChipGroup>
 
     <LinearLayout

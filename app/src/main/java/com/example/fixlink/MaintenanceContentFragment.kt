@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
-import com.example.fixlink.ui.filters.MaintenanceFilterDialogFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -32,6 +31,11 @@ import com.example.fixlink.data.entities.User
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
+import java.text.SimpleDateFormat
+import java.util.*
+import com.example.fixlink.ui.filters.FilterConstants
+import com.example.fixlink.ui.filters.MaintenanceFilterDialogFragment
+import kotlinx.coroutines.Job
 
 class MaintenanceContentFragment : Fragment() {
     companion object {
@@ -61,6 +65,13 @@ class MaintenanceContentFragment : Fragment() {
     private lateinit var fabAddMaintenance: FloatingActionButton
     private var isAdmin: Boolean = false
     private var isTechnician: Boolean = false
+
+    private var currentPriority: String? = null
+    private var currentState: String? = null
+    private var currentDate: String? = null
+    private var currentEquipmentStatus: Boolean? = null
+
+    private var filterJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -102,7 +113,7 @@ class MaintenanceContentFragment : Fragment() {
         }
 
         filterIcon.setOnClickListener {
-            MaintenanceFilterDialogFragment().show(childFragmentManager, MaintenanceFilterDialogFragment.TAG)
+            showFilterDialog()
         }
 
         // Setup FAB click listener
@@ -135,34 +146,128 @@ class MaintenanceContentFragment : Fragment() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
-                searchMaintenances(s.toString())
+                applyFilters()
             }
         })
     }
 
-    private fun searchMaintenances(query: String) {
-        filteredMaintenanceList.clear()
-        if (query.isEmpty()) {
-            filteredMaintenanceList.addAll(maintenanceList)
-        } else {
-            val searchQuery = query.lowercase()
-            filteredMaintenanceList.addAll(maintenanceList.filter { maintenance ->
-                // Search in title and description
-                (maintenance.title?.lowercase()?.contains(searchQuery) == true) ||
-                (maintenance.description?.lowercase()?.contains(searchQuery) == true) ||
-                // Search in equipment name
-                equipments.find { it.equipment_id == maintenance.id_equipment }?.name?.lowercase()?.contains(searchQuery) == true ||
-                // Search in location name
-                locations.find { it.location_id == maintenance.localization_id }?.name?.lowercase()?.contains(searchQuery) == true ||
-                // Search in user name
-                users.find { it.user_id == maintenance.id_user }?.let { "${it.firstname} ${it.lastname}" }?.lowercase()?.contains(searchQuery) == true ||
-                // Search in state
-                states.find { it.state_id == maintenance.state_id }?.state?.lowercase()?.contains(searchQuery) == true ||
-                // Search in priority
-                priorities.find { it.priority_id == maintenance.priority_id }?.priority?.lowercase()?.contains(searchQuery) == true
-            })
+    private fun applyFilters() {
+        filterJob?.cancel()
+        filterJob = CoroutineScope(Dispatchers.Main).launch {
+            var filteredMaintenance = maintenanceList.toMutableList()
+
+            //priority filter
+            if (currentPriority != null) {
+                Log.d(TAG, "Filtering by priority: $currentPriority")
+                Log.d(TAG, "Available priorities: ${priorities.map { it.priority }}")
+                val priorityId = priorities.find { it.priority == currentPriority }?.priority_id
+                Log.d(TAG, "Found priority ID: $priorityId")
+                filteredMaintenance = filteredMaintenance.filter { it.priority_id == priorityId }.toMutableList()
+                Log.d(TAG, "Filtered maintenance count after priority filter: ${filteredMaintenance.size}")
+            }
+
+            //date filter
+            if (currentDate != null) {
+                try {
+                    val inputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                    val outputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                    val selectedDate = inputFormat.parse(currentDate)
+                    val selectedDateStr = selectedDate?.let { outputFormat.format(it) }
+
+                    filteredMaintenance = filteredMaintenance.filter { maintenance ->
+                        val maintenanceDate = maintenance.publicationDate.split("T")[0] // Get just the date part
+                        maintenanceDate == selectedDateStr
+                    }.toMutableList()
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error parsing date: ${e.message}")
+                }
+            }
+
+            //state filter
+            if (currentState != null) {
+                Log.d(TAG, "Filtering by state: $currentState")
+                Log.d(TAG, "Available states: ${states.map { it.state }}")
+                val stateId = states.find { it.state == currentState }?.state_id
+                Log.d(TAG, "Found state ID: $stateId")
+                filteredMaintenance = filteredMaintenance.filter { it.state_id == stateId }.toMutableList()
+                Log.d(TAG, "Filtered maintenance count after state filter: ${filteredMaintenance.size}")
+            }
+
+            //equipment status filter
+            if (currentEquipmentStatus != null) {
+                filteredMaintenance = filteredMaintenance.filter { maintenance ->
+                    val equipment = equipments.find { it.equipment_id == maintenance.id_equipment }
+                    equipment?.active == currentEquipmentStatus
+                }.toMutableList()
+                Log.d(TAG, "Filtered maintenance count after equipment status filter: ${filteredMaintenance.size}")
+            }
+
+            //search filter
+            val searchQuery = searchEditText.text.toString()
+            if (searchQuery.isNotEmpty()) {
+                filteredMaintenance = filteredMaintenance.filter { maintenance ->
+                    (maintenance.description?.contains(searchQuery, ignoreCase = true) == true) ||
+                    equipments.find { it.equipment_id == maintenance.id_equipment }?.name?.contains(searchQuery, ignoreCase = true) == true ||
+                    locations.find { it.location_id == maintenance.localization_id }?.name?.contains(searchQuery, ignoreCase = true) == true ||
+                    users.find { it.user_id == maintenance.id_user }?.let { user ->
+                        if (user.lastname.isNullOrEmpty()) user.firstname else "${user.firstname} ${user.lastname}"
+                    }?.contains(searchQuery, ignoreCase = true) == true ||
+                    states.find { it.state_id == maintenance.state_id }?.state?.contains(searchQuery, ignoreCase = true) == true ||
+                    priorities.find { it.priority_id == maintenance.priority_id }?.priority?.contains(searchQuery, ignoreCase = true) == true
+                }.toMutableList()
+            }
+
+            //update the filtered list
+            filteredMaintenanceList.clear()
+            filteredMaintenanceList.addAll(filteredMaintenance)
+            maintenanceAdapter.notifyDataSetChanged()
+            Log.d(TAG, "Updated adapter with ${filteredMaintenance.size} items")
         }
+    }
+
+    private fun showFilterDialog() {
+        val filterDialog = MaintenanceFilterDialogFragment.newInstance(
+            priority = currentPriority,
+            state = currentState,
+            date = currentDate,
+            equipmentStatus = currentEquipmentStatus
+        ).apply {
+            setPriorityCallback { priority ->
+                currentPriority = priority
+                applyFilters()
+            }
+            setStateCallback { state ->
+                currentState = state
+                applyFilters()
+            }
+            setDateCallback { date ->
+                currentDate = date
+                applyFilters()
+            }
+            setEquipmentStatusCallback { status ->
+                currentEquipmentStatus = status
+                applyFilters()
+            }
+            setClearCallback {
+                clearFilters()
+            }
+        }
+
+        filterDialog.show(childFragmentManager, MaintenanceFilterDialogFragment.TAG)
+    }
+
+    private fun clearFilters() {
+        //clears stored filters
+        currentPriority = null
+        currentState = null
+        currentDate = null
+        currentEquipmentStatus = null
+
+        //resets the list to show all items
+        filteredMaintenanceList.clear()
+        filteredMaintenanceList.addAll(maintenanceList)
         maintenanceAdapter.notifyDataSetChanged()
+        Log.d(TAG, "Cleared filters, showing all ${maintenanceList.size} items")
     }
 
     private fun showLoading(show: Boolean) {

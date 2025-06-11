@@ -1,6 +1,9 @@
 package com.example.fixlink
 
+import android.content.Context
 import android.os.Bundle
+import android.util.AttributeSet
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -105,6 +108,13 @@ class ReportActivity : AppCompatActivity() {
         initializeViews()
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Show back button in top app bar
+        val topAppBarFragment = supportFragmentManager.findFragmentById(R.id.topAppBarFragmentContainer) as? TopAppBarFragment
+        topAppBarFragment?.showBackButton()
+    }
+
     private fun initializeViews() {
         reportEditText = findViewById(R.id.reportEditText)
         sendReportButton = findViewById(R.id.sendReportButton)
@@ -143,4 +153,5 @@ class ReportActivity : AppCompatActivity() {
             }
         }
     }
+    
 } 

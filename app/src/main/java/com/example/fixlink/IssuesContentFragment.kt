@@ -34,6 +34,7 @@ import android.text.TextWatcher
 import android.widget.EditText
 import java.text.SimpleDateFormat
 import java.util.*
+import com.example.fixlink.ui.filters.FilterConstants
 
 class IssuesContentFragment : Fragment() {
     companion object {
@@ -89,6 +90,16 @@ class IssuesContentFragment : Fragment() {
         loadingProgressBar = view.findViewById(R.id.loadingProgressBar)
         issuesContent = view.findViewById(R.id.issuesContent)
 
+        // Initialize RecyclerView with a fixed size
+        issuesRecyclerView.setHasFixedSize(true)
+        issuesRecyclerView.layoutManager = LinearLayoutManager(requireContext()).apply {
+            orientation = LinearLayoutManager.VERTICAL
+        }
+        
+        // Initialize adapter with empty list
+        issueAdapter = IssueAdapter(filteredIssuesList)
+        issuesRecyclerView.adapter = issueAdapter
+
         filterIcon.setOnClickListener {
             showFilterDialog()
         }
@@ -105,14 +116,8 @@ class IssuesContentFragment : Fragment() {
             }
         }
 
-        issueAdapter = IssueAdapter(filteredIssuesList)
-        issuesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        issuesRecyclerView.adapter = issueAdapter
-
         setupSearch()
-
         showLoading(true)
-
         loadAuxiliaryDataAndIssues()
     }
 
@@ -194,114 +199,42 @@ class IssuesContentFragment : Fragment() {
                 val result = issueRepository.getAllIssues()
                 withContext(Dispatchers.Main) {
                     result.onSuccess { issues ->
-                        //clear both lists first
+                        Log.d(TAG, "Loaded ${issues.size} issues from database")
+                        
+                        // Clear both lists first
                         issuesList.clear()
                         filteredIssuesList.clear()
                         
-                        //add to issuesList
+                        // Add to issuesList
                         issuesList.addAll(issues)
+                        Log.d(TAG, "Added ${issues.size} issues to issuesList")
                         
-                        //sets up the adapter with auxiliary data
+                        // Set up the adapter with auxiliary data
                         issueAdapter.setAuxiliaryData(priorities, equipments, locations, states, users)
+                        Log.d(TAG, "Set auxiliary data in adapter")
                         
-                        //update the filtered list directly instead of calling applyFilters
+                        // Update the filtered list
                         filteredIssuesList.addAll(issues)
+                        Log.d(TAG, "Added ${issues.size} issues to filteredIssuesList")
+                        
+                        // Notify adapter of the change
                         issueAdapter.notifyDataSetChanged()
+                        Log.d(TAG, "Notified adapter of data change")
                         
                         showLoading(false)
-                    }.onFailure {
+                    }.onFailure { error ->
+                        Log.e(TAG, "Error loading issues: ${error.message}", error)
                         showLoading(false)
                         Toast.makeText(requireContext(), "Erro ao carregar issues", Toast.LENGTH_SHORT).show()
                     }
                 }
             } catch (e: Exception) {
+                Log.e(TAG, "Error in loadIssues: ${e.message}", e)
                 withContext(Dispatchers.Main) {
                     showLoading(false)
                     Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
             }
-        }
-    }
-
-    private fun applyFilters() {
-
-        filterJob?.cancel()
-        
-        filterJob = CoroutineScope(Dispatchers.Main).launch {
-            //add a small delay to debounce rapid filter changes
-            kotlinx.coroutines.delay(100)
-            
-            filteredIssuesList.clear()
-            
-            var filteredIssues = issuesList.toMutableList()
-
-            //ownership filter
-            if (currentOwnership == "My Issues") {
-                val currentUserId = withContext(Dispatchers.IO) {
-                    userRepository.getCurrentUserId()
-                }
-                if (currentUserId != null) {
-                    Log.d(TAG, "Filtering for user ID: $currentUserId")
-                    filteredIssues = filteredIssues.filter { issue ->
-                        Log.d(TAG, "Comparing issue user ID: ${issue.id_user} with current user ID: $currentUserId")
-                        issue.id_user == currentUserId
-                    }.toMutableList()
-                    Log.d(TAG, "Filtered issues count: ${filteredIssues.size}")
-                } else {
-                    Log.e(TAG, "Current user ID is null")
-                    filteredIssues.clear()
-                }
-            }
-
-            //priority filter
-            if (currentPriority != null) {
-                val priorityId = priorities.find { it.priority == currentPriority }?.priority_id
-                filteredIssues = filteredIssues.filter { it.priority_id == priorityId }.toMutableList()
-            }
-
-            //date filter
-            if (currentDate != null) {
-                try {
-                    val inputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                    val outputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-                    val selectedDate = inputFormat.parse(currentDate)
-                    val selectedDateStr = selectedDate?.let { outputFormat.format(it) }
-
-                    filteredIssues = filteredIssues.filter { issue ->
-                        val issueDate = issue.publicationDate.split("T")[0] // Get just the date part
-                        issueDate == selectedDateStr
-                    }.toMutableList()
-                } catch (e: Exception) {
-                    Log.e(TAG, "Error parsing date: ${e.message}")
-                }
-            }
-
-            //state filter
-            if (currentState != null) {
-                val stateId = states.find { it.state == currentState }?.state_id
-                filteredIssues = filteredIssues.filter { it.state_id == stateId }.toMutableList()
-            }
-
-            //equipment status filter
-            if (currentEquipmentStatus != null) {
-                filteredIssues = filteredIssues.filter { issue ->
-                    val equipment = equipments.find { it.equipment_id == issue.id_equipment }
-                    equipment?.active == currentEquipmentStatus
-                }.toMutableList()
-            }
-
-            //search filter
-            val searchQuery = searchEditText.text.toString()
-            if (searchQuery.isNotEmpty()) {
-                filteredIssues = filteredIssues.filter { issue ->
-                    (issue.title?.contains(searchQuery, ignoreCase = true) == true) ||
-                    (issue.description?.contains(searchQuery, ignoreCase = true) == true)
-                }.toMutableList()
-            }
-
-            //update the filtered list
-            filteredIssuesList.addAll(filteredIssues)
-            issueAdapter.notifyDataSetChanged()
         }
     }
 
@@ -341,6 +274,91 @@ class IssuesContentFragment : Fragment() {
         filterDialog.show(childFragmentManager, IssuesFilterDialogFragment.TAG)
     }
 
+    private fun applyFilters() {
+        filterJob?.cancel()
+        filterJob = CoroutineScope(Dispatchers.Main).launch {
+            var filteredIssues = issuesList.toMutableList()
+
+            //ownership filter
+            if (currentOwnership == FilterConstants.OWNERSHIP_MY) {
+                val currentUserId = withContext(Dispatchers.IO) {
+                    userRepository.getCurrentUserId()
+                }
+                if (currentUserId != null) {
+                    Log.d(TAG, "Filtering for user ID: $currentUserId")
+                    filteredIssues = filteredIssues.filter { issue ->
+                        Log.d(TAG, "Comparing issue user ID: ${issue.id_user} with current user ID: $currentUserId")
+                        issue.id_user == currentUserId
+                    }.toMutableList()
+                    Log.d(TAG, "Filtered issues count: ${filteredIssues.size}")
+                } else {
+                    Log.e(TAG, "Current user ID is null")
+                    filteredIssues.clear()
+                }
+            }
+
+            //priority filter
+            if (currentPriority != null) {
+                Log.d(TAG, "Filtering by priority: $currentPriority")
+                Log.d(TAG, "Available priorities: ${priorities.map { it.priority }}")
+                val priorityId = priorities.find { it.priority == currentPriority }?.priority_id
+                Log.d(TAG, "Found priority ID: $priorityId")
+                filteredIssues = filteredIssues.filter { it.priority_id == priorityId }.toMutableList()
+                Log.d(TAG, "Filtered issues count after priority filter: ${filteredIssues.size}")
+            }
+
+            //date filter
+            if (currentDate != null) {
+                try {
+                    val inputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                    val outputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                    val selectedDate = inputFormat.parse(currentDate)
+                    val selectedDateStr = selectedDate?.let { outputFormat.format(it) }
+
+                    filteredIssues = filteredIssues.filter { issue ->
+                        val issueDate = issue.publicationDate.split("T")[0] // Get just the date part
+                        issueDate == selectedDateStr
+                    }.toMutableList()
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error parsing date: ${e.message}")
+                }
+            }
+
+            //state filter
+            if (currentState != null) {
+                Log.d(TAG, "Filtering by state: $currentState")
+                Log.d(TAG, "Available states: ${states.map { it.state }}")
+                val stateId = states.find { it.state == currentState }?.state_id
+                Log.d(TAG, "Found state ID: $stateId")
+                filteredIssues = filteredIssues.filter { it.state_id == stateId }.toMutableList()
+                Log.d(TAG, "Filtered issues count after state filter: ${filteredIssues.size}")
+            }
+
+            //equipment status filter
+            if (currentEquipmentStatus != null) {
+                filteredIssues = filteredIssues.filter { issue ->
+                    val equipment = equipments.find { it.equipment_id == issue.id_equipment }
+                    equipment?.active == currentEquipmentStatus
+                }.toMutableList()
+            }
+
+            //search filter
+            val searchQuery = searchEditText.text.toString()
+            if (searchQuery.isNotEmpty()) {
+                filteredIssues = filteredIssues.filter { issue ->
+                    (issue.title?.contains(searchQuery, ignoreCase = true) == true) ||
+                    (issue.description?.contains(searchQuery, ignoreCase = true) == true)
+                }.toMutableList()
+            }
+
+            //update the filtered list
+            filteredIssuesList.clear()
+            filteredIssuesList.addAll(filteredIssues)
+            issueAdapter.notifyDataSetChanged()
+            Log.d(TAG, "Updated adapter with ${filteredIssues.size} items")
+        }
+    }
+
     private fun clearFilters() {
         //clears stored filters
         currentOwnership = null
@@ -353,5 +371,6 @@ class IssuesContentFragment : Fragment() {
         filteredIssuesList.clear()
         filteredIssuesList.addAll(issuesList)
         issueAdapter.notifyDataSetChanged()
+        Log.d(TAG, "Cleared filters, showing all ${issuesList.size} items")
     }
 } 
