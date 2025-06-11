@@ -28,6 +28,15 @@ class TopAppBarFragment : Fragment() {
                 activity?.finish()
             }
         }
+
+        // Check if we should show the back button based on arguments
+        arguments?.getBoolean("show_back_button", false)?.let { showBack ->
+            if (showBack) {
+                showBackButton()
+            } else {
+                hideBackButton()
+            }
+        }
         
         return view
     }

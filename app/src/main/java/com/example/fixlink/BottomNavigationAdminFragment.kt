@@ -85,14 +85,16 @@ class BottomNavigationAdminFragment : Fragment() {
         textAdmin = view.findViewById(R.id.text_admin)
         textProfile = view.findViewById(R.id.text_profile)
 
-        // Set initial selected item based on current activity
-        selectedItemId = when (activity) {
-            is DashboardActivity -> R.id.nav_dashboard
-            is IssuesUserActivity -> R.id.nav_issues
-            is MaintenanceUserActivity -> R.id.nav_maintenance
-            is AdminActivity -> R.id.nav_admin
-            is ProfileActivity -> R.id.nav_profile
-            else -> R.id.nav_dashboard
+        // Only set selected item based on activity if no selected item was provided in arguments
+        if (arguments?.getInt("selected_item", -1) == -1) {
+            selectedItemId = when (activity) {
+                is DashboardActivity -> R.id.nav_dashboard
+                is IssuesUserActivity -> R.id.nav_issues
+                is MaintenanceUserActivity -> R.id.nav_maintenance
+                is AdminActivity -> R.id.nav_admin
+                is ProfileActivity -> R.id.nav_profile
+                else -> R.id.nav_dashboard
+            }
         }
         updateColors(selectedItemId)
 

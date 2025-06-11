@@ -91,15 +91,16 @@ class BottomNavigationFragment : Fragment() {
         textMaintenance = view.findViewById(R.id.text_maintenance)
         textProfile = view.findViewById(R.id.text_profile)
 
-        // Set initial selected item based on current activity
-        selectedItemId = when (activity) {
-            is MyTasksActivity -> R.id.nav_my_tasks
-            is IssuesUserActivity -> R.id.nav_issues
-            is MaintenanceUserActivity -> R.id.nav_maintenance
-            is ProfileActivity -> R.id.nav_profile
-            else -> R.id.nav_my_tasks
+        // Only set selected item based on activity if no selected item was provided in arguments
+        if (arguments?.getInt("selected_item", -1) == -1) {
+            selectedItemId = when (activity) {
+                is MyTasksActivity -> R.id.nav_my_tasks
+                is IssuesUserActivity -> R.id.nav_issues
+                is MaintenanceUserActivity -> R.id.nav_maintenance
+                is ProfileActivity -> R.id.nav_profile
+                else -> R.id.nav_my_tasks
+            }
         }
-
         updateColors(selectedItemId)
 
         // Set click listeners with visual feedback

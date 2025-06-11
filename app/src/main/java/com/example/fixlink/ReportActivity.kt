@@ -17,6 +17,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import androidx.fragment.app.commit
 
 class ReportActivity : AppCompatActivity() {
     private lateinit var reportEditText: EditText
@@ -45,32 +46,36 @@ class ReportActivity : AppCompatActivity() {
             return
         }
 
-        // Check user role before proceeding
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val userResult = userRepository.getCurrentUser()
-                if (userResult.isSuccess) {
-                    val user = userResult.getOrNull()
-                    val isAdmin = user?.typeId == 3
-                    val isTechnician = user?.typeId == 2
-                    
-                    if (!isAdmin && !isTechnician) {
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(this@ReportActivity, "Access denied. Only administrators and technicians can send reports.", Toast.LENGTH_SHORT).show()
-                            finish()
-                        }
-                        return@launch
+        // Add fragments immediately
+        if (savedInstanceState == null) {
+            // Add top app bar with back button
+            supportFragmentManager.commit {
+                replace(R.id.topAppBarFragmentContainer, TopAppBarFragment().apply {
+                    arguments = Bundle().apply {
+                        putBoolean("show_back_button", true)
                     }
+                })
+            }
 
-                    // Add fragments after user role check
-                    withContext(Dispatchers.Main) {
-                        if (savedInstanceState == null) {
-                            // Add top app bar
-                            supportFragmentManager.beginTransaction()
-                                .replace(R.id.topAppBarFragmentContainer, TopAppBarFragment())
-                                .commit()
+            // Check user role and add appropriate bottom navigation
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    val userResult = userRepository.getCurrentUser()
+                    if (userResult.isSuccess) {
+                        val user = userResult.getOrNull()
+                        val isAdmin = user?.typeId == 3
+                        val isTechnician = user?.typeId == 2
+                        
+                        if (!isAdmin && !isTechnician) {
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(this@ReportActivity, "Access denied. Only administrators and technicians can send reports.", Toast.LENGTH_SHORT).show()
+                                finish()
+                            }
+                            return@launch
+                        }
 
-                            // Add bottom navigation with the correct fragment based on user role
+                        // Add bottom navigation with the correct fragment and selected item
+                        withContext(Dispatchers.Main) {
                             val selectedItem = if (isMaintenance) R.id.nav_maintenance else R.id.nav_issues
                             val bottomNavFragment = if (isAdmin) {
                                 BottomNavigationAdminFragment().apply {
@@ -85,21 +90,21 @@ class ReportActivity : AppCompatActivity() {
                                     }
                                 }
                             }
-                            supportFragmentManager.beginTransaction()
-                                .replace(R.id.bottomNavigationContainer, bottomNavFragment)
-                                .commit()
+                            supportFragmentManager.commit {
+                                replace(R.id.bottomNavigationContainer, bottomNavFragment)
+                            }
+                        }
+                    } else {
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(this@ReportActivity, "Error: Could not verify user permissions", Toast.LENGTH_SHORT).show()
+                            finish()
                         }
                     }
-                } else {
+                } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(this@ReportActivity, "Error: Could not verify user permissions", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@ReportActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
                         finish()
                     }
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(this@ReportActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
-                    finish()
                 }
             }
         }
