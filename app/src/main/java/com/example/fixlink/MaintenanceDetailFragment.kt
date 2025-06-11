@@ -313,54 +313,84 @@ class MaintenanceDetailFragment : Fragment() {
         }
 
         // Set priority chip
-        val priorityText = priorities.find { it.priority_id == maintenance.priority_id }?.priority ?: maintenance.priority_id.toString()
+        val priorityText = when (maintenance.priority_id) {
+            1 -> requireContext().getString(R.string.text_priority_low)
+            2 -> requireContext().getString(R.string.text_priority_medium)
+            3 -> requireContext().getString(R.string.text_priority_high)
+            else -> maintenance.priority_id.toString()
+        }
         priorityChip.text = priorityText
-        setChipColor(priorityChip, getPriorityColor(priorityText))
+        // Set colors based on priority
+        when (maintenance.priority_id) {
+            1 -> setChipColor(priorityChip, Color.parseColor("#B2DFDB")) // Verde claro - Low
+            2 -> setChipColor(priorityChip, Color.parseColor("#FFEB3B")) // Amarelo - Medium
+            3 -> setChipColor(priorityChip, Color.parseColor("#FF5252")) // Vermelho - High
+            else -> setChipColor(priorityChip, Color.LTGRAY)
+        }
 
         // Set status chip
-        val statusText = states.find { it.state_id == maintenance.state_id }?.state ?: maintenance.state_id.toString()
+        val statusText = when (maintenance.state_id) {
+            1 -> requireContext().getString(R.string.text_state_pending)
+            2 -> requireContext().getString(R.string.text_state_assigned)
+            3 -> requireContext().getString(R.string.text_state_ongoing)
+            4 -> requireContext().getString(R.string.text_state_completed)
+            else -> maintenance.state_id.toString()
+        }
         statusChip.text = statusText
-        setChipColor(statusChip, getStatusColor(statusText))
+        // Set colors based on status
+        when (maintenance.state_id) {
+            1 -> setChipColor(statusChip, Color.parseColor("#E0E0E0")) // Cinza claro - Pending
+            2 -> setChipColor(statusChip, Color.parseColor("#B3E5FC")) // Azul claro - Assigned
+            3 -> setChipColor(statusChip, Color.parseColor("#D6CDEA")) // Lilás claro - Under Repair
+            4 -> setChipColor(statusChip, Color.parseColor("#66BB6A")) // Verde - Resolved
+            else -> setChipColor(statusChip, Color.LTGRAY)
+        }
 
         // Set equipment chip
         val equipment = equipments.find { it.equipment_id == maintenance.id_equipment }
-        val equipmentState = if (equipment != null) if (equipment.active) "Active" else "Inactive" else "?"
+        val equipmentState = if (equipment != null) {
+            if (equipment.active) requireContext().getString(R.string.text_status_active)
+            else requireContext().getString(R.string.text_status_inactive)
+        } else "?"
         equipmentChip.text = equipmentState
-        setChipColor(equipmentChip, getEquipmentColor(equipmentState))
+        // Set colors for equipment status
+        when (equipmentState.lowercase()) {
+            requireContext().getString(R.string.text_status_active).lowercase() -> setChipColor(equipmentChip, Color.parseColor("#FFC107")) // Amarelo
+            requireContext().getString(R.string.text_status_inactive).lowercase() -> setChipColor(equipmentChip, Color.parseColor("#00BCD4")) // Azul
+            else -> setChipColor(equipmentChip, Color.LTGRAY)
+        }
 
         // Log the current status and admin state for debugging
         Log.d(TAG, "Current status: $statusText, isAdmin: $isAdmin")
 
         // Show/hide buttons based on status and user role
-        when (statusText.lowercase()) {
-            "pending" -> {
-                // Only show assign technician button for admin users
-                val shouldShowAssignButton = isAdmin
-                Log.d(TAG, "Pending status - should show assign button: $shouldShowAssignButton")
-                assignTechnicianButton.visibility = if (shouldShowAssignButton) View.VISIBLE else View.GONE
+        when (maintenance.state_id) {
+            1 -> { // Pending
+                assignTechnicianButton.visibility = if (isAdmin) View.VISIBLE else View.GONE
                 startTaskButton.visibility = View.GONE
                 endTaskButton.visibility = View.GONE
                 viewReportButton.visibility = View.GONE
             }
-            "assigned", "atribuído", "atribuido" -> {
+            2 -> { // Assigned
                 assignTechnicianButton.visibility = View.GONE
-                // Only show start task button for admin or the assigned technician
-                startTaskButton.visibility = if (isAdmin || (isTechnician && maintenance.id_technician == currentUserId)) View.VISIBLE else View.GONE
+                // Show start task button for admin or the assigned technician
+                val isAssignedTechnician = isTechnician && maintenance.id_technician == currentUserId
+                startTaskButton.visibility = if (isAdmin || isAssignedTechnician) View.VISIBLE else View.GONE
                 endTaskButton.visibility = View.GONE
                 viewReportButton.visibility = View.GONE
             }
-            "ongoing", "em curso", "em reparacao", "em reparação", "under repair", "em andamento" -> {
+            3 -> { // Ongoing
                 assignTechnicianButton.visibility = View.GONE
                 startTaskButton.visibility = View.GONE
-                // Only show end task button for admin or the assigned technician
-                endTaskButton.visibility = if (isAdmin || (isTechnician && maintenance.id_technician == currentUserId)) View.VISIBLE else View.GONE
+                // Show end task button for admin or the assigned technician
+                val isAssignedTechnician = isTechnician && maintenance.id_technician == currentUserId
+                endTaskButton.visibility = if (isAdmin || isAssignedTechnician) View.VISIBLE else View.GONE
                 viewReportButton.visibility = View.GONE
             }
-            "completed", "concluído", "concluido" -> {
+            4 -> { // Completed
                 assignTechnicianButton.visibility = View.GONE
                 startTaskButton.visibility = View.GONE
                 endTaskButton.visibility = View.GONE
-                // Show View Report button only for admin and completed maintenance
                 viewReportButton.visibility = if (isAdmin) View.VISIBLE else View.GONE
             }
             else -> {
@@ -373,8 +403,8 @@ class MaintenanceDetailFragment : Fragment() {
 
         startTaskButton.setOnClickListener {
             showChangeStatusDialog(
-                title = "Change Status to Ongoing",
-                message = "Are you sure you want to change the status of this task to Ongoing? You won't be able to undo it afterwards.",
+                title = requireContext().getString(R.string.text_change_status_title, requireContext().getString(R.string.text_state_ongoing)),
+                message = requireContext().getString(R.string.text_change_status_message, requireContext().getString(R.string.text_state_ongoing)),
                 onConfirm = {
                     changeMaintenanceStatus(maintenance, states, "ongoing")
                 }
@@ -383,14 +413,14 @@ class MaintenanceDetailFragment : Fragment() {
 
         endTaskButton.setOnClickListener {
             android.app.AlertDialog.Builder(requireContext())
-                .setTitle("Finish Task")
-                .setMessage("Are you sure you want to send this report and finish this task?")
-                .setPositiveButton("Send Report") { _, _ ->
+                .setTitle(requireContext().getString(R.string.text_report))
+                .setMessage(requireContext().getString(R.string.text_change_status_message, requireContext().getString(R.string.text_state_completed)))
+                .setPositiveButton(requireContext().getString(R.string.button_send_report)) { _, _ ->
                     val intent = Intent(requireContext(), ReportActivity::class.java)
                     intent.putExtra("MAINTENANCE_ID", maintenance.maintenance_id)
                     startActivity(intent)
                 }
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton(requireContext().getString(R.string.button_cancel), null)
                 .show()
         }
 
@@ -434,53 +464,19 @@ class MaintenanceDetailFragment : Fragment() {
         }
     }
 
-    private fun getPriorityColor(priority: String): Int {
-        return when (priority.lowercase()) {
-            "high", "alta" -> Color.parseColor("#FF5252") // Vermelho
-            "medium", "média", "media" -> Color.parseColor("#FFEB3B") // Amarelo
-            "low", "baixa" -> Color.parseColor("#B2DFDB") // Verde claro
-            else -> Color.LTGRAY
-        }
-    }
-
-    private fun getStatusColor(status: String): Int {
-        return when (status.lowercase()) {
-            "pending", "pendente" -> Color.parseColor("#D3D3D3") // Cinza claro
-            "assigned", "atribuído", "atribuido" -> Color.parseColor("#ADD8E6") // Azul claro
-            "ongoing", "em curso" -> Color.parseColor("#D6CDEA") // Lilás claro
-            "completed", "terminada" -> Color.parseColor("#6DBF5B") // Verde
-            else -> Color.LTGRAY
-        }
-    }
-
-    private fun getEquipmentColor(state: String): Int {
-        return when (state.lowercase()) {
-            "active", "ativo" -> Color.parseColor("#FFC107") // Amarelo
-            "inactive", "inativo" -> Color.parseColor("#00BCD4") // Azul
-            else -> Color.LTGRAY
-        }
-    }
-
-    private fun setChipColor(chip: TextView, color: Int) {
-        val drawable = GradientDrawable()
-        drawable.cornerRadius = 32f
-        drawable.setColor(color)
-        chip.background = drawable
-    }
-
     private fun showChangeStatusDialog(title: String, message: String, onConfirm: () -> Unit) {
         android.app.AlertDialog.Builder(requireContext())
             .setTitle(title)
             .setMessage(message)
-            .setPositiveButton("Confirm") { _, _ -> onConfirm() }
-            .setNegativeButton("Cancel", null)
+            .setPositiveButton(requireContext().getString(R.string.button_confirm)) { _, _ -> onConfirm() }
+            .setNegativeButton(requireContext().getString(R.string.button_cancel), null)
             .show()
     }
 
     private fun changeMaintenanceStatus(maintenance: Maintenance, states: List<State_maintenance>, newStatus: String, report: String? = null) {
         val newState = states.find { it.state.equals(newStatus, true) }
         if (newState == null) {
-            Toast.makeText(requireContext(), "Invalid state.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), requireContext().getString(R.string.text_invalid_state), Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -520,10 +516,10 @@ class MaintenanceDetailFragment : Fragment() {
             withContext(Dispatchers.Main) {
                 showLoading(false)
                 if (result.isSuccess) {
-                    Toast.makeText(requireContext(), "Status updated successfully!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), requireContext().getString(R.string.text_status_updated), Toast.LENGTH_SHORT).show()
                     loadMaintenanceData()
                 } else {
-                    Toast.makeText(requireContext(), "Failed to update status.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), requireContext().getString(R.string.text_error_updating_status), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -544,12 +540,19 @@ class MaintenanceDetailFragment : Fragment() {
             withContext(Dispatchers.Main) {
                 showLoading(false)
                 if (result.isSuccess) {
-                    Toast.makeText(requireContext(), "You have been assigned to this maintenance!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), requireContext().getString(R.string.text_assigned_to_maintenance), Toast.LENGTH_SHORT).show()
                     loadMaintenanceData()
                 } else {
-                    Toast.makeText(requireContext(), "Failed to assign yourself.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), requireContext().getString(R.string.text_error_assigning), Toast.LENGTH_SHORT).show()
                 }
             }
         }
+    }
+
+    private fun setChipColor(chip: TextView, color: Int) {
+        val drawable = GradientDrawable()
+        drawable.cornerRadius = 32f
+        drawable.setColor(color)
+        chip.background = drawable
     }
 }

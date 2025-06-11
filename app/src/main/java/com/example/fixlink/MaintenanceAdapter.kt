@@ -89,11 +89,24 @@ class MaintenanceAdapter(private val maintenances: List<Maintenance>) : Recycler
             } else maintenance.id_user
             creatorTextView.text = "Creator: $creatorName"
 
-            val priorityText = priorities.find { it.priority_id == maintenance.priority_id }?.priority ?: maintenance.priority_id.toString()
-            val statusText = states.find { it.state_id == maintenance.state_id }?.state ?: maintenance.state_id.toString()
+            val priorityText = when (maintenance.priority_id) {
+                1 -> itemView.context.getString(R.string.text_priority_low)
+                2 -> itemView.context.getString(R.string.text_priority_medium)
+                3 -> itemView.context.getString(R.string.text_priority_high)
+                else -> maintenance.priority_id.toString()
+            }
+            val statusText = when (maintenance.state_id) {
+                1 -> itemView.context.getString(R.string.text_state_pending)
+                2 -> itemView.context.getString(R.string.text_state_assigned)
+                3 -> itemView.context.getString(R.string.text_state_ongoing)
+                4 -> itemView.context.getString(R.string.text_state_completed)
+                else -> maintenance.state_id.toString()
+            }
             val equipment = equipments.find { it.equipment_id == maintenance.id_equipment }
-            val equipmentText = equipment?.name ?: maintenance.id_equipment
-            val equipmentState = if (equipment != null) if (equipment.active) "Active" else "Inactive" else "?"
+            val equipmentState = if (equipment != null) {
+                if (equipment.active) itemView.context.getString(R.string.text_status_active)
+                else itemView.context.getString(R.string.text_status_inactive)
+            } else "?"
             val locationText = locations.find { it.location_id == maintenance.localization_id }?.name ?: maintenance.localization_id.toString()
 
             priorityChip.text = priorityText
@@ -102,25 +115,26 @@ class MaintenanceAdapter(private val maintenances: List<Maintenance>) : Recycler
             locationTextView.text = locationText
 
             // Set colors based on priority
-            when (priorityText.lowercase()) {
-                "high" -> setChipColor(priorityChip, Color.parseColor("#FF5252"))
-                "medium" -> setChipColor(priorityChip, Color.parseColor("#FFEB3B"))
-                "low" -> setChipColor(priorityChip, Color.parseColor("#B2DFDB"))
+            when (maintenance.priority_id) {
+                1 -> setChipColor(priorityChip, Color.parseColor("#B2DFDB")) // Verde claro - Low
+                2 -> setChipColor(priorityChip, Color.parseColor("#FFEB3B")) // Amarelo - Medium
+                3 -> setChipColor(priorityChip, Color.parseColor("#FF5252")) // Vermelho - High
                 else -> setChipColor(priorityChip, Color.GRAY)
             }
 
             // Set colors based on status
-            when (statusText.lowercase()) {
-                "pending", "pendente" -> setChipColor(statusChip, Color.parseColor("#D3D3D3")) // Cinza claro
-                "assigned", "atribuído", "atribuido" -> setChipColor(statusChip, Color.parseColor("#ADD8E6")) // Azul claro
-                "ongoing", "em reparação" -> setChipColor(statusChip, Color.parseColor("#D6CDEA")) // Lilás claro
-                "completed", "terminada" -> setChipColor(statusChip, Color.parseColor("#6DBF5B")) // Verde
+            when (maintenance.state_id) {
+                1 -> setChipColor(statusChip, Color.parseColor("#D3D3D3")) // Cinza claro - Pending
+                2 -> setChipColor(statusChip, Color.parseColor("#ADD8E6")) // Azul claro - Assigned
+                3 -> setChipColor(statusChip, Color.parseColor("#D6CDEA")) // Lilás claro - Under Repair
+                4 -> setChipColor(statusChip, Color.parseColor("#6DBF5B")) // Verde - Resolved
                 else -> setChipColor(statusChip, Color.LTGRAY)
             }
 
+            // Cores para equipamento
             when (equipmentState.lowercase()) {
-                "active", "ativo" -> setChipColor(equipmentChip, Color.parseColor("#FFC107")) // Amarelo
-                "inactive", "inativo" -> setChipColor(equipmentChip, Color.parseColor("#00BCD4")) // Azul
+                itemView.context.getString(R.string.text_status_active).lowercase() -> setChipColor(equipmentChip, Color.parseColor("#FFC107")) // Amarelo
+                itemView.context.getString(R.string.text_status_inactive).lowercase() -> setChipColor(equipmentChip, Color.parseColor("#00BCD4")) // Azul
                 else -> setChipColor(equipmentChip, Color.LTGRAY)
             }
         }

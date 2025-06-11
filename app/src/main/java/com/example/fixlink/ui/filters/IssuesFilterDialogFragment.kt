@@ -203,18 +203,18 @@ class IssuesFilterDialogFragment : DialogFragment() {
 
         //priority
         when (currentPriority) {
-            "Low" -> priorityChipGroup.check(R.id.priority_low_chip)
-            "Medium" -> priorityChipGroup.check(R.id.priority_medium_chip)
-            "High" -> priorityChipGroup.check(R.id.priority_high_chip)
+            requireContext().getString(R.string.text_priority_low) -> priorityChipGroup.check(R.id.priority_low_chip)
+            requireContext().getString(R.string.text_priority_medium) -> priorityChipGroup.check(R.id.priority_medium_chip)
+            requireContext().getString(R.string.text_priority_high) -> priorityChipGroup.check(R.id.priority_high_chip)
             else -> priorityChipGroup.clearCheck()
         }
 
         //state
         when (currentState) {
-            "Pending" -> stateChipGroup.check(R.id.state_pending_chip)
-            "Assigned" -> stateChipGroup.check(R.id.state_assigned_chip)
-            "Under Repair" -> stateChipGroup.check(R.id.state_under_repair_chip)
-            "Resolved" -> stateChipGroup.check(R.id.state_resolved_chip)
+            requireContext().getString(R.string.text_state_pending) -> stateChipGroup.check(R.id.state_pending_chip)
+            requireContext().getString(R.string.text_state_assigned) -> stateChipGroup.check(R.id.state_assigned_chip)
+            requireContext().getString(R.string.text_state_under_repair) -> stateChipGroup.check(R.id.state_under_repair_chip)
+            requireContext().getString(R.string.text_state_resolved) -> stateChipGroup.check(R.id.state_resolved_chip)
             else -> stateChipGroup.clearCheck()
         }
 

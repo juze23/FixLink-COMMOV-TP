@@ -125,6 +125,20 @@
     <string name="text_active_users">%1$d active today</string>
     <string name="text_total_locations">Total Locations</string>
     <string name="text_active_locations">%1$d with active issues</string>
+    <string name="text_active_equipment">Active Equipment</string>
+    <string name="text_chart_issues_by_status">Issues by Status</string>
+    <string name="text_chart_issues_by_priority">Issues by Priority</string>
+    <string name="text_chart_maintenance_by_status">Maintenance by Status</string>
+    <string name="text_recent_activity">Recent Activity</string>
+    <string name="text_view_all_activity">"View All "</string>
+    <string name="text_loading_dashboard">Loading dashboard data...</string>
+    <string name="text_chart_legend_pending">Pending</string>
+    <string name="text_chart_legend_in_progress">In Progress</string>
+    <string name="text_chart_legend_completed">Completed</string>
+    <string name="text_chart_legend_cancelled">Cancelled</string>
+    <string name="text_chart_legend_low">Low</string>
+    <string name="text_chart_legend_medium">Medium</string>
+    <string name="text_chart_legend_high">High</string>
 
     <!-- Report View -->
     <string name="text_report_content">Report content here...</string>
@@ -293,4 +307,17 @@
     <string name="register_maintenance_button">Register Maintenance</string>
     <string name="register_maintenance_equipment_label">Equipment</string>
     <string name="text_issues">Issues</string>
+
+    <!-- New strings for maintenance states -->
+    <string name="text_state_ongoing">Ongoing</string>
+    <string name="text_state_completed">Completed</string>
+
+    <!-- Status Messages -->
+    <string name="text_invalid_state">Invalid state.</string>
+    <string name="text_status_updated">Status updated successfully!</string>
+    <string name="text_error_updating_status">Failed to update status.</string>
+    <string name="text_assigned_to_issue">You have been assigned to this issue!</string>
+    <string name="text_assigned_to_maintenance">You have been assigned to this maintenance!</string>
+    <string name="text_error_assigning">Failed to assign yourself.</string>
+
 </resources> 

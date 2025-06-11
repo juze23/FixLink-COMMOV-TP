@@ -269,10 +269,17 @@ class AdminDashboardFragment : Fragment() {
     private fun updateIssuesByStateChart(issues: List<Issue>, states: List<Issue_state>) {
         val entries = states.map { state ->
             val count = issues.count { it.state_id == state.state_id }
-            PieEntry(count.toFloat(), state.state)
+            val label = when(state.state) {
+                "Pending" -> getString(R.string.text_chart_legend_pending)
+                "In Progress" -> getString(R.string.text_chart_legend_in_progress)
+                "Completed" -> getString(R.string.text_chart_legend_completed)
+                "Cancelled" -> getString(R.string.text_chart_legend_cancelled)
+                else -> state.state
+            }
+            PieEntry(count.toFloat(), label)
         }.filter { it.value > 0 }
 
-        val dataSet = PieDataSet(entries, "Issues by State").apply {
+        val dataSet = PieDataSet(entries, getString(R.string.text_chart_issues_by_status)).apply {
             colors = ColorTemplate.MATERIAL_COLORS.toList()
             valueTextSize = 12f
             valueFormatter = PercentFormatter(issuesByStateChart)
@@ -285,15 +292,28 @@ class AdminDashboardFragment : Fragment() {
     private fun updateIssuesByPriorityChart(issues: List<Issue>, priorities: List<Priority>) {
         val entries = priorities.map { priority ->
             val count = issues.count { it.priority_id == priority.priority_id }
+            val label = when(priority.priority) {
+                "Low" -> getString(R.string.text_chart_legend_low)
+                "Medium" -> getString(R.string.text_chart_legend_medium)
+                "High" -> getString(R.string.text_chart_legend_high)
+                else -> priority.priority
+            }
             BarEntry(priority.priority_id.toFloat(), count.toFloat())
         }
 
-        val dataSet = BarDataSet(entries, "Issues by Priority").apply {
+        val dataSet = BarDataSet(entries, getString(R.string.text_chart_issues_by_priority)).apply {
             colors = ColorTemplate.MATERIAL_COLORS.toList()
             valueTextSize = 12f
         }
 
-        val labels = priorities.map { it.priority }
+        val labels = priorities.map { priority ->
+            when(priority.priority) {
+                "Low" -> getString(R.string.text_chart_legend_low)
+                "Medium" -> getString(R.string.text_chart_legend_medium)
+                "High" -> getString(R.string.text_chart_legend_high)
+                else -> priority.priority
+            }
+        }
         val xAxis = issuesByPriorityChart.xAxis
         xAxis.valueFormatter = com.github.mikephil.charting.formatter.IndexAxisValueFormatter(labels)
 
@@ -307,7 +327,7 @@ class AdminDashboardFragment : Fragment() {
             BarEntry(location.location_id.toFloat(), count.toFloat())
         }.filter { it.y > 0 }
 
-        val dataSet = BarDataSet(entries, "Issues by Location").apply {
+        val dataSet = BarDataSet(entries, getString(R.string.text_chart_maintenance_by_status)).apply {
             colors = ColorTemplate.MATERIAL_COLORS.toList()
             valueTextSize = 12f
         }

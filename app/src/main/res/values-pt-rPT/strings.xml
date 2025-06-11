@@ -67,7 +67,7 @@
 
     <!-- Item de Lista de Manutenção -->
     <string name="text_maintenance_title">Título da Manutenção</string>
-    <string name="text_creator_name">Nome do Criador</string>
+    <string name="text_creator_name">Criador</string>
     <string name="text_priority">Prioridade</string>
     <string name="text_status">Estado</string>
     <string name="text_equipment">Equipamento</string>
@@ -106,12 +106,26 @@
     <string name="button_apply">Aplicar</string>
 
     <!-- Painel de Administrador -->
-    <string name="text_total_issues">Total de Avarias</string>
+    <string name="text_total_issues">Total de Problemas</string>
     <string name="text_open_issues">%1$d em aberto</string>
     <string name="text_total_users">Total de Utilizadores</string>
     <string name="text_active_users">%1$d ativos hoje</string>
     <string name="text_total_locations">Total de Localizações</string>
-    <string name="text_active_locations">%1$d com avarias ativas</string>
+    <string name="text_active_locations">%1$d com problemas ativos</string>
+    <string name="text_active_equipment">Equipamentos Ativos</string>
+    <string name="text_chart_issues_by_status">Problemas por Estado</string>
+    <string name="text_chart_issues_by_priority">Problemas por Prioridade</string>
+    <string name="text_chart_maintenance_by_status">Manutenções por Estado</string>
+    <string name="text_recent_activity">Atividade Recente</string>
+    <string name="text_view_all_activity">Ver Todas</string>
+    <string name="text_loading_dashboard">A carregar dados do painel...</string>
+    <string name="text_chart_legend_pending">Pendente</string>
+    <string name="text_chart_legend_in_progress">Em Progresso</string>
+    <string name="text_chart_legend_completed">Concluído</string>
+    <string name="text_chart_legend_cancelled">Cancelado</string>
+    <string name="text_chart_legend_low">Baixa</string>
+    <string name="text_chart_legend_medium">Média</string>
+    <string name="text_chart_legend_high">Alta</string>
 
     <!-- Visualização de Relatório -->
     <string name="text_report_content">Conteúdo do relatório aqui...</string>
@@ -175,7 +189,7 @@
 
     <!-- Fragmento de Detalhe da Avaria -->
     <string name="text_issue_title">Título da Avaria</string>
-    <string name="text_reporter_name">Nome do Reportador</string>
+    <string name="text_reporter_name">Repórter</string>
     <string name="text_date">Data</string>
     <string name="text_status_information">Informação do Estado</string>
 
@@ -293,5 +307,16 @@
     <string name="text_issues">Avarias</string>
     <string name="text_maintenance">Manutenção</string>
 
+    <!-- New states -->
+    <string name="text_state_ongoing">Em Curso</string>
+    <string name="text_state_completed">Concluído</string>
+
+    <!-- Mensagens de Estado -->
+    <string name="text_invalid_state">Estado inválido.</string>
+    <string name="text_status_updated">Estado atualizado com sucesso!</string>
+    <string name="text_error_updating_status">Erro ao atualizar estado.</string>
+    <string name="text_assigned_to_issue">Foi atribuído a esta avaria!</string>
+    <string name="text_assigned_to_maintenance">Foi atribuído a esta manutenção!</string>
+    <string name="text_error_assigning">Erro ao atribuir a si mesmo.</string>
 
 </resources> 
