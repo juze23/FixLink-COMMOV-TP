@@ -31,6 +31,7 @@ class ViewAllListFragment : Fragment() {
 
     private lateinit var listContainer: LinearLayout
     private lateinit var fragmentTitleTextView: TextView
+    private lateinit var viewLessButton: TextView
     private val userRepository = UserRepository()
     private val equipmentRepository = EquipmentRepository()
 
@@ -40,19 +41,26 @@ class ViewAllListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_view_all_list, container, false)
-
+        
         listContainer = view.findViewById(R.id.listContainer)
         fragmentTitleTextView = view.findViewById(R.id.fragmentTitleTextView)
+        viewLessButton = view.findViewById(R.id.viewLessButton)
 
-        val listType = arguments?.getString(ARG_LIST_TYPE)
+        // Set up View Less button
+        viewLessButton.setOnClickListener {
+            (activity as? AdminActivity)?.hideViewAllListFragment()
+        }
+
+
+        val listType = arguments?.getString("list_type") ?: return view
 
         when (listType) {
             "technicians" -> {
-                fragmentTitleTextView.text = "All Technicians"
+                fragmentTitleTextView.text = getString(R.string.text_all_technicians)
                 loadTechnicians()
             }
             "equipments" -> {
-                fragmentTitleTextView.text = "All Equipments"
+                fragmentTitleTextView.text = getString(R.string.text_all_equipments)
                 loadEquipments()
             }
         }
@@ -118,13 +126,20 @@ class ViewAllListFragment : Fragment() {
 
             nameTextView.text = item
 
-            // TODO: Implement edit and delete functionality
-            editIcon.setOnClickListener {
-                // Handle edit
-            }
-
-            deleteIcon.setOnClickListener {
-                // Handle delete
+            // Check if we're in technicians or equipments list
+            when (arguments?.getString("list_type")) {
+                "technicians" -> {
+                    // Hide both edit and delete icons for technicians
+                    editIcon.visibility = View.GONE
+                    deleteIcon.visibility = View.GONE
+                }
+                "equipments" -> {
+                    // Keep edit icon but hide delete icon for equipment
+                    editIcon.setOnClickListener {
+                        (activity as? AdminActivity)?.showEditFragment(item)
+                    }
+                    deleteIcon.visibility = View.GONE
+                }
             }
 
             listContainer.addView(itemView)

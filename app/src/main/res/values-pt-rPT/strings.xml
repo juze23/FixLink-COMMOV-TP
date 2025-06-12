@@ -232,6 +232,7 @@
     <string name="text_technicians">Técnicos</string>
     <string name="text_equipments">Equipamentos</string>
     <string name="text_view_all">Ver Todos</string>
+    <string name="text_all_equipments">Todos os equipamentos</string>
     <string name="text_add_new_item">Adicionar novo item</string>
 
     <!-- Admin Fragment -->
@@ -345,11 +346,16 @@
     <string name="text_notification_maintenance_created">Foi criada uma nova tarefa de manutenção</string>
 
     <!-- State Strings -->
+    <string name="text_view">Ver</string>
     <string name="text_state_cancelled">Cancelado</string>
 
     <!-- Date Format Strings -->
     <string name="text_date_format">dd/MM/yyyy HH:mm</string>
     <string name="text_today">Hoje</string>
     <string name="text_yesterday">Ontem</string>
+    <string name="text_mark_as_unread">Marcar como lido</string>
+    <string name="text_mark_as_read">Marcar como lido</string>
+    <string name="text_view_less">Ver Menos</string>
+    <string name="text_all_technicians">"  Todos os técnicos"</string>
 
 </resources> 

@@ -34,8 +34,6 @@ class AdminActivity : AppCompatActivity() {
 
     private lateinit var techniciansListContainer: LinearLayout
     private lateinit var equipmentsListContainer: LinearLayout
-    private lateinit var searchEditText: EditText
-    private lateinit var filterIcon: ImageView
     private lateinit var viewAllTechnicians: TextView
     private lateinit var viewAllEquipments: TextView
     private lateinit var addFab: FloatingActionButton
@@ -72,8 +70,6 @@ class AdminActivity : AppCompatActivity() {
         // Initialize views
         techniciansListContainer = findViewById(R.id.techniciansListContainer)
         equipmentsListContainer = findViewById(R.id.equipmentsListContainer)
-        searchEditText = findViewById(R.id.searchEditText)
-        filterIcon = findViewById(R.id.filterIcon)
         viewAllTechnicians = findViewById(R.id.viewAllTechnicians)
         viewAllEquipments = findViewById(R.id.viewAllEquipments)
         addFab = findViewById(R.id.addFab)
@@ -89,17 +85,15 @@ class AdminActivity : AppCompatActivity() {
         viewAllTechnicians.setOnClickListener { showViewAllListFragment("technicians") }
         viewAllEquipments.setOnClickListener { showViewAllListFragment("equipments") }
         addFab.setOnClickListener { navigateToAddItem() }
-        // Add listeners for search and filter if needed
 
         // Handle back button press
         onBackPressedDispatcher.addCallback(this) {
             if (viewAllListFragmentContainer.visibility == View.VISIBLE) {
                 hideViewAllListFragment()
             } else {
-                // If viewAllListFragment is not visible, allow default back behavior (e.g., exit activity)
-                isEnabled = false // Disable this callback temporarily
-                onBackPressedDispatcher.onBackPressed() // Call default back behavior
-                isEnabled = true // Re-enable the callback
+                isEnabled = false
+                onBackPressedDispatcher.onBackPressed()
+                isEnabled = true
             }
         }
     }
@@ -165,14 +159,9 @@ class AdminActivity : AppCompatActivity() {
 
             nameTextView.text = "${technician.firstname} ${technician.lastname}"
 
-            // TODO: Implement edit and delete functionality
-            editIcon.setOnClickListener {
-                // Handle edit technician
-            }
-
-            deleteIcon.setOnClickListener {
-                // Handle delete technician
-            }
+            // Hide edit and delete icons for technicians
+            editIcon.visibility = View.GONE
+            deleteIcon.visibility = View.GONE
 
             techniciansListContainer.addView(technicianItemView)
         }
@@ -196,13 +185,11 @@ class AdminActivity : AppCompatActivity() {
 
             nameTextView.text = equipment.name
 
+            // Keep edit icon but hide delete icon for equipment
             editIcon.setOnClickListener { 
                 showEditFragment(equipment.name)
             }
-
-            deleteIcon.setOnClickListener {
-                // Handle delete equipment
-            }
+            deleteIcon.visibility = View.GONE
 
             equipmentsListContainer.addView(equipmentItemView)
         }
@@ -220,7 +207,7 @@ class AdminActivity : AppCompatActivity() {
         }
     }
 
-    private fun hideViewAllListFragment() {
+    fun hideViewAllListFragment() {
         val existingFragment = supportFragmentManager.findFragmentById(R.id.viewAllListFragmentContainer)
         if (existingFragment != null) {
             supportFragmentManager.commit {
@@ -236,7 +223,7 @@ class AdminActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun showEditFragment(equipmentName: String) {
+    fun showEditFragment(equipmentName: String) {
         editFragmentContainer.visibility = View.VISIBLE
         supportFragmentManager.commit {
             replace(R.id.editFragmentContainer, EditEquipmentFragment.newInstance(equipmentName))

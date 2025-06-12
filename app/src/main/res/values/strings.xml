@@ -311,7 +311,10 @@
     <string name="text_filter_list">Filter list</string>
     <string name="text_technicians">Technicians</string>
     <string name="text_equipments">Equipments</string>
-    <string name="text_view_all">Ver Tudo</string>
+    <string name="text_view_all">View All</string>
+    <string name="text_view_less">View Less</string>
+    <string name="text_all_technicians">All Technicians</string>
+    <string name="text_all_equipments">All Equipment</string>
     <string name="text_add_new_item">Add new item</string>
     <string name="text_select_location">Selecionar localização</string>
 
@@ -387,5 +390,7 @@
     <string name="text_date_format">MM/dd/yyyy HH:mm</string>
     <string name="text_today">Today</string>
     <string name="text_yesterday">Yesterday</string>
+    <string name="text_mark_as_unread">Mark as unread</string>
+    <string name="text_mark_as_read">Mark as read</string>
 
 </resources> 
