@@ -113,6 +113,9 @@
     <string name="text_total_locations">Total de Localizações</string>
     <string name="text_active_locations">%1$d com problemas ativos</string>
     <string name="text_active_equipment">Equipamentos Ativos</string>
+    <string name="text_avg_issue_time">Tempo Médio de Avarias</string>
+    <string name="text_avg_maintenance_time">Tempo Médio de Manutenção</string>
+    <string name="text_days">%1$d dias</string>
     <string name="text_chart_issues_by_status">Avarias por Estado</string>
     <string name="text_chart_issues_by_priority">Avarias por Prioridade</string>
     <string name="text_chart_maintenance_by_status">Manutenções por Estado</string>

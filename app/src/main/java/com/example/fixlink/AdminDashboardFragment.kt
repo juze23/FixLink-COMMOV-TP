@@ -15,6 +15,7 @@ import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
+import com.github.mikephil.charting.components.Legend
 import com.example.fixlink.data.repository.*
 import com.example.fixlink.data.entities.*
 import kotlinx.coroutines.CoroutineScope
@@ -25,6 +26,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import com.google.android.material.button.MaterialButton
 import android.widget.Toast
+import java.util.concurrent.TimeUnit
 
 class AdminDashboardFragment : Fragment() {
     private lateinit var totalIssuesText: TextView
@@ -35,6 +37,10 @@ class AdminDashboardFragment : Fragment() {
     private lateinit var activeUsersText: TextView
     private lateinit var totalLocationsText: TextView
     private lateinit var activeLocationsText: TextView
+    private lateinit var avgIssueTimeText: TextView
+    private lateinit var avgIssueTimeDaysText: TextView
+    private lateinit var avgMaintenanceTimeText: TextView
+    private lateinit var avgMaintenanceTimeDaysText: TextView
     private lateinit var viewAllButton: MaterialButton
     private lateinit var issuesByStateChart: PieChart
     private lateinit var issuesByPriorityChart: BarChart
@@ -50,6 +56,7 @@ class AdminDashboardFragment : Fragment() {
     private val priorityRepository = PriorityRepository()
     private val locationRepository = LocationRepository()
     private val userRepository = UserRepository()
+    private val maintenanceRepository = MaintenanceRepository()
 
     private var currentIssues: List<Issue> = emptyList()
     private var currentUsers: List<User> = emptyList()
@@ -78,6 +85,10 @@ class AdminDashboardFragment : Fragment() {
         activeUsersText = view.findViewById(R.id.activeUsersText)
         totalLocationsText = view.findViewById(R.id.totalLocationsText)
         activeLocationsText = view.findViewById(R.id.activeLocationsText)
+        avgIssueTimeText = view.findViewById(R.id.avgIssueTimeText)
+        avgIssueTimeDaysText = view.findViewById(R.id.avgIssueTimeDaysText)
+        avgMaintenanceTimeText = view.findViewById(R.id.avgMaintenanceTimeText)
+        avgMaintenanceTimeDaysText = view.findViewById(R.id.avgMaintenanceTimeDaysText)
         issuesByStateChart = view.findViewById(R.id.issuesByStateChart)
         issuesByPriorityChart = view.findViewById(R.id.issuesByPriorityChart)
         issuesByLocationChart = view.findViewById(R.id.issuesByLocationChart)
@@ -199,6 +210,7 @@ class AdminDashboardFragment : Fragment() {
                 val priorities = priorityRepository.getPriorityList().getOrNull() ?: emptyList()
                 val locations = locationRepository.getLocationList().getOrNull() ?: emptyList()
                 val users = userRepository.getAllUsers().getOrNull() ?: emptyList()
+                val maintenanceList = maintenanceRepository.getAllMaintenance().getOrNull() ?: emptyList()
 
                 withContext(Dispatchers.Main) {
                     // Store current data for full view
@@ -208,7 +220,7 @@ class AdminDashboardFragment : Fragment() {
                     currentLocations = locations
 
                     // Update overview statistics
-                    updateOverviewStats(issues, equipments, users, locations)
+                    updateOverviewStats(issues, equipments, users, locations, maintenanceList)
                     
                     // Update charts
                     updateIssuesByStateChart(issues, states)
@@ -234,19 +246,20 @@ class AdminDashboardFragment : Fragment() {
         issues: List<Issue>,
         equipments: List<Equipment>,
         users: List<User>,
-        locations: List<Location>
+        locations: List<Location>,
+        maintenanceList: List<Maintenance>
     ) {
         // Issues stats
         val totalIssues = issues.size
         val openIssues = issues.count { it.state_id == 1 } // Assuming 1 is the ID for "Open" state
         totalIssuesText.text = totalIssues.toString()
-        openIssuesText.text = "$openIssues open"
+        openIssuesText.text = getString(R.string.text_open_issues, openIssues)
 
         // Equipment stats
         val activeEquipment = equipments.count { it.active }
         val totalEquipment = equipments.size
         activeEquipmentText.text = activeEquipment.toString()
-        totalEquipmentText.text = "of $totalEquipment total"
+        totalEquipmentText.text = getString(R.string.text_of_total, totalEquipment)
 
         // Users stats
         val totalUsers = users.size
@@ -255,7 +268,7 @@ class AdminDashboardFragment : Fragment() {
             issues.any { it.id_user == user.user_id && it.publicationDate.startsWith(today) }
         }
         totalUsersText.text = totalUsers.toString()
-        activeUsersText.text = "$activeUsers active today"
+        activeUsersText.text = getString(R.string.text_active_users, activeUsers)
 
         // Locations stats
         val totalLocations = locations.size
@@ -263,17 +276,70 @@ class AdminDashboardFragment : Fragment() {
             issues.any { it.localization_id == location.location_id && it.state_id != 3 } // Assuming 3 is "Closed" state
         }
         totalLocationsText.text = totalLocations.toString()
-        activeLocationsText.text = "$activeLocations with active issues"
+        activeLocationsText.text = getString(R.string.text_active_locations, activeLocations)
+
+        // Calculate average issue time
+        val completedIssues = issues.filter { 
+            it.state_id == 4 && it.beginningDate != null && it.endingDate != null 
+        } // Only count resolved issues with both dates
+        val avgIssueTime = if (completedIssues.isNotEmpty()) {
+            val totalMillis = completedIssues.sumOf { issue ->
+                val startDate = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault()).parse(issue.beginningDate!!)
+                val endDate = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault()).parse(issue.endingDate!!)
+                endDate.time - startDate.time
+            }
+            val avgMillis = totalMillis / completedIssues.size
+            val hours = TimeUnit.MILLISECONDS.toHours(avgMillis)
+            val minutes = TimeUnit.MILLISECONDS.toMinutes(avgMillis) % 60
+            
+            if (hours >= 1) {
+                avgIssueTimeText.text = getString(R.string.text_hours, hours)
+                avgIssueTimeDaysText.text = getString(R.string.text_minutes, minutes)
+            } else {
+                avgIssueTimeText.text = getString(R.string.text_minutes, minutes)
+                avgIssueTimeDaysText.text = ""
+            }
+        } else {
+            avgIssueTimeText.text = getString(R.string.text_minutes, 0)
+            avgIssueTimeDaysText.text = ""
+        }
+
+        // Calculate average maintenance time
+        val completedMaintenance = maintenanceList.filter { 
+            it.state_id == 4 && it.beginningDate != null && it.endingDate != null 
+        } // Only count completed maintenance with both dates
+        val avgMaintenanceTime = if (completedMaintenance.isNotEmpty()) {
+            val totalMillis = completedMaintenance.sumOf { maintenance ->
+                val startDate = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault()).parse(maintenance.beginningDate!!)
+                val endDate = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault()).parse(maintenance.endingDate!!)
+                endDate.time - startDate.time
+            }
+            val avgMillis = totalMillis / completedMaintenance.size
+            val hours = TimeUnit.MILLISECONDS.toHours(avgMillis)
+            val minutes = TimeUnit.MILLISECONDS.toMinutes(avgMillis) % 60
+            
+            if (hours >= 1) {
+                avgMaintenanceTimeText.text = getString(R.string.text_hours, hours)
+                avgMaintenanceTimeDaysText.text = getString(R.string.text_minutes, minutes)
+            } else {
+                avgMaintenanceTimeText.text = getString(R.string.text_minutes, minutes)
+                avgMaintenanceTimeDaysText.text = ""
+            }
+        } else {
+            avgMaintenanceTimeText.text = getString(R.string.text_minutes, 0)
+            avgMaintenanceTimeDaysText.text = ""
+        }
     }
 
     private fun updateIssuesByStateChart(issues: List<Issue>, states: List<Issue_state>) {
         val entries = states.map { state ->
             val count = issues.count { it.state_id == state.state_id }
-            val label = when(state.state) {
-                "Pending" -> getString(R.string.text_chart_legend_pending)
-                "In Progress" -> getString(R.string.text_chart_legend_in_progress)
-                "Completed" -> getString(R.string.text_chart_legend_completed)
-                "Cancelled" -> getString(R.string.text_chart_legend_cancelled)
+            val label = when(state.state.lowercase()) {
+                "pending" -> getString(R.string.text_state_pending)
+                "assigned" -> getString(R.string.text_state_assigned)
+                "under repair" -> getString(R.string.text_state_under_repair)
+                "resolved" -> getString(R.string.text_state_resolved)
+                "cancelled" -> getString(R.string.text_state_cancelled)
                 else -> state.state
             }
             PieEntry(count.toFloat(), label)
@@ -285,8 +351,22 @@ class AdminDashboardFragment : Fragment() {
             valueFormatter = PercentFormatter(issuesByStateChart)
         }
 
-        issuesByStateChart.data = PieData(dataSet)
-        issuesByStateChart.invalidate()
+        issuesByStateChart.apply {
+            data = PieData(dataSet)
+            description.isEnabled = false
+            legend.isEnabled = true
+            legend.textSize = 12f
+            legend.form = Legend.LegendForm.CIRCLE
+            legend.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
+            legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+            legend.orientation = Legend.LegendOrientation.HORIZONTAL
+            legend.setDrawInside(false)
+            setUsePercentValues(true)
+            setEntryLabelTextSize(12f)
+            setEntryLabelColor(Color.BLACK)
+            animateY(1000)
+            invalidate()
+        }
     }
 
     private fun updateIssuesByPriorityChart(issues: List<Issue>, priorities: List<Priority>) {

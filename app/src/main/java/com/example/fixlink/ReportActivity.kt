@@ -18,6 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import androidx.fragment.app.commit
+import com.example.fixlink.data.repository.NotificationRepository
 
 class ReportActivity : AppCompatActivity() {
     private lateinit var reportEditText: EditText
@@ -141,14 +142,28 @@ class ReportActivity : AppCompatActivity() {
                     if (isMaintenance) {
                         maintenanceId?.let { id ->
                             maintenanceRepository.updateMaintenanceReport(id, report)
-                            // No need to call changeMaintenanceStatus since updateMaintenanceReport already sets status to completed
+                            // Create notification for the maintenance creator
+                            val currentMaintenance = maintenanceRepository.getMaintenanceById(id).getOrNull()
+                            if (currentMaintenance != null) {
+                                NotificationRepository().createNotification(
+                                    userId = currentMaintenance.id_user,
+                                    maintenanceId = id,
+                                    description = "Maintenance status changed to Completed"
+                                )
+                            }
                         }
                     } else {
                         issueId?.let { id ->
                             issueRepository.updateIssueReport(id, report)
-                            // Update status to resolved with notification
-                            val notificationText = "Issue status changed to Resolved"
-                            issueRepository.changeIssueStatus(id, "resolved", notificationText)
+                            // Create notification for the issue creator
+                            val currentIssue = issueRepository.getIssueById(id).getOrNull()
+                            if (currentIssue != null) {
+                                NotificationRepository().createNotification(
+                                    userId = currentIssue.id_user,
+                                    issueId = id,
+                                    description = "Issue status changed to Resolved"
+                                )
+                            }
                         }
                     }
                 }

@@ -16,6 +16,9 @@ import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.UUID
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class MaintenanceRepository {
     suspend fun getMaintenanceById(maintenanceId: String): Result<Maintenance> = withContext(Dispatchers.IO) {
@@ -134,10 +137,11 @@ class MaintenanceRepository {
             // First get the current maintenance to update
             val currentMaintenance = getMaintenanceById(maintenanceId).getOrNull() ?: return@withContext Result.failure(Exception("Maintenance not found"))
             
-            // Create updated maintenance with new report and state_id = 4 (completed)
+            // Create updated maintenance with new report, state_id = 4 and ending date
             val updatedMaintenance = currentMaintenance.copy(
                 report = report,
-                state_id = 4  // Set state to "completed"
+                state_id = 4,  // Set state to "completed"
+                endingDate = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault()).format(Date())
             )
             
             // Update the maintenance using the existing updateMaintenance method
@@ -152,7 +156,7 @@ class MaintenanceRepository {
         maintenanceId: String, 
         newStatus: String,
         notificationText: String
-    ): Result<Unit> = withContext(Dispatchers.IO) {
+    ) = withContext(Dispatchers.IO) {
         try {
             // First get the current maintenance to update
             val currentMaintenance = getMaintenanceById(maintenanceId).getOrNull() ?: return@withContext Result.failure(Exception("Maintenance not found"))
@@ -169,9 +173,27 @@ class MaintenanceRepository {
             if (newState == null) {
                 return@withContext Result.failure(Exception("Invalid state: $newStatus"))
             }
+
+            // Set beginning date if the new state is ongoing and it wasn't set before
+            val beginningDate = if (newState.state.lowercase() in listOf("ongoing", "em curso") && currentMaintenance.beginningDate == null) {
+                SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault()).format(Date())
+            } else {
+                currentMaintenance.beginningDate
+            }
+
+            // Set ending date if the new state is completed
+            val endingDate = if (newState.state.lowercase() in listOf("completed", "concluído", "concluido")) {
+                SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault()).format(Date())
+            } else {
+                currentMaintenance.endingDate
+            }
             
-            // Create updated maintenance with new state
-            val updatedMaintenance = currentMaintenance.copy(state_id = newState.state_id)
+            // Create updated maintenance with new state and dates if applicable
+            val updatedMaintenance = currentMaintenance.copy(
+                state_id = newState.state_id,
+                beginningDate = beginningDate,
+                endingDate = endingDate
+            )
             
             // Update the maintenance using the existing updateMaintenance method
             val updateResult = updateMaintenance(updatedMaintenance)

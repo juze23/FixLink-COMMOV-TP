@@ -27,6 +27,9 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromJsonElement
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class IssueRepository {
     @RequiresApi(Build.VERSION_CODES.O)
@@ -246,10 +249,11 @@ class IssueRepository {
             // First get the current issue to update
             val currentIssue = getIssueById(issueId).getOrNull() ?: return@withContext Result.failure(Exception("Issue not found"))
             
-            // Create updated issue with new report and state_id = 4
+            // Create updated issue with new report, state_id = 4 and ending date
             val updatedIssue = currentIssue.copy(
                 report = report,
-                state_id = 4  // Set state to "Reported"
+                state_id = 4,  // Set state to "Resolved"
+                endingDate = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault()).format(Date())
             )
             
             // Update the issue using the existing updateIssue method
@@ -264,7 +268,7 @@ class IssueRepository {
         issueId: String, 
         newStatus: String,
         notificationText: String
-    ): Result<Unit> = withContext(Dispatchers.IO) {
+    ) = withContext(Dispatchers.IO) {
         try {
             // First get the current issue to update
             val currentIssue = getIssueById(issueId).getOrNull() ?: return@withContext Result.failure(Exception("Issue not found"))
@@ -281,9 +285,27 @@ class IssueRepository {
             if (newState == null) {
                 return@withContext Result.failure(Exception("Invalid state: $newStatus"))
             }
+
+            // Set beginning date if the new state is under repair and it wasn't set before
+            val beginningDate = if (newState.state.lowercase() in listOf("under repair", "em reparação", "em reparacao") && currentIssue.beginningDate == null) {
+                SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault()).format(Date())
+            } else {
+                currentIssue.beginningDate
+            }
+
+            // Set ending date if the new state is resolved (state_id 4)
+            val endingDate = if (newState.state_id == 4) {
+                SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault()).format(Date())
+            } else {
+                currentIssue.endingDate
+            }
             
-            // Create updated issue with new state
-            val updatedIssue = currentIssue.copy(state_id = newState.state_id)
+            // Create updated issue with new state and dates if applicable
+            val updatedIssue = currentIssue.copy(
+                state_id = newState.state_id,
+                beginningDate = beginningDate,
+                endingDate = endingDate
+            )
             
             // Update the issue using the existing updateIssue method
             val updateResult = updateIssue(updatedIssue)

@@ -126,6 +126,13 @@
     <string name="text_total_locations">Total Locations</string>
     <string name="text_active_locations">%1$d with active issues</string>
     <string name="text_active_equipment">Active Equipment</string>
+    <string name="text_of_total">of %1$d total</string>
+    <string name="text_avg_issue_time">Average Issue Time</string>
+    <string name="text_avg_maintenance_time">Average Maintenance Time</string>
+    <string name="text_time_format">%1$d hours %2$d minutes</string>
+    <string name="text_time_format_minutes">%1$d minutes</string>
+    <string name="text_hours">%1$d hours</string>
+    <string name="text_minutes">%1$d minutes</string>
     <string name="text_chart_issues_by_status">Issues by Status</string>
     <string name="text_chart_issues_by_priority">Issues by Priority</string>
     <string name="text_chart_maintenance_by_status">Maintenance by Status</string>
@@ -348,5 +355,6 @@
     <string name="text_mark_as_read">Mark as read</string>
     <string name="text_view_less">View Less</string>
     <string name="text_all_technicians">All Technicians</string>
+    <string name="text_manage_types">Manage Types</string>
 
 </resources> 
