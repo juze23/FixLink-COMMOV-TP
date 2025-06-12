@@ -31,7 +31,8 @@ class ProfileActivity : AppCompatActivity(), NotificationsFragment.NotificationU
 
     private lateinit var btnEditProfile: Button
     private lateinit var btnLogout: Button
-    private lateinit var nameTextView: TextView
+    private lateinit var firstnameTextView: TextView
+    private lateinit var lastnameTextView: TextView
     private lateinit var emailTextView: TextView
     private lateinit var phoneTextView: TextView
     private lateinit var syncStatusTextView: TextView
@@ -145,7 +146,8 @@ class ProfileActivity : AppCompatActivity(), NotificationsFragment.NotificationU
     private fun initializeViews() {
         btnEditProfile = findViewById(R.id.btn_edit_profile)
         btnLogout = findViewById(R.id.btn_logout)
-        nameTextView = findViewById(R.id.edit_name)
+        firstnameTextView = findViewById(R.id.edit_firstname)
+        lastnameTextView = findViewById(R.id.edit_lastname)
         emailTextView = findViewById(R.id.edit_email)
         phoneTextView = findViewById(R.id.edit_phone)
         syncStatusTextView = findViewById(R.id.syncStatusTextView)
@@ -209,7 +211,8 @@ class ProfileActivity : AppCompatActivity(), NotificationsFragment.NotificationU
     }
 
     private fun updateUI(user: User) {
-        nameTextView.text = if (user.lastname.isNullOrEmpty()) user.firstname else "${user.firstname} ${user.lastname}"
+        firstnameTextView.text = user.firstname
+        lastnameTextView.text = user.lastname ?: ""
         emailTextView.text = user.email
         phoneTextView.text = user.phoneNumber ?: "Not set"
         // TODO: Load profile image if available
@@ -218,7 +221,8 @@ class ProfileActivity : AppCompatActivity(), NotificationsFragment.NotificationU
     private fun navigateToEditProfile() {
         val intent = Intent(this, EditProfileActivity::class.java).apply {
             putExtra("USER_ID", currentUser?.user_id)
-            putExtra("USER_NAME", if (currentUser?.lastname.isNullOrEmpty()) currentUser?.firstname else "${currentUser?.firstname} ${currentUser?.lastname}")
+            putExtra("USER_FIRSTNAME", currentUser?.firstname)
+            putExtra("USER_LASTNAME", currentUser?.lastname)
             putExtra("USER_EMAIL", currentUser?.email)
             putExtra("USER_PHONE", currentUser?.phoneNumber)
         }

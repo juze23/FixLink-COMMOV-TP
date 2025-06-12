@@ -21,6 +21,9 @@ import android.net.ConnectivityManager
 import android.content.Context
 import android.net.NetworkCapabilities
 import com.example.fixlink.data.preferences.ProfilePreferences
+import androidx.activity.enableEdgeToEdge
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 
 class EditProfileActivity : AppCompatActivity() {
 
@@ -38,7 +41,14 @@ class EditProfileActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContentView(R.layout.activity_edit_profile)
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
 
         profilePreferences = ProfilePreferences(this)
 
@@ -74,14 +84,10 @@ class EditProfileActivity : AppCompatActivity() {
 
         // Get user data from intent
         userId = intent.getStringExtra("USER_ID")
-        val fullName = intent.getStringExtra("USER_NAME") ?: ""
+        val firstname = intent.getStringExtra("USER_FIRSTNAME") ?: ""
+        val lastname = intent.getStringExtra("USER_LASTNAME") ?: ""
         val email = intent.getStringExtra("USER_EMAIL") ?: ""
         val phone = intent.getStringExtra("USER_PHONE") ?: ""
-
-        // Split full name into first and last name
-        val nameParts = fullName.split(" ", limit = 2)
-        val firstname = nameParts.getOrNull(0) ?: ""
-        val lastname = nameParts.getOrNull(1) ?: ""
 
         // Set initial values
         firstnameEditText.setText(firstname)
@@ -210,11 +216,6 @@ class EditProfileActivity : AppCompatActivity() {
 
         if (firstname.isEmpty()) {
             firstnameEditText.error = "First name is required"
-            return
-        }
-
-        if (lastname.isEmpty()) {
-            lastnameEditText.error = "Last name is required"
             return
         }
 
