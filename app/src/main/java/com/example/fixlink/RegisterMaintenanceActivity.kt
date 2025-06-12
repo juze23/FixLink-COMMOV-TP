@@ -51,6 +51,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.coroutines.Dispatchers
 import android.util.Log
+import androidx.activity.enableEdgeToEdge
 import kotlinx.coroutines.withContext
 
 class RegisterMaintenanceActivity : AppCompatActivity() {
@@ -122,6 +123,7 @@ class RegisterMaintenanceActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContentView(R.layout.activity_register_maintenance)
         // Further setup like finding views and setting listeners will go here
 

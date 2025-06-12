@@ -34,6 +34,13 @@ class TopAppBarFragment : Fragment() {
         backButton.setOnClickListener {
             // If we're in a fragment that's part of a back stack, pop it
             if (parentFragmentManager.backStackEntryCount > 0) {
+                // Show profile content and hide notifications container
+                activity?.findViewById<View>(R.id.profileContentContainer)?.visibility = View.VISIBLE
+                activity?.findViewById<View>(R.id.notificationsContainer)?.visibility = View.GONE
+                
+                // Hide back button when returning to profile
+                hideBackButton()
+                
                 parentFragmentManager.popBackStack()
             } else {
                 // Otherwise, finish the activity
@@ -53,6 +60,9 @@ class TopAppBarFragment : Fragment() {
                 // Show notifications container and hide profile content
                 activity?.findViewById<View>(R.id.notificationsContainer)?.visibility = View.VISIBLE
                 activity?.findViewById<View>(R.id.profileContentContainer)?.visibility = View.GONE
+                
+                // Show back button when notifications are displayed
+                showBackButton()
                 
                 parentFragmentManager.beginTransaction()
                     .replace(R.id.notificationsContainer, fragment)
