@@ -480,39 +480,21 @@ class MaintenanceDetailFragment : Fragment() {
             return
         }
 
-        // Get current date in ISO format using Calendar
-        val calendar = java.util.Calendar.getInstance()
-        val dateFormat = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.getDefault())
-        dateFormat.timeZone = java.util.TimeZone.getTimeZone("UTC")
-        val currentDate = dateFormat.format(calendar.time)
-
-        // Update dates based on status change
-        val updatedMaintenance = when (newStatus.lowercase()) {
-            "ongoing", "em curso" -> {
-                maintenance.copy(
-                    state_id = newState.state_id,
-                    report = report ?: maintenance.report,
-                    beginningDate = currentDate
-                )
-            }
-            "completed", "concluído", "concluido" -> {
-                maintenance.copy(
-                    state_id = newState.state_id,
-                    report = report ?: maintenance.report,
-                    endingDate = currentDate
-                )
-            }
-            else -> {
-                maintenance.copy(
-                    state_id = newState.state_id,
-                    report = report ?: maintenance.report
-                )
-            }
-        }
-
         showLoading(true)
         CoroutineScope(Dispatchers.IO).launch {
-            val result = maintenanceRepository.updateMaintenance(updatedMaintenance)
+            // Map Portuguese status to English for database
+            val englishStatus = when (newStatus.lowercase()) {
+                "ongoing", "em curso" -> "Ongoing"
+                "completed", "concluído", "concluido" -> "Completed"
+                "assigned", "atribuído", "atribuido" -> "Assigned"
+                "pending", "pendente" -> "Pending"
+                "cancelled", "cancelado" -> "Cancelled"
+                else -> newStatus
+            }
+            
+            val notificationText = "Maintenance status changed to $englishStatus"
+            
+            val result = maintenanceRepository.changeMaintenanceStatus(maintenance.maintenance_id, newStatus, notificationText)
             withContext(Dispatchers.Main) {
                 showLoading(false)
                 if (result.isSuccess) {
@@ -536,7 +518,8 @@ class MaintenanceDetailFragment : Fragment() {
         val technicianId = currentUserId ?: return
         showLoading(true)
         CoroutineScope(Dispatchers.IO).launch {
-            val result = maintenanceRepository.assignTechnicianToMaintenance(maintenanceId, technicianId)
+            val notificationText = requireContext().getString(R.string.text_notification_maintenance_assigned)
+            val result = maintenanceRepository.assignTechnicianToMaintenance(maintenanceId, technicianId, notificationText)
             withContext(Dispatchers.Main) {
                 showLoading(false)
                 if (result.isSuccess) {

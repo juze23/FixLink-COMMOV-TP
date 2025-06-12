@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="8dp"
+        android:padding="0dp"
         android:background="@color/white"
         android:gravity="center_vertical"
         app:layout_constraintTop_toBottomOf="@id/topAppBarFragmentContainer">
@@ -47,8 +47,20 @@
 
     </LinearLayout>
 
+    <!-- Notifications Container -->
+    <FrameLayout
+        android:id="@+id/notificationsContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/syncStatusContainer"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
     <!-- Main Profile Content -->
     <ScrollView
+        android:id="@+id/profileContentContainer"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/white"

@@ -334,4 +334,22 @@
     <string name="text_clear">Limpar</string>
     <string name="text_apply">Aplicar</string>
 
+    <!-- Notification Strings -->
+    <string name="text_notifications">Notificações</string>
+    <string name="text_no_notifications">Sem notificações</string>
+    <string name="text_notification_issue_status_changed">Estado da avaria alterado para %1$s</string>
+    <string name="text_notification_maintenance_status_changed">Estado da manutenção alterado para %1$s</string>
+    <string name="text_notification_issue_assigned">Foi-lhe atribuída uma ocorrência</string>
+    <string name="text_notification_maintenance_assigned">Foi-lhe atribuída uma tarefa de manutenção</string>
+    <string name="text_notification_issue_created">Foi criada uma nova ocorrência</string>
+    <string name="text_notification_maintenance_created">Foi criada uma nova tarefa de manutenção</string>
+
+    <!-- State Strings -->
+    <string name="text_state_cancelled">Cancelado</string>
+
+    <!-- Date Format Strings -->
+    <string name="text_date_format">dd/MM/yyyy HH:mm</string>
+    <string name="text_today">Hoje</string>
+    <string name="text_yesterday">Ontem</string>
+
 </resources> 

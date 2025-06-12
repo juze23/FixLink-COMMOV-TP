@@ -27,7 +27,7 @@ import com.google.android.material.snackbar.Snackbar
 import android.view.View
 import android.widget.ProgressBar
 
-class ProfileActivity : AppCompatActivity() {
+class ProfileActivity : AppCompatActivity(), NotificationsFragment.NotificationUpdateListener {
 
     private lateinit var btnEditProfile: Button
     private lateinit var btnLogout: Button
@@ -59,41 +59,81 @@ class ProfileActivity : AppCompatActivity() {
         // Check if coming from admin
         isFromAdmin = intent.getBooleanExtra("FROM_ADMIN", false)
 
-        // Add fragments
-        if (savedInstanceState == null) {
-            val topAppBarFragment = TopAppBarFragment()
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.topAppBarFragmentContainer, topAppBarFragment)
-                .commit()
-
-            // Add appropriate bottom navigation based on user type
-            CoroutineScope(Dispatchers.Main).launch {
-                val bottomNavFragment = withContext(Dispatchers.IO) {
-                    NavigationUtils.getBottomNavigationFragment()
-                }
-                // Set the selected item to profile
-                if (bottomNavFragment is BottomNavigationUserFragment) {
-                    bottomNavFragment.arguments = Bundle().apply {
-                        putInt("selected_item", R.id.nav_profile)
-                    }
-                } else if (bottomNavFragment is BottomNavigationFragment) {
-                    bottomNavFragment.arguments = Bundle().apply {
-                        putInt("selected_item", R.id.nav_profile)
-                    }
-                } else if (bottomNavFragment is BottomNavigationAdminFragment) {
-                    bottomNavFragment.arguments = Bundle().apply {
-                        putInt("selected_item", R.id.nav_profile)
-                    }
-                }
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.bottomNavigationContainer, bottomNavFragment)
-                    .commit()
-            }
-        }
-
         initializeViews()
         
-        loadUserData()
+        // Load user data first
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val result = userRepository.getCurrentUser()
+                result.fold(
+                    onSuccess = { user ->
+                        currentUser = user
+                        withContext(Dispatchers.Main) {
+                            updateUI(user)
+                            // Now that we have the user data, add the fragments
+                            if (savedInstanceState == null) {
+                                val topAppBarFragment = TopAppBarFragment().apply {
+                                    arguments = Bundle().apply {
+                                        putString("userId", user.user_id)
+                                    }
+                                }
+                                supportFragmentManager.beginTransaction()
+                                    .replace(R.id.topAppBarFragmentContainer, topAppBarFragment)
+                                    .commit()
+
+                                // Add appropriate bottom navigation based on user type
+                                val bottomNavFragment = withContext(Dispatchers.IO) {
+                                    NavigationUtils.getBottomNavigationFragment()
+                                }
+                                // Set the selected item to profile
+                                when (bottomNavFragment) {
+                                    is BottomNavigationUserFragment,
+                                    is BottomNavigationFragment,
+                                    is BottomNavigationAdminFragment -> {
+                                        bottomNavFragment.arguments = Bundle().apply {
+                                            putInt("selected_item", R.id.nav_profile)
+                                        }
+                                    }
+                                }
+                                supportFragmentManager.beginTransaction()
+                                    .replace(R.id.bottomNavigationContainer, bottomNavFragment)
+                                    .commit()
+                            }
+                            hideSyncStatus()
+                        }
+                    },
+                    onFailure = { error ->
+                        withContext(Dispatchers.Main) {
+                            // If we have cached data, show it
+                            if (currentUser != null) {
+                                updateUI(currentUser!!)
+                                if (!isNetworkAvailable()) {
+                                    showOfflineSyncStatus()
+                                }
+                            } else {
+                                // Only show error if we have no cached data
+                                Toast.makeText(this@ProfileActivity, "Error loading profile: ${error.message}", Toast.LENGTH_SHORT).show()
+                            }
+                            hideSyncStatus()
+                        }
+                    }
+                )
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    // If we have cached data, show it
+                    if (currentUser != null) {
+                        updateUI(currentUser!!)
+                        if (!isNetworkAvailable()) {
+                            showOfflineSyncStatus()
+                        }
+                    } else {
+                        // Only show error if we have no cached data
+                        Toast.makeText(this@ProfileActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+                    hideSyncStatus()
+                }
+            }
+        }
 
         btnEditProfile.setOnClickListener { navigateToEditProfile() }
         btnLogout.setOnClickListener { handleLogout() }
@@ -126,6 +166,11 @@ class ProfileActivity : AppCompatActivity() {
                         currentUser = user
                         withContext(Dispatchers.Main) {
                             updateUI(user)
+                            // Update TopAppBarFragment with current user ID
+                            val topAppBarFragment = supportFragmentManager.findFragmentById(R.id.topAppBarFragmentContainer) as? TopAppBarFragment
+                            topAppBarFragment?.arguments = Bundle().apply {
+                                putString("userId", user.user_id)
+                            }
                             hideSyncStatus()
                         }
                     },
@@ -291,5 +336,11 @@ class ProfileActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onNotificationUpdated() {
+        // Atualiza o contador de notificações no TopAppBarFragment
+        val topAppBarFragment = supportFragmentManager.findFragmentById(R.id.topAppBarFragmentContainer) as? TopAppBarFragment
+        topAppBarFragment?.startObservingNotifications()
     }
 }

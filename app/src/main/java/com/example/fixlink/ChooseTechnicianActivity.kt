@@ -127,10 +127,20 @@ class ChooseTechnicianActivity : AppCompatActivity() {
             try {
                 val result = if (isMaintenance) {
                     val currentMaintenanceId = maintenanceId ?: return@launch
-                    maintenanceRepository.assignTechnicianToMaintenance(currentMaintenanceId, technician.user_id)
+                    val notificationText = getString(R.string.text_notification_maintenance_assigned)
+                    maintenanceRepository.assignTechnicianToMaintenance(
+                        currentMaintenanceId, 
+                        technician.user_id,
+                        notificationText
+                    )
                 } else {
                     val currentIssueId = issueId ?: return@launch
-                    issueRepository.assignTechnicianToIssue(currentIssueId, technician.user_id)
+                    val notificationText = getString(R.string.text_notification_issue_assigned)
+                    issueRepository.assignTechnicianToIssue(
+                        currentIssueId, 
+                        technician.user_id,
+                        notificationText
+                    )
                 }
                 
                 withContext(Dispatchers.Main) {

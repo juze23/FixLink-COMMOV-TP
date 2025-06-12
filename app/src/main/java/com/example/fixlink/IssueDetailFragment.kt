@@ -468,39 +468,21 @@ class IssueDetailFragment : Fragment() {
             return
         }
 
-        // Get current date in ISO format using Calendar
-        val calendar = java.util.Calendar.getInstance()
-        val dateFormat = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.getDefault())
-        dateFormat.timeZone = java.util.TimeZone.getTimeZone("UTC")
-        val currentDate = dateFormat.format(calendar.time)
-
-        // Update dates based on status change
-        val updatedIssue = when (newStatus.lowercase()) {
-            "under repair", "em andamento", "em reparacao" -> {
-                issue.copy(
-                    state_id = newState.state_id,
-                    report = report ?: issue.report,
-                    beginningDate = currentDate
-                )
-            }
-            "resolved", "resolvido" -> {
-                issue.copy(
-                    state_id = newState.state_id,
-                    report = report ?: issue.report,
-                    endingDate = currentDate
-                )
-            }
-            else -> {
-                issue.copy(
-                    state_id = newState.state_id,
-                    report = report ?: issue.report
-                )
-            }
-        }
-
         showLoading(true)
         CoroutineScope(Dispatchers.IO).launch {
-            val result = issueRepository.updateIssue(updatedIssue)
+            // Map Portuguese status to English for database
+            val englishStatus = when (newStatus.lowercase()) {
+                "under repair", "em andamento", "em reparacao" -> "Under Repair"
+                "resolved", "resolvido" -> "Resolved"
+                "assigned", "atribuído", "atribuido" -> "Assigned"
+                "pending", "pendente" -> "Pending"
+                "cancelled", "cancelado" -> "Cancelled"
+                else -> newStatus
+            }
+            
+            val notificationText = "Issue status changed to $englishStatus"
+            
+            val result = issueRepository.changeIssueStatus(issue.issue_id, newStatus, notificationText)
             withContext(Dispatchers.Main) {
                 showLoading(false)
                 if (result.isSuccess) {
@@ -524,7 +506,8 @@ class IssueDetailFragment : Fragment() {
         val technicianId = currentUserId ?: return
         showLoading(true)
         CoroutineScope(Dispatchers.IO).launch {
-            val result = issueRepository.assignTechnicianToIssue(issueId, technicianId)
+            val notificationText = requireContext().getString(R.string.text_notification_issue_assigned)
+            val result = issueRepository.assignTechnicianToIssue(issueId, technicianId, notificationText)
             withContext(Dispatchers.Main) {
                 showLoading(false)
                 if (result.isSuccess) {

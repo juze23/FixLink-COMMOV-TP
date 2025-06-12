@@ -95,7 +95,11 @@ class MaintenanceRepository {
         }
     }
 
-    suspend fun assignTechnicianToMaintenance(maintenanceId: String, technicianId: String): Result<Unit> = withContext(Dispatchers.IO) {
+    suspend fun assignTechnicianToMaintenance(
+        maintenanceId: String, 
+        technicianId: String,
+        notificationText: String
+    ): Result<Unit> = withContext(Dispatchers.IO) {
         try {
             // First get the current maintenance to update
             val currentMaintenance = getMaintenanceById(maintenanceId).getOrNull() ?: return@withContext Result.failure(Exception("Maintenance not found"))
@@ -107,7 +111,18 @@ class MaintenanceRepository {
             )
             
             // Update the maintenance using the existing updateMaintenance method
-            updateMaintenance(updatedMaintenance).map { Unit }
+            val updateResult = updateMaintenance(updatedMaintenance)
+            
+            if (updateResult.isSuccess) {
+                // Create notification for the assigned technician
+                NotificationRepository().createNotification(
+                    userId = technicianId,
+                    maintenanceId = maintenanceId,
+                    description = notificationText
+                )
+            }
+            
+            updateResult.map { Unit }
         } catch (e: Exception) {
             Log.e("MaintenanceRepository", "Error assigning technician: ", e)
             Result.failure(e)
@@ -133,7 +148,11 @@ class MaintenanceRepository {
         }
     }
 
-    suspend fun changeMaintenanceStatus(maintenanceId: String, newStatus: String): Result<Unit> = withContext(Dispatchers.IO) {
+    suspend fun changeMaintenanceStatus(
+        maintenanceId: String, 
+        newStatus: String,
+        notificationText: String
+    ): Result<Unit> = withContext(Dispatchers.IO) {
         try {
             // First get the current maintenance to update
             val currentMaintenance = getMaintenanceById(maintenanceId).getOrNull() ?: return@withContext Result.failure(Exception("Maintenance not found"))
@@ -155,7 +174,18 @@ class MaintenanceRepository {
             val updatedMaintenance = currentMaintenance.copy(state_id = newState.state_id)
             
             // Update the maintenance using the existing updateMaintenance method
-            updateMaintenance(updatedMaintenance).map { Unit }
+            val updateResult = updateMaintenance(updatedMaintenance)
+            
+            if (updateResult.isSuccess) {
+                // Create notification for the maintenance creator
+                NotificationRepository().createNotification(
+                    userId = currentMaintenance.id_user,
+                    maintenanceId = maintenanceId,
+                    description = notificationText
+                )
+            }
+            
+            updateResult.map { Unit }
         } catch (e: Exception) {
             Log.e("MaintenanceRepository", "Error changing maintenance status: ", e)
             Result.failure(e)

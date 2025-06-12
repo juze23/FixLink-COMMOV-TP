@@ -207,7 +207,11 @@ class IssueRepository {
         }
     }
     
-    suspend fun assignTechnicianToIssue(issueId: String, technicianId: String): Result<Unit> = withContext(Dispatchers.IO) {
+    suspend fun assignTechnicianToIssue(
+        issueId: String, 
+        technicianId: String,
+        notificationText: String
+    ): Result<Unit> = withContext(Dispatchers.IO) {
         try {
             // First get the current issue to update
             val currentIssue = getIssueById(issueId).getOrNull() ?: return@withContext Result.failure(Exception("Issue not found"))
@@ -219,7 +223,18 @@ class IssueRepository {
             )
             
             // Update the issue using the existing updateIssue method
-            updateIssue(updatedIssue).map { Unit }
+            val updateResult = updateIssue(updatedIssue)
+            
+            if (updateResult.isSuccess) {
+                // Create notification for the assigned technician
+                NotificationRepository().createNotification(
+                    userId = technicianId,
+                    issueId = issueId,
+                    description = notificationText
+                )
+            }
+            
+            updateResult.map { Unit }
         } catch (e: Exception) {
             Log.e("IssueRepository", "Error assigning technician: ", e)
             Result.failure(e)
@@ -245,7 +260,11 @@ class IssueRepository {
         }
     }
 
-    suspend fun changeIssueStatus(issueId: String, newStatus: String): Result<Unit> = withContext(Dispatchers.IO) {
+    suspend fun changeIssueStatus(
+        issueId: String, 
+        newStatus: String,
+        notificationText: String
+    ): Result<Unit> = withContext(Dispatchers.IO) {
         try {
             // First get the current issue to update
             val currentIssue = getIssueById(issueId).getOrNull() ?: return@withContext Result.failure(Exception("Issue not found"))
@@ -267,7 +286,18 @@ class IssueRepository {
             val updatedIssue = currentIssue.copy(state_id = newState.state_id)
             
             // Update the issue using the existing updateIssue method
-            updateIssue(updatedIssue).map { Unit }
+            val updateResult = updateIssue(updatedIssue)
+            
+            if (updateResult.isSuccess) {
+                // Create notification for the issue creator
+                NotificationRepository().createNotification(
+                    userId = currentIssue.id_user,
+                    issueId = issueId,
+                    description = notificationText
+                )
+            }
+            
+            updateResult.map { Unit }
         } catch (e: Exception) {
             Log.e("IssueRepository", "Error changing issue status: ", e)
             Result.failure(e)

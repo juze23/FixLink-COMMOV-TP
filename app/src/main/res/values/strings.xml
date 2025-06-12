@@ -369,4 +369,23 @@
     <string name="text_clear">Clear</string>
     <string name="text_apply">Apply</string>
 
+    <!-- Notification Strings -->
+    <string name="text_notifications">Notifications</string>
+    <string name="text_no_notifications">No notifications</string>
+    <string name="text_notification_issue_status_changed">Issue status changed to %1$s</string>
+    <string name="text_notification_maintenance_status_changed">Maintenance status changed to %1$s</string>
+    <string name="text_notification_issue_assigned">You have been assigned to an issue</string>
+    <string name="text_notification_maintenance_assigned">You have been assigned to a maintenance task</string>
+    <string name="text_notification_issue_created">New issue has been created</string>
+    <string name="text_notification_maintenance_created">New maintenance task has been created</string>
+    <string name="text_view">View</string>
+
+    <!-- State Strings -->
+    <string name="text_state_cancelled">Cancelled</string>
+
+    <!-- Date Format Strings -->
+    <string name="text_date_format">MM/dd/yyyy HH:mm</string>
+    <string name="text_today">Today</string>
+    <string name="text_yesterday">Yesterday</string>
+
 </resources> 

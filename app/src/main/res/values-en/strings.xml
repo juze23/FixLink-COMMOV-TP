@@ -309,6 +309,7 @@
     <string name="text_issues">Issues</string>
 
     <!-- New strings for maintenance states -->
+    <string name="text_notification_maintenance_created">New maintenance task has been created</string>
     <string name="text_state_ongoing">Ongoing</string>
     <string name="text_state_completed">Completed</string>
 
@@ -330,5 +331,18 @@
     <string name="text_all_tasks">All Tasks</string>
     <string name="text_clear">Clear</string>
     <string name="text_apply">Apply</string>
+    <string name="text_notifications">Notifications</string>
+    <string name="text_no_notifications">No notifications</string>
+    <string name="text_notification_issue_status_changed">Issue status changed to %1$s</string>
+    <string name="text_notification_maintenance_status_changed">Maintenance status changed to %1$s</string>
+    <string name="text_notification_issue_assigned">You have been assigned to an issue</string>
+    <string name="text_notification_maintenance_assigned">You have been assigned to a maintenance task</string>
+    <string name="text_notification_issue_created">New issue has been created</string>
+    <string name="text_mark_as_unread">Mark as unread</string>
+    <string name="text_state_cancelled">Cancelled</string>
+    <string name="text_date_format">MM/dd/yyyy HH:mm</string>
+    <string name="text_today">Today</string>
+    <string name="text_yesterday">Yesterday</string>
+    <string name="text_mark_as_read">Mark as read</string>
 
 </resources> 

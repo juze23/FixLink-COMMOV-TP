@@ -105,24 +105,28 @@ class MyTasksActivity : AppCompatActivity() {
     }
 
     private fun loadContent() {
-        // Add TopAppBarFragment
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.topAppBarFragmentContainer, TopAppBarFragment())
-            .commit()
-
-        // Add MyTasksFragment
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.myTasksContentFragmentContainer, MyTasksFragment())
-            .commit()
-
-        // Add appropriate bottom navigation based on user type
-        CoroutineScope(Dispatchers.Main).launch {
-            val bottomNavFragment = withContext(Dispatchers.IO) {
-                NavigationUtils.getBottomNavigationFragment()
-            }
+        if (!isFinishing && !isDestroyed) {
+            // Add TopAppBarFragment
             supportFragmentManager.beginTransaction()
-                .replace(R.id.bottomNavigationContainer, bottomNavFragment)
-                .commit()
+                .replace(R.id.topAppBarFragmentContainer, TopAppBarFragment())
+                .commitAllowingStateLoss()
+
+            // Add MyTasksFragment
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.myTasksContentFragmentContainer, MyTasksFragment())
+                .commitAllowingStateLoss()
+
+            // Add appropriate bottom navigation based on user type
+            CoroutineScope(Dispatchers.Main).launch {
+                val bottomNavFragment = withContext(Dispatchers.IO) {
+                    NavigationUtils.getBottomNavigationFragment()
+                }
+                if (!isFinishing && !isDestroyed) {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.bottomNavigationContainer, bottomNavFragment)
+                        .commitAllowingStateLoss()
+                }
+            }
         }
     }
 } 

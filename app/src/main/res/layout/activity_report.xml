@@ -14,48 +14,54 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <LinearLayout
+        <FrameLayout
+            android:id="@+id/reportRootContainer"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:padding="24dp">
+            android:layout_weight="1">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_report"
-                android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="16dp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/label_description"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                android:layout_marginBottom="8dp"/>
-
-            <EditText
-                android:id="@+id/reportEditText"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:hint="@string/hint_report_description"
-                android:background="@drawable/edittext_background"
-                android:gravity="top|start"
-                android:inputType="textMultiLine"
-                android:maxLines="6"
-                android:padding="12dp"
-                android:layout_marginBottom="24dp"/>
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="24dp">
 
-            <Button
-                android:id="@+id/sendReportButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/button_send_report"
-                android:backgroundTint="@color/purple_primary"
-                android:textColor="@android:color/white"/>
-        </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_report"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="16dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_description"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:layout_marginBottom="8dp"/>
+
+                <EditText
+                    android:id="@+id/reportEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:hint="@string/hint_report_description"
+                    android:background="@drawable/edittext_background"
+                    android:gravity="top|start"
+                    android:inputType="textMultiLine"
+                    android:maxLines="6"
+                    android:padding="12dp"
+                    android:layout_marginBottom="24dp"/>
+
+                <Button
+                    android:id="@+id/sendReportButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/button_send_report"
+                    android:backgroundTint="@color/purple_primary"
+                    android:textColor="@android:color/white"/>
+            </LinearLayout>
+        </FrameLayout>
 
         <FrameLayout
             android:id="@+id/bottomNavigationContainer"

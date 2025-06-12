@@ -146,8 +146,9 @@ class ReportActivity : AppCompatActivity() {
                     } else {
                         issueId?.let { id ->
                             issueRepository.updateIssueReport(id, report)
-                            // Update status to resolved
-                            issueRepository.changeIssueStatus(id, "resolved")
+                            // Update status to resolved with notification
+                            val notificationText = "Issue status changed to Resolved"
+                            issueRepository.changeIssueStatus(id, "resolved", notificationText)
                         }
                     }
                 }
