@@ -198,6 +198,7 @@
     <string name="text_password_changed">Password changed successfully</string>
     <string name="text_error_changing_password">Error changing password. Please try again.</string>
     <string name="text_password_requirements">Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number and one special character</string>
+    <string name="dialog_change_password_cancel">Cancel</string>
     <string name="text_passwords_dont_match">Passwords don\'t match</string>
     <string name="text_invalid_email">Invalid email address</string>
     <string name="text_invalid_phone">Invalid phone number</string>
@@ -238,6 +239,7 @@
     <string name="text_status_inactive">Inactive</string>
 
     <!-- Issues Content Fragment -->
+    <string name="text_error_updating_password">Error updating password: %1$s</string>
     <string name="text_current_password_incorrect">Current password is incorrect</string>
     <string name="text_back_button">Back button</string>
     <string name="text_fixlink_logo">FixLink Logo</string>
@@ -355,6 +357,17 @@
     <string name="text_mark_as_read">Mark as read</string>
     <string name="text_view_less">View Less</string>
     <string name="text_all_technicians">All Technicians</string>
+    <string name="error_loading_image">Error loading image: %1$s</string>
     <string name="text_manage_types">Manage Types</string>
+    <string name="dialog_add_photo_title">Add Photo</string>
+    <string name="dialog_take_photo">Take Photo</string>
+    <string name="dialog_choose_gallery">Choose from Gallery</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="error_camera_permission">Camera permission is required to take photos</string>
+    <string name="error_creating_image">Error creating image file</string>
+    <string name="dialog_change_password_title">Change Password</string>
+    <string name="dialog_change_password_button">Change</string>
+    <string name="text_password_length_error">Password must be at least 6 characters</string>
+    <string name="text_password_updated">Password updated successfully</string>
 
 </resources> 

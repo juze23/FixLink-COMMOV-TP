@@ -119,26 +119,26 @@ class EditProfileActivity : AppCompatActivity() {
         val confirmPasswordEditText = dialogView.findViewById<EditText>(R.id.confirmPasswordEditText)
 
         AlertDialog.Builder(this)
-            .setTitle("Change Password")
+            .setTitle(getString(R.string.dialog_change_password_title))
             .setView(dialogView)
-            .setPositiveButton("Change") { _, _ ->
+            .setPositiveButton(getString(R.string.dialog_change_password_button)) { _, _ ->
                 val currentPassword = currentPasswordEditText.text.toString()
                 val newPassword = newPasswordEditText.text.toString()
                 val confirmPassword = confirmPasswordEditText.text.toString()
 
                 if (newPassword != confirmPassword) {
-                    Toast.makeText(this, "New passwords don't match", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.text_passwords_dont_match), Toast.LENGTH_SHORT).show()
                     return@setPositiveButton
                 }
 
                 if (newPassword.length < 6) {
-                    Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.text_password_length_error), Toast.LENGTH_SHORT).show()
                     return@setPositiveButton
                 }
 
                 updatePassword(currentPassword, newPassword)
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(getString(R.string.dialog_change_password_cancel), null)
             .show()
     }
 
@@ -149,18 +149,18 @@ class EditProfileActivity : AppCompatActivity() {
                 result.fold(
                     onSuccess = {
                         withContext(Dispatchers.Main) {
-                            Toast.makeText(this@EditProfileActivity, "Password updated successfully", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@EditProfileActivity, getString(R.string.text_password_updated), Toast.LENGTH_SHORT).show()
                         }
                     },
                     onFailure = { error ->
                         withContext(Dispatchers.Main) {
-                            Toast.makeText(this@EditProfileActivity, "Error updating password: ${error.message}", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@EditProfileActivity, getString(R.string.text_error_updating_password, error.message), Toast.LENGTH_SHORT).show()
                         }
                     }
                 )
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@EditProfileActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@EditProfileActivity, getString(R.string.text_error_updating_password, e.message), Toast.LENGTH_SHORT).show()
                 }
             }
         }

@@ -361,4 +361,31 @@
     <string name="text_view_less">Ver Menos</string>
     <string name="text_all_technicians">"  Todos os técnicos"</string>
 
+    <!-- Diálogo de Adicionar Foto -->
+    <string name="dialog_add_photo_title">Adicionar Foto</string>
+    <string name="dialog_take_photo">Tirar Foto</string>
+    <string name="dialog_choose_gallery">Escolher da Galeria</string>
+    <string name="dialog_cancel">Cancelar</string>
+    <string name="error_camera_permission">Permissão da câmera é necessária para tirar fotos</string>
+    <string name="error_creating_image">Erro ao criar arquivo de imagem</string>
+    <string name="error_loading_image">Erro ao carregar imagem: %1$s</string>
+
+    <!-- Formatação de Tempo -->
+    <string name="text_of_total">de %1$d total</string>
+    <string name="text_time_format">%1$d horas %2$d minutos</string>
+    <string name="text_time_format_minutes">%1$d minutos</string>
+    <string name="text_hours">%1$d horas</string>
+    <string name="text_minutes">%1$d minutos</string>
+
+    <!-- Gerenciamento de Tipos -->
+    <string name="text_manage_types">Gerir Tipos</string>
+
+    <!-- Diálogo de Alterar Senha -->
+    <string name="dialog_change_password_title">Alterar Palavra-passe</string>
+    <string name="dialog_change_password_button">Alterar</string>
+    <string name="dialog_change_password_cancel">Cancelar</string>
+    <string name="text_password_length_error">A palavra-passe deve ter pelo menos 6 caracteres</string>
+    <string name="text_password_updated">Palavra-passe atualizada com sucesso</string>
+    <string name="text_error_updating_password">Erro ao atualizar palavra-passe: %1$s</string>
+
 </resources> 

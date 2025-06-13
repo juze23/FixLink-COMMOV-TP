@@ -112,13 +112,13 @@
     <string name="text_total_locations">Total Locations</string>
     <string name="text_active_locations">%1$d with active issues</string>
     <string name="text_active_equipment">Active Equipment</string>
-    <string name="text_of_total">de %1$d total</string>
+    <string name="text_of_total">of %1$d total</string>
     <string name="text_avg_issue_time">Average Issue Time</string>
     <string name="text_avg_maintenance_time">Average Maintenance Time</string>
-    <string name="text_time_format">%1$d horas %2$d minutos</string>
-    <string name="text_time_format_minutes">%1$d minutos</string>
-    <string name="text_hours">%1$d horas</string>
-    <string name="text_minutes">%1$d minutos</string>
+    <string name="text_time_format">%1$d hours %2$d minutes</string>
+    <string name="text_time_format_minutes">%1$d minutes</string>
+    <string name="text_hours">%1$d hours</string>
+    <string name="text_minutes">%1$d minutes</string>
     <string name="text_chart_issues_by_status">Issues by Status</string>
     <string name="text_chart_issues_by_priority">Issues by Priority</string>
     <string name="text_chart_maintenance_by_status">Maintenance by Status</string>
@@ -293,11 +293,12 @@
     <string name="button_cancel_edit_profile">Cancel</string>
 
     <!-- Change Password Dialog -->
-    <string name="hint_current_password">Current Password</string>
-    <string name="hint_new_password">New Password</string>
-    <string name="hint_confirm_new_password">Confirm New Password</string>
-    <string name="text_password_changed">Password changed successfully</string>
-    <string name="text_error_changing_password">Error changing password. Please try again.</string>
+    <string name="dialog_change_password_title">Change Password</string>
+    <string name="dialog_change_password_button">Change</string>
+    <string name="dialog_change_password_cancel">Cancel</string>
+    <string name="text_password_length_error">Password must be at least 6 characters</string>
+    <string name="text_password_updated">Password updated successfully</string>
+    <string name="text_error_updating_password">Error updating password: %1$s</string>
 
     <string name="text_current_password_incorrect">Current password is incorrect</string>
 
@@ -399,5 +400,22 @@
     <string name="text_yesterday">Yesterday</string>
     <string name="text_mark_as_unread">Mark as unread</string>
     <string name="text_mark_as_read">Mark as read</string>
+
+    <!-- Photo Dialog -->
+    <string name="dialog_add_photo_title">Add Photo</string>
+    <string name="dialog_take_photo">Take Photo</string>
+    <string name="dialog_choose_gallery">Choose from Gallery</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="error_camera_permission">Camera permission is required to take photos</string>
+    <string name="error_creating_image">Error creating image file</string>
+    <string name="error_loading_image">Error loading image: %1$s</string>
+
+    <!-- Type Management -->
+    <string name="text_manage_types">Manage Types</string>
+    <string name="hint_current_password">Current Password</string>
+    <string name="hint_new_password">New Password</string>
+    <string name="hint_confirm_new_password">Confirm New Password</string>
+    <string name="text_password_changed">Password changed successfully</string>
+    <string name="text_error_changing_password">Error changing password. Please try again.</string>
 
 </resources> 

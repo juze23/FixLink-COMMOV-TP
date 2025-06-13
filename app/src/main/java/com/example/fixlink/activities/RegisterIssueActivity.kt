@@ -76,7 +76,7 @@ class RegisterIssueActivity : AppCompatActivity() {
         if (isGranted) {
             dispatchTakePictureIntent()
         } else {
-            Toast.makeText(this, "Camera permission is required to take photos", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.error_camera_permission), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -126,7 +126,7 @@ class RegisterIssueActivity : AppCompatActivity() {
                     imageView.foreground = null
                 } catch (e: Exception) {
                     Log.e("RegisterIssueActivity", "Error in image loading: ${e.message}", e)
-                    Toast.makeText(this@RegisterIssueActivity, "Error loading image: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@RegisterIssueActivity, getString(R.string.error_loading_image, e.message), Toast.LENGTH_SHORT).show()
                     imageView.setImageResource(R.drawable.placeholder_printer_image)
                 }
             }
@@ -302,9 +302,13 @@ class RegisterIssueActivity : AppCompatActivity() {
     }
 
     private fun showImageSourceDialog() {
-        val options = arrayOf("Take Photo", "Choose from Gallery", "Cancel")
+        val options = arrayOf(
+            getString(R.string.dialog_take_photo),
+            getString(R.string.dialog_choose_gallery),
+            getString(R.string.dialog_cancel)
+        )
         AlertDialog.Builder(this)
-            .setTitle("Add Photo")
+            .setTitle(getString(R.string.dialog_add_photo_title))
             .setItems(options) { _, which ->
                 when (which) {
                     0 -> checkCameraPermissionAndTakePicture()
@@ -333,7 +337,7 @@ class RegisterIssueActivity : AppCompatActivity() {
         val photoFile: File? = try {
             createImageFile()
         } catch (ex: Exception) {
-            Toast.makeText(this, "Error creating image file", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.error_creating_image), Toast.LENGTH_SHORT).show()
             null
         }
 
