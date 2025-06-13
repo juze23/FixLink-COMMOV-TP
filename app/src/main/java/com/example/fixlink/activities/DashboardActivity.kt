@@ -1,4 +1,4 @@
-package com.example.fixlink
+package com.example.fixlink.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -13,8 +13,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import androidx.activity.enableEdgeToEdge
+import com.example.fixlink.R
 import com.example.fixlink.fragments.AdminDashboardFragment
+import com.example.fixlink.fragments.BottomNavigationAdminFragment
+import com.example.fixlink.fragments.TopAppBarFragment
 import com.example.fixlink.utils.NavigationUtils
+
 
 class DashboardActivity : AppCompatActivity() {
     private val userRepository = UserRepository()

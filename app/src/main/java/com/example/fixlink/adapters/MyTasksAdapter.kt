@@ -8,10 +8,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.fixlink.IssueDetailFragment
-import com.example.fixlink.MaintenanceDetailFragment
 import com.example.fixlink.R
 import com.example.fixlink.data.entities.*
+import com.example.fixlink.fragments.IssueDetailFragment
+import com.example.fixlink.fragments.MaintenanceDetailFragment
 
 class   MyTasksAdapter(
     private val issues: List<Issue>,

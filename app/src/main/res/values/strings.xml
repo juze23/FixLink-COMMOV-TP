@@ -320,10 +320,11 @@
     <string name="text_technicians">Technicians</string>
     <string name="text_equipments">Equipments</string>
     <string name="text_view_all">View All</string>
-    <string name="text_view_less">View Less</string>
+    <string name="text_view_all_count">View all (%d)</string>
+    <string name="text_view_less">View less</string>
     <string name="text_all_technicians">All Technicians</string>
     <string name="text_all_equipments">All Equipment</string>
-    <string name="text_add_new_item">Add new item</string>
+    <string name="text_add_new_item">Add New Item</string>
     <string name="text_select_location">Selecionar localização</string>
 
     <!-- Admin Fragment -->
@@ -412,10 +413,122 @@
 
     <!-- Type Management -->
     <string name="text_manage_types">Manage Types</string>
+    <string name="text_maintenance_types">Maintenance Types</string>
+    <string name="text_issue_types">Issue Types</string>
+    <string name="text_locations">Locations</string>
+    <string name="text_add_type">Add Type</string>
+    <string name="text_edit_type">Edit Type</string>
+    <string name="text_delete_type">Delete Type</string>
+    <string name="text_add_location">Add Location</string>
+    <string name="text_edit_location">Edit Location</string>
+    <string name="text_delete_location">Delete Location</string>
+    <string name="hint_type_name">Enter type name</string>
+    <string name="hint_location_name">Enter location name</string>
+    <string name="text_type_added">Type added successfully</string>
+    <string name="text_type_updated">Type updated successfully</string>
+    <string name="text_type_deleted">Type deleted successfully</string>
+    <string name="text_location_added">Location added successfully</string>
+    <string name="text_location_updated">Location updated successfully</string>
+    <string name="text_location_deleted">Location deleted successfully</string>
+    <string name="text_error_adding_type">Error adding type</string>
+    <string name="text_error_updating_type">Error updating type</string>
+    <string name="text_error_deleting_type">Error deleting type</string>
+    <string name="text_error_adding_location">Error adding location</string>
+    <string name="text_error_updating_location">Error updating location</string>
+    <string name="text_error_deleting_location">Error deleting location</string>
+    <string name="text_days">%1$d days</string>
+
+    <!-- Password Management -->
     <string name="hint_current_password">Current Password</string>
     <string name="hint_new_password">New Password</string>
     <string name="hint_confirm_new_password">Confirm New Password</string>
     <string name="text_password_changed">Password changed successfully</string>
     <string name="text_error_changing_password">Error changing password. Please try again.</string>
+
+    <!-- Maintenance Types, Issue Types and Locations Management -->
+    <string name="text_add_user">Add User</string>
+    <string name="text_add_equipment">Add Equipment</string>
+    <string name="text_add_maintenance_type">Add Maintenance Type</string>
+    <string name="text_add_issue_type">Add Issue Type</string>
+
+    <!-- Registration Dialog -->
+    <string name="dialog_add_item_title">Add New Item</string>
+    <string name="button_add_user">Add User</string>
+    <string name="button_add_equipment">Add Equipment</string>
+    <string name="button_add_location">Add Location</string>
+    <string name="button_add_maintenance_type">Add Maintenance Type</string>
+    <string name="button_add_issue_type">Add Issue Type</string>
+
+    <!-- Location Registration -->
+    <string name="label_location_name">Location Name</string>
+    <string name="button_register_location">Register Location</string>
+    <string name="error_empty_location_name">Location name cannot be empty</string>
+    <string name="success_location_registered">Location registered successfully</string>
+    <string name="error_location_registration">Failed to register location</string>
+
+    <!-- Maintenance Type Registration -->
+    <string name="label_maintenance_type_name">Maintenance Type Name</string>
+    <string name="hint_maintenance_type_name">Enter maintenance type name</string>
+    <string name="button_register_maintenance_type">Register Maintenance Type</string>
+    <string name="error_empty_maintenance_type_name">Maintenance type name cannot be empty</string>
+    <string name="success_maintenance_type_registered">Maintenance type registered successfully</string>
+    <string name="error_maintenance_type_registration">Failed to register maintenance type</string>
+
+    <!-- Issue Type Registration -->
+    <string name="label_issue_type_name">Issue Type Name</string>
+    <string name="hint_issue_type_name">Enter issue type name</string>
+    <string name="button_register_issue_type">Register Issue Type</string>
+    <string name="error_empty_issue_type_name">Issue type name cannot be empty</string>
+    <string name="success_issue_type_registered">Issue type registered successfully</string>
+    <string name="error_issue_type_registration">Failed to register issue type</string>
+
+    <!-- Equipment Registration -->
+    <string name="label_equipment_description">Descrição do Equipamento</string>
+    <string name="error_empty_equipment_name">O nome do equipamento não pode estar vazio</string>
+    <string name="error_empty_equipment_location">Por favor, selecione uma localização</string>
+    <string name="success_equipment_registered">Equipamento registrado com sucesso</string>
+    <string name="error_equipment_registration">Falha ao registrar equipamento</string>
+
+    <!-- User Registration -->
+    <string name="label_firstname">First Name</string>
+    <string name="hint_firstname">Enter first name</string>
+    <string name="label_lastname">Last Name</string>
+    <string name="hint_lastname">Enter last name</string>
+    <string name="hint_email">Enter email address</string>
+    <string name="label_phone">Phone</string>
+    <string name="hint_phone">Enter phone number</string>
+    <string name="hint_password">Enter password</string>
+    <string name="error_empty_firstname">First name cannot be empty</string>
+    <string name="error_empty_lastname">Last name cannot be empty</string>
+    <string name="error_empty_email">Email cannot be empty</string>
+    <string name="error_invalid_email">Invalid email format</string>
+    <string name="error_empty_phone">Phone number cannot be empty</string>
+    <string name="error_empty_password">Password cannot be empty</string>
+    <string name="success_user_registered">User registered successfully</string>
+    <string name="error_user_registration">Failed to register user</string>
+
+    <!-- Register Type Activities -->
+    <string name="title_register_issue_type">Register Issue Type</string>
+    <string name="title_register_maintenance_type">Register Maintenance Type</string>
+
+    <!-- Edit Dialog Strings -->
+    <string name="error_name_required">Name is required</string>
+    <string name="error_equipment_not_found">Equipment not found</string>
+    <string name="error_updating_equipment">Error updating equipment: %1$s</string>
+    <string name="error_updating_location">Error updating location: %1$s</string>
+    <string name="error_updating_priority">Error updating priority: %1$s</string>
+    <string name="error_updating_type">Error updating type: %1$s</string>
+    <string name="text_equipment_updated">Equipment updated successfully</string>
+    <string name="text_priority_updated">Priority updated successfully</string>
+    <string name="text_no_changes">No changes made</string>
+    <string name="hint_priority_name">Enter priority name</string>
+    <string name="text_cancel">Cancel</string>
+    <string name="text_save">Save</string>
+
+    <string name="error_location_not_found">Location not found</string>
+
+    <string name="error_type_not_found">Type not found</string>
+
+
 
 </resources> 

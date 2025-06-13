@@ -57,4 +57,9 @@
         <item>Rede</item>
         <item>Outro</item>
     </string-array>
+
+    <string-array name="equipment_status_array">
+        <item>Ativo</item>
+        <item>Inativo</item>
+    </string-array>
 </resources> 

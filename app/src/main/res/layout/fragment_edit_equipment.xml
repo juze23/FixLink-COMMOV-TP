@@ -1,107 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="16dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="8dp"
-    app:cardBackgroundColor="@android:color/white">
+    android:background="@color/white"
+    android:layout_gravity="center">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="24dp"
+        android:layout_margin="16dp"
+        android:background="@drawable/rounded_background">
 
-        <!-- Equipment Name -->
         <TextView
             android:id="@+id/equipmentNameTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/label_equipment_name"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="@color/black"/>
+            android:gravity="center"
+            android:layout_marginBottom="24dp"/>
 
-        <!-- Name Section -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/label_name"
-            android:textSize="14sp"
-            android:textColor="@color/purple_primary"/>
-
-        <EditText
-            android:id="@+id/nameEditText"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:hint="@string/hint_equipment_name"
-            android:padding="12dp"
-            android:background="@drawable/rounded_edittext_background"/>
+            android:layout_marginBottom="16dp">
 
-        <!-- Description Section -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/label_description"
-            android:textSize="14sp"
-            android:textColor="@color/purple_primary"/>
+            <EditText
+                android:id="@+id/nameEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_equipment_name"
+                android:inputType="textCapSentences|textNoSuggestions"
+                android:maxLines="1"
+                android:imeOptions="actionNext" />
 
-        <EditText
-            android:id="@+id/descriptionEditText"
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:hint="@string/hint_equipment_description"
-            android:padding="12dp"
-            android:background="@drawable/rounded_edittext_background"/>
+            android:layout_marginBottom="16dp">
 
-        <!-- Status Section -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/label_status"
-            android:textSize="14sp"
-            android:textColor="@color/purple_primary"/>
+            <EditText
+                android:id="@+id/descriptionEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_equipment_description"
+                android:inputType="textCapSentences|textMultiLine|textNoSuggestions"
+                android:minLines="2"
+                android:maxLines="4"
+                android:gravity="top"
+                android:imeOptions="actionDone" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Spinner
             android:id="@+id/statusSpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:padding="12dp"
-            android:background="@drawable/rounded_edittext_background"
-            android:entries="@array/equipment_statuses"/>
+            android:layout_marginBottom="24dp"
+            android:entries="@array/equipment_status_array" />
 
-        <!-- Buttons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="end"
-            android:layout_marginTop="24dp">
+            android:gravity="end">
 
             <Button
                 android:id="@+id/cancelButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/button_cancel"
-                style="?attr/materialButtonOutlinedStyle"
-                android:textColor="@color/purple_primary"/>
+                android:text="@string/text_cancel"
+                android:layout_marginEnd="8dp"
+                style="@style/Widget.MaterialComponents.Button.TextButton" />
 
             <Button
                 android:id="@+id/saveButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="@string/button_save"/>
+                android:text="@string/text_save" />
+
         </LinearLayout>
 
     </LinearLayout>
 
-</androidx.cardview.widget.CardView> 
+</FrameLayout> 

@@ -43,6 +43,6 @@ data class State_maintenance(
 @Serializable
 data class Type_maintenance(
     @SerialName("type_id")
-    val type_id: Int,
+    val type_id: Int? = null,
     val type: String
 )

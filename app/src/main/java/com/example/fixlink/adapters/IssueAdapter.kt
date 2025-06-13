@@ -12,11 +12,11 @@ import com.example.fixlink.data.entities.Location
 import com.example.fixlink.data.entities.Issue_state
 import android.graphics.drawable.GradientDrawable
 import android.graphics.Color
-import com.example.fixlink.IssueDetailFragment
-import com.example.fixlink.IssuesContentFragment
-import com.example.fixlink.MyTasksFragment
 import com.example.fixlink.R
 import com.example.fixlink.data.entities.User
+import com.example.fixlink.fragments.IssueDetailFragment
+import com.example.fixlink.fragments.IssuesContentFragment
+import com.example.fixlink.fragments.MyTasksFragment
 
 class IssueAdapter(private val issues: MutableList<Issue>) : RecyclerView.Adapter<IssueAdapter.IssueViewHolder>() {
     private var priorities: List<Priority> = emptyList()

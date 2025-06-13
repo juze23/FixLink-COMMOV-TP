@@ -5,399 +5,261 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RegisterUserActivity">
+    android:background="@color/white"
+    tools:context=".activities.RegisterUserActivity">
 
     <!-- App Bar Fragment Container -->
-    <FrameLayout
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/topAppBarFragmentContainer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="@color/purple_secondary"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <ScrollView
-        android:id="@+id/formScrollView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fillViewport="true"
-        android:background="@color/white"
-        app:layout_constraintTop_toBottomOf="@+id/topAppBarFragmentContainer"
+        app:layout_constraintTop_toBottomOf="@id/topAppBarFragmentContainer"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationContainer"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationContainer">
+        app:layout_constraintEnd_toEndOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="16dp">
+            android:padding="16dp">
 
-            <!-- Toggle for Equipment/User -->
-            <com.google.android.material.button.MaterialButtonToggleGroup
-                android:id="@+id/toggleButtonLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:singleSelection="true"
-                app:checkedButton="@+id/button_user"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
-
-                <Button
-                    android:id="@+id/button_equipment"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/text_equipment"/>
-
-                <Button
-                    android:id="@+id/button_user"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/text_user"/>
-
-            </com.google.android.material.button.MaterialButtonToggleGroup>
-
-            <!-- User Form Layout -->
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/userFormLayout"
+            <!-- User Type Label -->
+            <TextView
+                android:id="@+id/user_type_label"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:visibility="visible"
-                app:layout_constraintTop_toBottomOf="@+id/toggleButtonLayout"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="32dp"
+                android:text="@string/label_user_type"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/purple_primary"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <!-- User Type Label -->
-                <TextView
-                    android:id="@+id/user_type_label"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginEnd="32dp"
-                    android:text="@string/label_user_type"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/purple_primary"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+            <!-- User Type Spinner -->
+            <Spinner
+                android:id="@+id/user_type_spinner"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/rounded_edittext_background"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/user_type_label" />
 
-                <!-- User Type Spinner -->
-                <Spinner
-                    android:id="@+id/user_type_spinner"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="32dp"
-                    android:background="@drawable/rounded_edittext_background"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:spinnerMode="dropdown"
-                    style="@style/Widget.AppCompat.Spinner"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/user_type_label" />
-
-                <!-- First Name Label -->
-                <TextView
-                    android:id="@+id/firstname_label"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginEnd="32dp"
-                    android:text="@string/label_first_name"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/purple_primary"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/user_type_spinner" />
-
-                <!-- First Name Input -->
-                <EditText
-                    android:id="@+id/firstname_input"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="32dp"
-                    android:hint="@string/hint_first_name"
-                    android:inputType="textPersonName"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    android:background="@drawable/rounded_edittext_background"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/firstname_label" />
-
-                <!-- Last Name Label -->
-                <TextView
-                    android:id="@+id/lastname_label"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginEnd="32dp"
-                    android:text="@string/label_last_name"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/purple_primary"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/firstname_input" />
-
-                <!-- Last Name Input -->
-                <EditText
-                    android:id="@+id/lastname_input"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="32dp"
-                    android:hint="@string/hint_last_name"
-                    android:inputType="textPersonName"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    android:background="@drawable/rounded_edittext_background"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/lastname_label" />
-
-                <!-- Email Label -->
-                <TextView
-                    android:id="@+id/email_label"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginEnd="32dp"
-                    android:text="@string/label_email"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/purple_primary"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/lastname_input" />
-
-                <!-- Email Input -->
-                <EditText
-                    android:id="@+id/email_input"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="32dp"
-                    android:hint="@string/hint_email_signup"
-                    android:inputType="textEmailAddress"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    android:background="@drawable/rounded_edittext_background"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/email_label" />
-
-                <!-- Phone Number Label -->
-                <TextView
-                    android:id="@+id/phone_number_label"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginEnd="32dp"
-                    android:text="@string/label_phone_number"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/purple_primary"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/email_input" />
-
-                <!-- Phone Number Input -->
-                <EditText
-                    android:id="@+id/phone_input"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="32dp"
-                    android:hint="@string/hint_phone_number"
-                    android:inputType="phone"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    android:background="@drawable/rounded_edittext_background"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/phone_number_label" />
-
-                <!-- Password Label -->
-                <TextView
-                    android:id="@+id/password_label"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginEnd="32dp"
-                    android:text="@string/label_password"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/purple_primary"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/phone_input" />
-
-                <!-- Password Input -->
-                <EditText
-                    android:id="@+id/password_input"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="32dp"
-                    android:hint="@string/hint_password_signup"
-                    android:inputType="textPassword"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    android:background="@drawable/rounded_edittext_background"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/password_label" />
-
-                <!-- Register User Button -->
-                <Button
-                    android:id="@+id/register_user_button"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="32dp"
-                    android:layout_marginEnd="32dp"
-                    android:text="@string/button_register_user"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/password_input" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <!-- Equipment Form -->
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/equipmentFormLayout"
+            <!-- First Name Label -->
+            <TextView
+                android:id="@+id/firstname_label"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@+id/toggleButtonLayout"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="32dp"
+                android:text="@string/label_firstname"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/purple_primary"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:layout_constraintTop_toBottomOf="@+id/user_type_spinner" />
 
-                <!-- Equipment Name Label -->
-                <TextView
-                    android:id="@+id/equipment_name_label"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginEnd="32dp"
-                    android:text="@string/label_equipment_name"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/purple_primary"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+            <!-- First Name Input -->
+            <EditText
+                android:id="@+id/firstname_input"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="32dp"
+                android:hint="@string/hint_firstname"
+                android:inputType="textPersonName"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:background="@drawable/rounded_edittext_background"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/firstname_label" />
 
-                <!-- Equipment Name Input -->
-                <EditText
-                    android:id="@+id/equipment_name_input"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="32dp"
-                    android:hint="@string/hint_equipment_name"
-                    android:inputType="textCapSentences"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    android:background="@drawable/rounded_edittext_background"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/equipment_name_label" />
+            <!-- Last Name Label -->
+            <TextView
+                android:id="@+id/lastname_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="32dp"
+                android:text="@string/label_lastname"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/purple_primary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/firstname_input" />
 
-                <!-- Location Label -->
-                <TextView
-                    android:id="@+id/equipment_location_label"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginEnd="32dp"
-                    android:text="@string/label_location"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/purple_primary"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/equipment_name_input" />
+            <!-- Last Name Input -->
+            <EditText
+                android:id="@+id/lastname_input"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="32dp"
+                android:hint="@string/hint_lastname"
+                android:inputType="textPersonName"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:background="@drawable/rounded_edittext_background"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/lastname_label" />
 
-                <!-- Location Spinner -->
-                <Spinner
-                    android:id="@+id/equipmentLocationSpinner"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="32dp"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    android:background="@drawable/rounded_edittext_background"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/equipment_location_label" />
+            <!-- Email Label -->
+            <TextView
+                android:id="@+id/email_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="32dp"
+                android:text="@string/label_email"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/purple_primary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/lastname_input" />
 
-                <!-- Register Equipment Button -->
-                <Button
-                    android:id="@+id/register_equipment_button"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="32dp"
-                    android:layout_marginEnd="32dp"
-                    android:text="@string/button_register_equipment"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:backgroundTint="@color/purple_primary"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/equipmentLocationSpinner" />
+            <!-- Email Input -->
+            <EditText
+                android:id="@+id/email_input"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="32dp"
+                android:hint="@string/hint_email"
+                android:inputType="textEmailAddress"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:background="@drawable/rounded_edittext_background"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/email_label" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            <!-- Phone Label -->
+            <TextView
+                android:id="@+id/phone_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="32dp"
+                android:text="@string/label_phone"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/purple_primary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/email_input" />
+
+            <!-- Phone Input -->
+            <EditText
+                android:id="@+id/phone_input"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="32dp"
+                android:hint="@string/hint_phone"
+                android:inputType="phone"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:background="@drawable/rounded_edittext_background"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/phone_label" />
+
+            <!-- Password Label -->
+            <TextView
+                android:id="@+id/password_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="32dp"
+                android:text="@string/label_password"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/purple_primary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/phone_input" />
+
+            <!-- Password Input -->
+            <EditText
+                android:id="@+id/password_input"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="32dp"
+                android:hint="@string/hint_password"
+                android:inputType="textPassword"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:background="@drawable/rounded_edittext_background"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/password_label" />
+
+            <!-- Register User Button -->
+            <Button
+                android:id="@+id/register_user_button"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="32dp"
+                android:text="@string/button_register_user"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:backgroundTint="@color/purple_primary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/password_input" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
     <!-- Bottom Navigation Container (Fragment) -->
-    <FrameLayout
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/bottomNavigationContainer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

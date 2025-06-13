@@ -19,75 +19,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FixLink"
         tools:targetApi="31">
-        <activity
-            android:name=".AdminActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ChooseTechnicianActivity"
-            android:exported="false"
-            android:theme="@style/Theme.FixLink" />
-        <activity
-            android:name=".RegisterUserActivity"
-            android:exported="false" />
-        <activity
-            android:name=".RegisterMaintenanceActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MaintenanceReportActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ProfileActivity"
-            android:exported="false" />
-        <activity
-            android:name=".FirstLoginActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ForgotPasswordActivity"
-            android:exported="false" />
-        <activity
-            android:name=".SignUpActivity"
-            android:exported="false" />
-        <activity
-            android:name=".LoginActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity 
-            android:name=".RegisterIssueActivity"
-            android:exported="false"
-            android:label="@string/page_title_register_issue" />
-        <activity
-            android:name=".IssuesUserActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MyTasksActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MaintenanceUserActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ViewAllListActivity"
-            android:exported="false" />
-        <activity
-            android:name=".EditProfileActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ReportActivity"
-            android:exported="false" />
-        <activity
-            android:name=".DashboardActivity"
-            android:exported="false"
-            android:theme="@style/Theme.FixLink.NoActionBar" />
-        <activity
-            android:name=".ViewReportActivity"
-            android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -98,6 +29,88 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+        <activity
+            android:name="com.example.fixlink.activities.ForgotPasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.example.fixlink.activities.SignUpActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.example.fixlink.activities.LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.example.fixlink.activities.MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity 
+            android:name="com.example.fixlink.activities.RegisterIssueActivity"
+            android:exported="false"
+            android:label="@string/page_title_register_issue" />
+        <activity
+            android:name="com.example.fixlink.activities.IssuesUserActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.example.fixlink.activities.MyTasksActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.example.fixlink.activities.MaintenanceUserActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.example.fixlink.activities.ViewAllListActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.example.fixlink.activities.EditProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.example.fixlink.activities.ReportActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.example.fixlink.activities.DashboardActivity"
+            android:exported="false"
+            android:theme="@style/Theme.FixLink.NoActionBar" />
+        <activity
+            android:name="com.example.fixlink.activities.ViewReportActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.example.fixlink.activities.AdminActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.example.fixlink.activities.ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.example.fixlink.activities.ChooseTechnicianActivity"
+            android:exported="false"
+            android:theme="@style/Theme.FixLink" />
+        <activity
+            android:name="com.example.fixlink.activities.RegisterUserActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.example.fixlink.activities.RegisterMaintenanceActivity"
+            android:exported="false"
+            android:label="@string/page_title_register_maintenance" />
+        <activity
+            android:name="com.example.fixlink.activities.MaintenanceReportActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.example.fixlink.activities.FirstLoginActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.example.fixlink.activities.RegisterEquipmentActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.example.fixlink.activities.RegisterLocationActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.example.fixlink.activities.RegisterMaintenanceTypeActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.example.fixlink.activities.RegisterIssueTypeActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

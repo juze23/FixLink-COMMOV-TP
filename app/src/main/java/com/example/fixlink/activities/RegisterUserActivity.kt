@@ -1,26 +1,19 @@
-package com.example.fixlink
+package com.example.fixlink.activities
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.fixlink.TopAppBarFragment
-import com.example.fixlink.BottomNavigationAdminFragment
+import androidx.fragment.app.commit
 import android.widget.ArrayAdapter
 import android.widget.Spinner
-import androidx.fragment.app.commit
-import android.widget.LinearLayout
 import android.widget.Button
 import android.widget.EditText
-import android.view.View
 import android.widget.Toast
-import com.google.android.material.button.MaterialButtonToggleGroup
 import com.example.fixlink.data.repository.UserRepository
-import com.example.fixlink.data.repository.EquipmentRepository
-import com.example.fixlink.data.entities.Location
-import com.example.fixlink.data.repository.LocationRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,15 +21,13 @@ import kotlinx.coroutines.withContext
 import android.os.Build
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
+import com.example.fixlink.R
+import com.example.fixlink.fragments.BottomNavigationAdminFragment
+import com.example.fixlink.fragments.TopAppBarFragment
 
 class RegisterUserActivity : AppCompatActivity() {
 
     private lateinit var userTypeSpinner: Spinner
-    private lateinit var toggleButtonLayout: MaterialButtonToggleGroup
-    private lateinit var userFormLayout: androidx.constraintlayout.widget.ConstraintLayout
-    private lateinit var equipmentFormLayout: androidx.constraintlayout.widget.ConstraintLayout
-
-    // User form views
     private lateinit var emailInput: EditText
     private lateinit var phoneInput: EditText
     private lateinit var passwordInput: EditText
@@ -44,15 +35,7 @@ class RegisterUserActivity : AppCompatActivity() {
     private lateinit var lastnameInput: EditText
     private lateinit var registerUserButton: Button
 
-    // Equipment form views
-    private lateinit var equipmentNameInput: EditText
-    private lateinit var equipmentLocationSpinner: Spinner
-    private lateinit var registerEquipmentButton: Button
-
     private val userRepository = UserRepository()
-    private val equipmentRepository = EquipmentRepository()
-    private val locationRepository = LocationRepository()
-    private var locationList: List<Location> = emptyList()
 
     companion object {
         private const val TAG = "RegisterUserActivity"
@@ -62,6 +45,13 @@ class RegisterUserActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_register_user)
+
+        // Configure system bars
+        window.statusBarColor = getColor(R.color.purple_secondary)
+        window.navigationBarColor = getColor(R.color.purple_secondary)
+        window.decorView.systemUiVisibility = window.decorView.systemUiVisibility and 
+            View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv() and 
+            View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR.inv()
 
         if (savedInstanceState == null) {
             supportFragmentManager.commit {
@@ -79,9 +69,6 @@ class RegisterUserActivity : AppCompatActivity() {
         }
 
         // Initialize views
-        toggleButtonLayout = findViewById(R.id.toggleButtonLayout)
-        userFormLayout = findViewById(R.id.userFormLayout)
-        equipmentFormLayout = findViewById(R.id.equipmentFormLayout)
         userTypeSpinner = findViewById(R.id.user_type_spinner)
         emailInput = findViewById(R.id.email_input)
         phoneInput = findViewById(R.id.phone_input)
@@ -89,16 +76,9 @@ class RegisterUserActivity : AppCompatActivity() {
         firstnameInput = findViewById(R.id.firstname_input)
         lastnameInput = findViewById(R.id.lastname_input)
         registerUserButton = findViewById(R.id.register_user_button)
-        equipmentNameInput = findViewById(R.id.equipment_name_input)
-        equipmentLocationSpinner = findViewById(R.id.equipmentLocationSpinner)
-        registerEquipmentButton = findViewById(R.id.register_equipment_button)
 
         setupUserTypeSpinner()
-        setupToggleButtonListener()
-        setupRegisterButtons()
-        // Initial form visibility based on checked button in layout
-        updateFormVisibility(toggleButtonLayout.checkedButtonId)
-        loadLocations()
+        setupRegisterButton()
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -124,48 +104,7 @@ class RegisterUserActivity : AppCompatActivity() {
         userTypeSpinner.adapter = userTypeAdapter
     }
 
-    private fun loadLocations() {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                locationRepository.getLocationList().fold(
-                    onSuccess = { locations ->
-                        locationList = locations
-                        withContext(Dispatchers.Main) {
-                            val adapter = ArrayAdapter(
-                                this@RegisterUserActivity,
-                                android.R.layout.simple_spinner_item,
-                                listOf(getString(R.string.text_select_location)) + locations.map { it.name }
-                            ).apply {
-                                setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                            }
-                            equipmentLocationSpinner.adapter = adapter
-                        }
-                    },
-                    onFailure = { error ->
-                        Log.e(TAG, "Error loading locations: ${error.message}", error)
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(this@RegisterUserActivity, "Error loading locations", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                )
-            } catch (e: Exception) {
-                Log.e(TAG, "Error in loadLocations: ${e.message}", e)
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(this@RegisterUserActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-    }
-
-    private fun setupToggleButtonListener() {
-        toggleButtonLayout.addOnButtonCheckedListener { toggleGroup, checkedId, isChecked ->
-            if (isChecked) {
-                updateFormVisibility(checkedId)
-            }
-        }
-    }
-
-    private fun setupRegisterButtons() {
+    private fun setupRegisterButton() {
         registerUserButton.setOnClickListener {
             if (validateUserInputs()) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -173,12 +112,6 @@ class RegisterUserActivity : AppCompatActivity() {
                 } else {
                     Toast.makeText(this, "This app requires Android 8.0 or higher", Toast.LENGTH_LONG).show()
                 }
-            }
-        }
-
-        registerEquipmentButton.setOnClickListener {
-            if (validateEquipmentInputs()) {
-                registerEquipment()
             }
         }
     }
@@ -234,16 +167,6 @@ class RegisterUserActivity : AppCompatActivity() {
         return true
     }
 
-    private fun validateEquipmentInputs(): Boolean {
-        val name = equipmentNameInput.text.toString().trim()
-        if (equipmentLocationSpinner.selectedItemPosition == 0) {
-            Toast.makeText(this, "Please select a location", Toast.LENGTH_SHORT).show()
-            return false
-        }
-
-        return true
-    }
-
     @RequiresApi(Build.VERSION_CODES.O)
     private fun registerUser() {
         val email = emailInput.text.toString().trim()
@@ -278,55 +201,6 @@ class RegisterUserActivity : AppCompatActivity() {
                 withContext(Dispatchers.Main) {
                     Toast.makeText(this@RegisterUserActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
-            }
-        }
-    }
-
-    private fun registerEquipment() {
-        val name = equipmentNameInput.text.toString().trim()
-        if (name.isEmpty()) {
-            equipmentNameInput.error = "Equipment name is required"
-            return
-        }
-
-        val locationId = locationList[equipmentLocationSpinner.selectedItemPosition - 1].location_id
-        val description = "Location ID: $locationId"
-
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val result = equipmentRepository.registerEquipment(name, description)
-                result.fold(
-                    onSuccess = {
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(this@RegisterUserActivity, "Equipment registered successfully!", Toast.LENGTH_SHORT).show()
-                            // Clear inputs
-                            equipmentNameInput.text.clear()
-                            equipmentLocationSpinner.setSelection(0)
-                        }
-                    },
-                    onFailure = { error ->
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(this@RegisterUserActivity, "Error: ${error.message}", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                )
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(this@RegisterUserActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-    }
-
-    private fun updateFormVisibility(checkedId: Int) {
-        when (checkedId) {
-            R.id.button_user -> {
-                userFormLayout.visibility = View.VISIBLE
-                equipmentFormLayout.visibility = View.GONE
-            }
-            R.id.button_equipment -> {
-                userFormLayout.visibility = View.GONE
-                equipmentFormLayout.visibility = View.VISIBLE
             }
         }
     }

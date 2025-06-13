@@ -1,4 +1,4 @@
-package com.example.fixlink
+package com.example.fixlink.fragments
 
 import android.app.ActivityOptions
 import android.content.Intent
@@ -13,6 +13,11 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import com.example.fixlink.R
+import com.example.fixlink.activities.IssuesUserActivity
+import com.example.fixlink.activities.MaintenanceUserActivity
+import com.example.fixlink.activities.MyTasksActivity
+import com.example.fixlink.activities.ProfileActivity
 import com.example.fixlink.data.repository.UserRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

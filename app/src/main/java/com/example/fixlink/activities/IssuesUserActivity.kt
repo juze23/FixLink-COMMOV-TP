@@ -1,4 +1,4 @@
-package com.example.fixlink
+package com.example.fixlink.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -14,6 +14,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import android.content.Intent
 import android.widget.Toast
+import com.example.fixlink.R
+import com.example.fixlink.fragments.BottomNavigationAdminFragment
+import com.example.fixlink.fragments.BottomNavigationFragment
+import com.example.fixlink.fragments.IssuesContentFragment
+import com.example.fixlink.fragments.TopAppBarFragment
 
 class IssuesUserActivity : AppCompatActivity() {
     private val userRepository = UserRepository()

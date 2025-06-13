@@ -1,4 +1,4 @@
-package com.example.fixlink
+package com.example.fixlink.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -10,6 +10,8 @@ import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import com.example.fixlink.R
+import com.example.fixlink.activities.AdminActivity
 import com.example.fixlink.data.entities.Equipment
 import com.example.fixlink.data.repository.EquipmentRepository
 import kotlinx.coroutines.CoroutineScope
@@ -43,9 +45,29 @@ class EditEquipmentFragment : Fragment() {
         saveButton = view.findViewById(R.id.saveButton)
         equipmentRepository = EquipmentRepository()
 
+        // Configure input handling
+        nameEditText.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                nameEditText.clearFocus()
+            }
+        }
+        descriptionEditText.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                descriptionEditText.clearFocus()
+            }
+        }
+
         // Set click listeners for buttons
-        cancelButton.setOnClickListener { dismissFragment() }
-        saveButton.setOnClickListener { saveChanges() }
+        cancelButton.setOnClickListener { 
+            nameEditText.clearFocus()
+            descriptionEditText.clearFocus()
+            dismissFragment() 
+        }
+        saveButton.setOnClickListener { 
+            nameEditText.clearFocus()
+            descriptionEditText.clearFocus()
+            saveChanges() 
+        }
 
         // Load equipment data if provided
         arguments?.getString("equipmentName")?.let { equipmentName ->
@@ -53,6 +75,12 @@ class EditEquipmentFragment : Fragment() {
         }
 
         return view
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        nameEditText.setOnFocusChangeListener(null)
+        descriptionEditText.setOnFocusChangeListener(null)
     }
 
     private fun loadEquipmentData(equipmentName: String) {
@@ -81,39 +109,41 @@ class EditEquipmentFragment : Fragment() {
     }
 
     private fun saveChanges() {
-        val name = nameEditText.text.toString().trim()
-        val description = descriptionEditText.text.toString().trim()
-        val isActive = statusSpinner.selectedItemPosition == 0 // 0 for Active, 1 for Inactive
+        val newName = nameEditText.text.toString().trim()
+        val newDescription = descriptionEditText.text.toString().trim()
+        val newStatus = statusSpinner.selectedItem.toString() == getString(R.string.text_status_active)
 
-        if (name.isEmpty()) {
-            nameEditText.error = "Name is required"
+        if (newName.isEmpty()) {
+            nameEditText.error = getString(R.string.error_name_required)
             return
         }
 
-        currentEquipment?.let { equipment ->
-            CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    val updatedEquipment = equipment.copy(
-                        name = name,
-                        description = description,
-                        active = isActive
-                    )
-                    val result = equipmentRepository.updateEquipment(updatedEquipment)
-                    withContext(Dispatchers.Main) {
-                        result.fold(
-                            onSuccess = {
-                                Toast.makeText(context, "Equipment updated successfully!", Toast.LENGTH_SHORT).show()
-                                dismissFragment()
-                            },
-                            onFailure = { error ->
-                                Toast.makeText(context, "Error: ${error.message}", Toast.LENGTH_SHORT).show()
-                            }
-                        )
+        val currentEquipmentId = currentEquipment?.equipment_id ?: run {
+            Toast.makeText(context, getString(R.string.error_equipment_not_found), Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val updatedEquipment = Equipment(
+            equipment_id = currentEquipmentId,
+            name = newName,
+            description = newDescription,
+            active = newStatus
+        )
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val result = equipmentRepository.updateEquipment(updatedEquipment)
+                withContext(Dispatchers.Main) {
+                    if (result.isSuccess) {
+                        Toast.makeText(context, getString(R.string.text_equipment_updated), Toast.LENGTH_SHORT).show()
+                        (activity as? AdminActivity)?.hideEditFragment()
+                    } else {
+                        Toast.makeText(context, getString(R.string.error_updating_equipment), Toast.LENGTH_SHORT).show()
                     }
-                } catch (e: Exception) {
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
-                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(context, getString(R.string.error_updating_equipment, e.message), Toast.LENGTH_SHORT).show()
                 }
             }
         }

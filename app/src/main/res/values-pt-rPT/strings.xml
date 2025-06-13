@@ -111,7 +111,7 @@
     <string name="text_total_users">Total de Utilizadores</string>
     <string name="text_active_users">%1$d ativos hoje</string>
     <string name="text_total_locations">Total de Localizações</string>
-    <string name="text_active_locations">%1$d com problemas ativos</string>
+    <string name="text_active_locations">%1$d com avarias ativos</string>
     <string name="text_active_equipment">Equipamentos Ativos</string>
     <string name="text_avg_issue_time">Tempo Médio de Avarias</string>
     <string name="text_avg_maintenance_time">Tempo Médio de Manutenção</string>
@@ -159,6 +159,7 @@
     <string name="text_delete">Eliminar</string>
 
     <!-- Fragmento de Edição de Equipamento -->
+    <string name="label_equipment_description">Descrição do Equipamento</string>
     <string name="hint_equipment_description">Insira a descrição do equipamento</string>
     <string name="label_status">Estado</string>
 
@@ -266,11 +267,11 @@
     <string name="button_change_password_edit">Alterar Palavra-passe</string>
     <string name="button_save_edit">Guardar</string>
     <string name="button_cancel_edit_profile">Cancelar</string>
-    <string name="hint_current_password">Palavra-passe Atual</string>
-    <string name="hint_new_password">Nova Palavra-passe</string>
-    <string name="hint_confirm_new_password">Confirmar Nova Palavra-passe</string>
+    <string name="hint_current_password">Palavra-passe atual</string>
+    <string name="hint_new_password">Nova palavra-passe</string>
+    <string name="hint_confirm_new_password">Confirmar nova palavra-passe</string>
     <string name="text_password_changed">Palavra-passe alterada com sucesso</string>
-    <string name="text_error_changing_password">Erro ao alterar palavra-passe. Por favor, tente novamente.</string>
+    <string name="text_error_changing_password">Erro ao alterar palavra-passe: %1$s</string>
     <string name="text_current_password_incorrect">Palavra-passe atual incorreta</string>
     <string name="text_password_reset_success">Palavra-passe redefinida com sucesso. Pode agora iniciar sessão com a nova palavra-passe.</string>
     <string name="text_error_resetting_password">Erro ao redefinir palavra-passe. Por favor, tente novamente.</string>
@@ -349,7 +350,7 @@
     <string name="text_notification_maintenance_created">Foi criada uma nova tarefa de manutenção</string>
 
     <!-- State Strings -->
-    <string name="text_view">Ver</string>
+    <string name="text_view">Ler</string>
     <string name="text_state_cancelled">Cancelado</string>
 
     <!-- Date Format Strings -->
@@ -358,7 +359,7 @@
     <string name="text_yesterday">Ontem</string>
     <string name="text_mark_as_unread">Marcar como lido</string>
     <string name="text_mark_as_read">Marcar como lido</string>
-    <string name="text_view_less">Ver Menos</string>
+    <string name="text_view_less">Ver menos</string>
     <string name="text_all_technicians">"  Todos os técnicos"</string>
 
     <!-- Diálogo de Adicionar Foto -->
@@ -387,5 +388,113 @@
     <string name="text_password_length_error">A palavra-passe deve ter pelo menos 6 caracteres</string>
     <string name="text_password_updated">Palavra-passe atualizada com sucesso</string>
     <string name="text_error_updating_password">Erro ao atualizar palavra-passe: %1$s</string>
+
+    <!-- Maintenance Types, Issue Types and Locations Management -->
+    <string name="text_maintenance_types">Tipos de Manutenção</string>
+    <string name="text_issue_types">Tipos de Avarias</string>
+    <string name="text_locations">Localizações</string>
+    <string name="text_add_type">Adicionar Tipo</string>
+    <string name="text_edit_type">Editar Tipo</string>
+    <string name="text_delete_type">Eliminar Tipo</string>
+    <string name="text_add_location">Adicionar Localização</string>
+    <string name="text_edit_location">Editar Localização</string>
+    <string name="text_delete_location">Eliminar Localização</string>
+    <string name="hint_type_name">Introduza o nome do tipo</string>
+    <string name="hint_location_name">Introduza o nome da localização</string>
+    <string name="text_type_added">Tipo adicionado com sucesso</string>
+    <string name="text_type_updated">Tipo atualizado com sucesso</string>
+    <string name="text_type_deleted">Tipo eliminado com sucesso</string>
+    <string name="text_location_added">Localização adicionada com sucesso</string>
+    <string name="text_location_updated">Localização atualizada com sucesso</string>
+    <string name="text_location_deleted">Localização eliminada com sucesso</string>
+    <string name="text_error_adding_type">Erro ao adicionar tipo</string>
+    <string name="text_error_updating_type">Erro ao atualizar tipo: %1$s</string>
+    <string name="text_error_deleting_type">Erro ao eliminar tipo</string>
+    <string name="text_error_adding_location">Erro ao adicionar localização</string>
+    <string name="text_error_updating_location">Erro ao atualizar localização: %1$s</string>
+    <string name="text_error_deleting_location">Erro ao eliminar localização</string>
+
+    <!-- List View All Text -->
+    <string name="text_view_all_count">Ver todos (%d)</string>
+
+    <!-- Registration Dialog -->
+    <string name="dialog_add_item_title">Adicionar Novo Item</string>
+    <string name="text_add_user">Adicionar Utilizador</string>
+    <string name="text_add_equipment">Adicionar Equipamento</string>
+    <string name="text_add_maintenance_type">Adicionar Tipo de Manutenção</string>
+    <string name="text_add_issue_type">Adicionar Tipo de Avaria</string>
+    <string name="button_add_user">Adicionar Utilizador</string>
+    <string name="button_add_equipment">Adicionar Equipamento</string>
+    <string name="button_add_location">Adicionar Localização</string>
+    <string name="button_add_maintenance_type">Adicionar Tipo de Manutenção</string>
+    <string name="button_add_issue_type">Adicionar Tipo de Avaria</string>
+
+    <!-- Location Registration -->
+    <string name="label_location_name">Nome da Localização</string>
+    <string name="button_register_location">Registar Localização</string>
+    <string name="error_empty_location_name">O nome da localização não pode estar vazio</string>
+    <string name="success_location_registered">Localização registada com sucesso</string>
+    <string name="error_location_registration">Falha ao registar localização</string>
+
+    <!-- Maintenance Type Registration -->
+    <string name="label_maintenance_type_name">Nome do Tipo de Manutenção</string>
+    <string name="hint_maintenance_type_name">Introduza o nome do tipo de manutenção</string>
+    <string name="button_register_maintenance_type">Registar Tipo de Manutenção</string>
+    <string name="error_empty_maintenance_type_name">O nome do tipo de manutenção não pode estar vazio</string>
+    <string name="success_maintenance_type_registered">Tipo de manutenção registado com sucesso</string>
+    <string name="error_maintenance_type_registration">Falha ao registar tipo de manutenção</string>
+
+    <!-- Issue Type Registration -->
+    <string name="label_issue_type_name">Nome do Tipo de Avaria</string>
+    <string name="hint_issue_type_name">Introduza o nome do tipo de avaria</string>
+    <string name="button_register_issue_type">Registar Tipo de Avaria</string>
+    <string name="error_empty_issue_type_name">O nome do tipo da avaria não pode estar vazio</string>
+    <string name="success_issue_type_registered">Tipo de avaria registada com sucesso</string>
+    <string name="error_issue_type_registration">Falha ao registar tipo de avaria</string>
+
+    <!-- Equipment Registration -->
+    <string name="label_equipment_location">Localização do Equipamento</string>
+    <string name="error_empty_equipment_name">O nome do equipamento não pode estar vazio</string>
+    <string name="error_empty_equipment_location">Por favor, selecione uma localização</string>
+    <string name="success_equipment_registered">Equipamento registado com sucesso</string>
+    <string name="error_equipment_registration">Falha ao registar equipamento</string>
+
+    <!-- User Registration -->
+    <string name="label_firstname">Nome Próprio</string>
+    <string name="hint_firstname">Introduza o nome próprio</string>
+    <string name="label_lastname">Apelido</string>
+    <string name="hint_lastname">Introduza o apelido</string>
+    <string name="hint_email">Introduza o endereço de email</string>
+    <string name="label_phone">Telefone</string>
+    <string name="hint_phone">Introduza o número de telefone</string>
+    <string name="hint_password">Introduza a palavra-passe</string>
+    <string name="error_empty_firstname">O nome próprio não pode estar vazio</string>
+    <string name="error_empty_lastname">O apelido não pode estar vazio</string>
+    <string name="error_empty_email">O email não pode estar vazio</string>
+    <string name="error_invalid_email">Formato de email inválido</string>
+    <string name="error_empty_phone">O número de telefone não pode estar vazio</string>
+    <string name="error_empty_password">A palavra-passe não pode estar vazia</string>
+    <string name="success_user_registered">Utilizador registado com sucesso</string>
+    <string name="error_user_registration">Falha ao registar utilizador</string>
+    <string name="title_register_issue_type">Registar Tipo de Issue</string>
+    <string name="title_register_maintenance_type">Registar Tipo de Manutenção</string>
+
+    <!-- Edit Dialog Strings -->
+    <string name="error_name_required">O nome é obrigatório</string>
+    <string name="error_equipment_not_found">Equipamento não encontrado</string>
+    <string name="error_updating_equipment">Erro ao atualizar equipamento: %1$s</string>
+    <string name="error_updating_location">Erro ao atualizar localização: %1$s</string>
+    <string name="error_updating_priority">Erro ao atualizar prioridade: %1$s</string>
+    <string name="error_updating_type">Erro ao atualizar tipo: %1$s</string>
+    <string name="text_equipment_updated">Equipamento atualizado com sucesso</string>
+    <string name="text_priority_updated">Prioridade atualizada com sucesso</string>
+    <string name="text_no_changes">Não foram feitas alterações</string>
+    <string name="hint_priority_name">Introduza o nome da prioridade</string>
+    <string name="text_cancel">Cancelar</string>
+    <string name="text_save">Guardar</string>
+
+    <string name="error_location_not_found">Localização não encontrada</string>
+
+    <string name="error_type_not_found">Tipo não encontrado</string>
 
 </resources> 

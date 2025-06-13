@@ -1,12 +1,15 @@
-package com.example.fixlink
+package com.example.fixlink.activities
 
 import android.os.Bundle
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.fixlink.R
 import com.example.fixlink.data.repository.IssueRepository
 import com.example.fixlink.data.repository.MaintenanceRepository
 import com.example.fixlink.data.repository.UserRepository
+import com.example.fixlink.fragments.BottomNavigationAdminFragment
+import com.example.fixlink.fragments.TopAppBarFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

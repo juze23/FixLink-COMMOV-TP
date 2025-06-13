@@ -1,4 +1,4 @@
-package com.example.fixlink
+package com.example.fixlink.fragments
 
 import android.content.Intent
 import android.os.Bundle
@@ -31,6 +31,8 @@ import com.example.fixlink.data.entities.User
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
+import com.example.fixlink.R
+import com.example.fixlink.activities.RegisterMaintenanceActivity
 import com.example.fixlink.adapters.MaintenanceAdapter
 import java.text.SimpleDateFormat
 import java.util.*

@@ -1,4 +1,4 @@
-package com.example.fixlink
+package com.example.fixlink.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -34,6 +34,7 @@ import kotlinx.coroutines.Job
 import java.text.SimpleDateFormat
 import java.util.*
 import android.util.Log
+import com.example.fixlink.R
 import com.example.fixlink.adapters.IssueAdapter
 import com.example.fixlink.adapters.MyTasksAdapter
 

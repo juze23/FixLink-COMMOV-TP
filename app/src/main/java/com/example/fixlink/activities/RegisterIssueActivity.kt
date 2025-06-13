@@ -1,4 +1,4 @@
-package com.example.fixlink
+package com.example.fixlink.activities
 
 import android.app.Activity
 import android.content.Intent
@@ -44,6 +44,9 @@ import java.util.Locale
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
+import com.example.fixlink.R
+import com.example.fixlink.fragments.BottomNavigationAdminFragment
+import com.example.fixlink.fragments.TopAppBarFragment
 import com.example.fixlink.utils.NavigationUtils
 
 class RegisterIssueActivity : AppCompatActivity() {
@@ -443,6 +446,16 @@ class RegisterIssueActivity : AppCompatActivity() {
             return
         }
 
+        val locationId = selectedLocation.location_id ?: run {
+            Toast.makeText(this, "Invalid location selected", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val typeId = selectedIssueType.type_id ?: run {
+            Toast.makeText(this, "Invalid issue type selected", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val result = issueRepository.createIssue(
@@ -450,9 +463,9 @@ class RegisterIssueActivity : AppCompatActivity() {
                     equipmentId = equipmentId,
                     title = title,
                     description = description,
-                    locationId = selectedLocation.location_id,
+                    locationId = locationId,
                     priorityId = selectedPriority.priority_id,
-                    typeId = selectedIssueType.type_id,
+                    typeId = typeId,
                     imageUri = selectedImageUri,
                     context = this@RegisterIssueActivity
                 )

@@ -1,4 +1,4 @@
-package com.example.fixlink
+package com.example.fixlink.fragments
 
 import android.content.Context
 import android.os.Bundle
@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.fixlink.R
 import com.example.fixlink.adapters.NotificationsAdapter
 import com.example.fixlink.data.entities.Notification
 import com.example.fixlink.data.repository.NotificationRepository

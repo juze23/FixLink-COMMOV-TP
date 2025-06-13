@@ -1,4 +1,4 @@
-package com.example.fixlink
+package com.example.fixlink.activities
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
@@ -23,6 +23,12 @@ import android.content.Context
 import android.net.NetworkCapabilities
 import android.view.View
 import android.widget.ProgressBar
+import com.example.fixlink.R
+import com.example.fixlink.fragments.BottomNavigationAdminFragment
+import com.example.fixlink.fragments.BottomNavigationFragment
+import com.example.fixlink.fragments.BottomNavigationUserFragment
+import com.example.fixlink.fragments.NotificationsFragment
+import com.example.fixlink.fragments.TopAppBarFragment
 
 class ProfileActivity : AppCompatActivity(), NotificationsFragment.NotificationUpdateListener {
 

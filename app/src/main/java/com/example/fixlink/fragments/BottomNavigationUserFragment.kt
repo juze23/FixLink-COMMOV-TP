@@ -1,4 +1,4 @@
-package com.example.fixlink
+package com.example.fixlink.fragments
 
 import android.app.ActivityOptions
 import android.content.Intent
@@ -11,6 +11,11 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import com.example.fixlink.R
+import com.example.fixlink.activities.IssuesUserActivity
+import com.example.fixlink.activities.MaintenanceUserActivity
+import com.example.fixlink.activities.ProfileActivity
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER

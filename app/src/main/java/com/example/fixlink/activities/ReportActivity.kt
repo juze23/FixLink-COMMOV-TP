@@ -1,4 +1,4 @@
-package com.example.fixlink
+package com.example.fixlink.activities
 
 import android.content.Context
 import android.os.Bundle
@@ -19,7 +19,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import androidx.fragment.app.commit
+import com.example.fixlink.R
 import com.example.fixlink.data.repository.NotificationRepository
+import com.example.fixlink.fragments.BottomNavigationAdminFragment
+import com.example.fixlink.fragments.BottomNavigationFragment
+import com.example.fixlink.fragments.TopAppBarFragment
 
 class ReportActivity : AppCompatActivity() {
     private lateinit var reportEditText: EditText

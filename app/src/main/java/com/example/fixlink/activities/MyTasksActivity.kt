@@ -1,4 +1,4 @@
-package com.example.fixlink
+package com.example.fixlink.activities
 
 import android.os.Bundle
 import android.view.View
@@ -16,6 +16,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import android.content.Intent
 import android.widget.Toast
+import com.example.fixlink.R
+import com.example.fixlink.fragments.MyTasksFragment
+import com.example.fixlink.fragments.TopAppBarFragment
 
 class MyTasksActivity : AppCompatActivity() {
     private val userRepository = UserRepository()

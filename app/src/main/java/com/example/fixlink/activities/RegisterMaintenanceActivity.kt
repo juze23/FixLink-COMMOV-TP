@@ -1,4 +1,4 @@
-package com.example.fixlink
+package com.example.fixlink.activities
 
 import android.Manifest
 import androidx.appcompat.app.AlertDialog
@@ -19,12 +19,9 @@ import androidx.core.content.FileProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.commit
-import com.example.fixlink.TopAppBarFragment
-import com.example.fixlink.BottomNavigationFragment
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TextView
-import androidx.fragment.app.commit
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -32,7 +29,6 @@ import androidx.lifecycle.lifecycleScope
 import com.example.fixlink.data.entities.Equipment
 import com.example.fixlink.data.entities.Location
 import com.example.fixlink.data.entities.Priority
-import com.example.fixlink.data.entities.Type_maintenance
 import com.example.fixlink.data.repository.EquipmentRepository
 import com.example.fixlink.data.repository.LocationRepository
 import com.example.fixlink.data.repository.MaintenanceRepository
@@ -41,7 +37,6 @@ import com.example.fixlink.data.repository.MaintenanceTypeRepository
 import com.example.fixlink.supabaseConfig.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.launch
-import android.annotation.SuppressLint
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -52,6 +47,11 @@ import com.bumptech.glide.request.RequestOptions
 import kotlinx.coroutines.Dispatchers
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
+import com.example.fixlink.R
+import com.example.fixlink.data.entities.Type_maintenance
+import com.example.fixlink.fragments.BottomNavigationAdminFragment
+import com.example.fixlink.fragments.BottomNavigationFragment
+import com.example.fixlink.fragments.TopAppBarFragment
 import kotlinx.coroutines.withContext
 import com.example.fixlink.utils.NavigationUtils
 import kotlinx.coroutines.CoroutineScope
@@ -460,6 +460,16 @@ class RegisterMaintenanceActivity : AppCompatActivity() {
             return
         }
 
+        val locationId = selectedLocation.location_id ?: run {
+            Toast.makeText(this, "Invalid location selected", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val typeId = selectedType.type_id ?: run {
+            Toast.makeText(this, "Invalid maintenance type selected", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         lifecycleScope.launch {
             try {
                 val result = maintenanceRepository.createMaintenance(
@@ -467,9 +477,9 @@ class RegisterMaintenanceActivity : AppCompatActivity() {
                     equipmentId = equipmentId,
                     title = title,
                     description = description,
-                    locationId = selectedLocation.location_id,
+                    locationId = locationId,
                     priorityId = selectedPriority.priority_id,
-                    typeId = selectedType.type_id,
+                    typeId = typeId,
                     imageUri = selectedImageUri,
                     context = this@RegisterMaintenanceActivity
                 )

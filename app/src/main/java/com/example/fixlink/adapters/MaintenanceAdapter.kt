@@ -12,9 +12,9 @@ import com.example.fixlink.data.entities.Location
 import com.example.fixlink.data.entities.User
 import android.graphics.drawable.GradientDrawable
 import android.graphics.Color
-import com.example.fixlink.MaintenanceDetailFragment
 import com.example.fixlink.R
 import com.example.fixlink.data.entities.State_maintenance
+import com.example.fixlink.fragments.MaintenanceDetailFragment
 
 class MaintenanceAdapter(private val maintenances: List<Maintenance>) : RecyclerView.Adapter<MaintenanceAdapter.MaintenanceViewHolder>() {
     private var priorities: List<Priority> = emptyList()

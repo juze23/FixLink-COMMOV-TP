@@ -1,4 +1,4 @@
-package com.example.fixlink
+package com.example.fixlink.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -21,6 +21,11 @@ import com.example.fixlink.data.preferences.ProfilePreferences
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.fixlink.R
+import com.example.fixlink.fragments.TopAppBarFragment
+import com.example.fixlink.fragments.BottomNavigationAdminFragment
+import com.example.fixlink.fragments.BottomNavigationFragment
+import com.example.fixlink.fragments.BottomNavigationUserFragment
 import com.example.fixlink.utils.NavigationUtils
 
 class EditProfileActivity : AppCompatActivity() {

@@ -28,7 +28,6 @@ import com.google.android.material.button.MaterialButton
 import android.widget.Toast
 import com.example.fixlink.R
 import com.example.fixlink.adapters.RecentActivityAdapter
-import com.example.fixlink.RecentActivityFullFragment
 import java.util.concurrent.TimeUnit
 
 class AdminDashboardFragment : Fragment() {
@@ -239,7 +238,9 @@ class AdminDashboardFragment : Fragment() {
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     showLoading(false)
-                    Toast.makeText(requireContext(), "Error loading dashboard data: ${e.message}", Toast.LENGTH_LONG).show()
+                    if (isAdded) {  // Check if fragment is still attached
+                        Toast.makeText(requireContext(), "Error loading dashboard data: ${e.message}", Toast.LENGTH_LONG).show()
+                    }
                 }
             }
         }
@@ -405,10 +406,14 @@ class AdminDashboardFragment : Fragment() {
     }
 
     private fun updateIssuesByLocationChart(issues: List<Issue>, locations: List<Location>) {
-        val entries = locations.map { location ->
-            val count = issues.count { it.localization_id == location.location_id }
-            BarEntry(location.location_id.toFloat(), count.toFloat())
-        }.filter { it.y > 0 }
+        val entries = locations.mapNotNull { location ->
+            location.location_id?.let { id ->
+                val count = issues.count { it.localization_id == id }
+                if (count > 0) {
+                    BarEntry(id.toFloat(), count.toFloat())
+                } else null
+            }
+        }
 
         val dataSet = BarDataSet(entries, getString(R.string.text_chart_maintenance_by_status)).apply {
             colors = ColorTemplate.MATERIAL_COLORS.toList()

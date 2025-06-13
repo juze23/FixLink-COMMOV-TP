@@ -1,4 +1,4 @@
-package com.example.fixlink
+package com.example.fixlink.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -37,6 +37,11 @@ import coil.transition.CrossfadeTransition
 import android.content.Intent
 import android.app.Activity
 import android.widget.Button
+import com.example.fixlink.AssignTaskFragment
+import com.example.fixlink.R
+import com.example.fixlink.activities.ChooseTechnicianActivity
+import com.example.fixlink.activities.ReportActivity
+import com.example.fixlink.activities.ViewReportActivity
 
 class MaintenanceDetailFragment : Fragment() {
     companion object {

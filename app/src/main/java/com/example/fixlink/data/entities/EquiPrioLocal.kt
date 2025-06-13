@@ -22,6 +22,6 @@ data class Priority(
 @Serializable
 data class Location(
     @SerialName("location_id")
-    val location_id: Int,
+    val location_id: Int? = null,
     val name: String
 )

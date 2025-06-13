@@ -45,6 +45,6 @@ data class Issue_state(
 @Serializable
 data class Issue_type(
     @SerialName("type_id")
-    val type_id: Int,
+    val type_id: Int? = null,
     val type: String
 )

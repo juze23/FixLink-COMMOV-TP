@@ -1,4 +1,4 @@
-package com.example.fixlink
+package com.example.fixlink.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +8,8 @@ import android.widget.TextView
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
+import com.example.fixlink.R
+import com.example.fixlink.fragments.TopAppBarFragment
 
 class ViewAllListActivity : AppCompatActivity() {
 
@@ -52,16 +54,12 @@ class ViewAllListActivity : AppCompatActivity() {
             val itemView = inflater.inflate(R.layout.list_item_admin, listContainer, false)
             val nameTextView = itemView.findViewById<TextView>(R.id.itemNameTextView)
             val editIcon = itemView.findViewById<ImageView>(R.id.editIcon)
-            val deleteIcon = itemView.findViewById<ImageView>(R.id.deleteIcon)
 
             nameTextView.text = item
 
-            // TODO: Implement click listeners for edit and delete icons
+            // TODO: Implement click listener for edit icon
             editIcon.setOnClickListener { 
                 // Handle edit click - maybe pass data back or show a dialog
-            }
-            deleteIcon.setOnClickListener { 
-                // Handle delete click
             }
 
             listContainer.addView(itemView)

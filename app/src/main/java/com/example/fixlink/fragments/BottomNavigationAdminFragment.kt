@@ -1,4 +1,4 @@
-package com.example.fixlink
+package com.example.fixlink.fragments
 
 import android.app.ActivityOptions
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
@@ -13,6 +13,12 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import android.content.Intent
+import com.example.fixlink.R
+import com.example.fixlink.activities.DashboardActivity
+import com.example.fixlink.activities.MaintenanceUserActivity
+import com.example.fixlink.activities.ProfileActivity
+import com.example.fixlink.activities.AdminActivity
+import com.example.fixlink.activities.IssuesUserActivity
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
