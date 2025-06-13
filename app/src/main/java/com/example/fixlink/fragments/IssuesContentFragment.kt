@@ -32,6 +32,7 @@ import com.example.fixlink.data.entities.User
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
+import com.example.fixlink.adapters.IssueAdapter
 import java.text.SimpleDateFormat
 import java.util.*
 import com.example.fixlink.ui.filters.FilterConstants

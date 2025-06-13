@@ -31,7 +31,7 @@
     <string name="hint_phone_number">Insira o seu número de telefone</string>
     <string name="label_confirm_password">Confirmar Palavra-passe</string>
     <string name="hint_confirm_password_signup">Por favor, confirme a sua palavra-passe</string>
-    <string name="button_sign_up">Registar</string>
+    <string name="button_sign_up"> Registar</string>
     <string name="label_first_name">Nome Próprio</string>
     <string name="hint_first_name">Insira o nome próprio</string>
     <string name="label_last_name">Apelido</string>

@@ -9,21 +9,18 @@ import android.widget.Button
 import android.content.Intent
 import android.widget.Toast
 import android.widget.TextView
-import android.widget.ImageView
 import com.example.fixlink.data.repository.UserRepository
 import com.example.fixlink.data.entities.User
-import com.example.fixlink.NavigationUtils
+import com.example.fixlink.utils.NavigationUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import androidx.fragment.app.commit
 import com.example.fixlink.data.preferences.LoginPreferences
 import com.example.fixlink.data.preferences.ProfilePreferences
 import android.net.ConnectivityManager
 import android.content.Context
 import android.net.NetworkCapabilities
-import com.google.android.material.snackbar.Snackbar
 import android.view.View
 import android.widget.ProgressBar
 

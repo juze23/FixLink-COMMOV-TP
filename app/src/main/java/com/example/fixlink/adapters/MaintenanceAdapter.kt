@@ -1,4 +1,4 @@
-package com.example.fixlink
+package com.example.fixlink.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +12,8 @@ import com.example.fixlink.data.entities.Location
 import com.example.fixlink.data.entities.User
 import android.graphics.drawable.GradientDrawable
 import android.graphics.Color
+import com.example.fixlink.MaintenanceDetailFragment
+import com.example.fixlink.R
 import com.example.fixlink.data.entities.State_maintenance
 
 class MaintenanceAdapter(private val maintenances: List<Maintenance>) : RecyclerView.Adapter<MaintenanceAdapter.MaintenanceViewHolder>() {

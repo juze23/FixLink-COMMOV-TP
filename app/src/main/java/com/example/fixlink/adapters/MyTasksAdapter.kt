@@ -1,4 +1,4 @@
-package com.example.fixlink
+package com.example.fixlink.adapters
 
 import android.graphics.drawable.GradientDrawable
 import android.graphics.Color
@@ -8,9 +8,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.fixlink.IssueDetailFragment
+import com.example.fixlink.MaintenanceDetailFragment
+import com.example.fixlink.R
 import com.example.fixlink.data.entities.*
 
-class MyTasksAdapter(
+class   MyTasksAdapter(
     private val issues: List<Issue>,
     private val maintenances: List<Maintenance>,
     private var priorities: List<Priority>,

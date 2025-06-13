@@ -5,8 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageView
-import android.content.Intent
 import android.widget.Toast
 import com.example.fixlink.data.repository.UserRepository
 import kotlinx.coroutines.CoroutineScope
@@ -15,7 +13,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import android.app.AlertDialog
 import android.view.LayoutInflater
-import android.widget.LinearLayout
 import androidx.lifecycle.lifecycleScope
 import android.net.ConnectivityManager
 import android.content.Context
@@ -24,6 +21,7 @@ import com.example.fixlink.data.preferences.ProfilePreferences
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.fixlink.utils.NavigationUtils
 
 class EditProfileActivity : AppCompatActivity() {
 

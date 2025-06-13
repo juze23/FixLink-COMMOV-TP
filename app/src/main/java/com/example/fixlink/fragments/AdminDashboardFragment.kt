@@ -1,4 +1,4 @@
-package com.example.fixlink
+package com.example.fixlink.fragments
 
 import android.graphics.Color
 import android.os.Bundle
@@ -26,6 +26,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 import com.google.android.material.button.MaterialButton
 import android.widget.Toast
+import com.example.fixlink.R
+import com.example.fixlink.adapters.RecentActivityAdapter
+import com.example.fixlink.RecentActivityFullFragment
 import java.util.concurrent.TimeUnit
 
 class AdminDashboardFragment : Fragment() {

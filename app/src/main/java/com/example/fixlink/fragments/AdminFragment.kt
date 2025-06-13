@@ -1,4 +1,4 @@
-package com.example.fixlink
+package com.example.fixlink.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +9,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
+import com.example.fixlink.BottomNavigationAdminFragment
+import com.example.fixlink.R
+import com.example.fixlink.TopAppBarFragment
 
 class AdminFragment : Fragment() {
     override fun onCreateView(

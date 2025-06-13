@@ -7,8 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.fragment.app.Fragment
-import com.example.fixlink.NavigationUtils
+import com.example.fixlink.utils.NavigationUtils
 import com.example.fixlink.data.preferences.LoginPreferences
 import com.example.fixlink.data.repository.UserRepository
 import kotlinx.coroutines.CoroutineScope

@@ -1,4 +1,4 @@
-package com.example.fixlink
+package com.example.fixlink.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +12,10 @@ import com.example.fixlink.data.entities.Location
 import com.example.fixlink.data.entities.Issue_state
 import android.graphics.drawable.GradientDrawable
 import android.graphics.Color
+import com.example.fixlink.IssueDetailFragment
+import com.example.fixlink.IssuesContentFragment
+import com.example.fixlink.MyTasksFragment
+import com.example.fixlink.R
 import com.example.fixlink.data.entities.User
 
 class IssueAdapter(private val issues: MutableList<Issue>) : RecyclerView.Adapter<IssueAdapter.IssueViewHolder>() {
@@ -58,7 +62,7 @@ class IssueAdapter(private val issues: MutableList<Issue>) : RecyclerView.Adapte
             
             // Get the parent fragment to determine which container to use
             val parentFragment = activity?.supportFragmentManager?.fragments?.firstOrNull { 
-                it is IssuesContentFragment || it is MyTasksFragment 
+                it is IssuesContentFragment || it is MyTasksFragment
             }
             
             val containerId = when (parentFragment) {

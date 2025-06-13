@@ -31,9 +31,9 @@ import com.example.fixlink.data.entities.User
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
+import com.example.fixlink.adapters.MaintenanceAdapter
 import java.text.SimpleDateFormat
 import java.util.*
-import com.example.fixlink.ui.filters.FilterConstants
 import com.example.fixlink.ui.filters.MaintenanceFilterDialogFragment
 import kotlinx.coroutines.Job
 

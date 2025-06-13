@@ -4,19 +4,14 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.fixlink.TopAppBarFragment
-import com.example.fixlink.BottomNavigationAdminFragment
 import androidx.fragment.app.commit
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import android.widget.EditText
 import android.widget.ImageView
 import android.view.View
 import android.content.Intent
 import android.widget.FrameLayout
-import androidx.fragment.app.replace
-import androidx.fragment.app.add
 import android.widget.ScrollView
 import androidx.activity.addCallback
 import android.widget.Toast
@@ -29,6 +24,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import androidx.activity.enableEdgeToEdge
+import com.example.fixlink.fragments.AdminFragment
 
 class AdminActivity : AppCompatActivity() {
 

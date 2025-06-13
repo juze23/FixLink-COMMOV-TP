@@ -29,12 +29,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import com.example.fixlink.supabaseConfig.SupabaseClient
 import com.example.fixlink.ui.filters.MyTasksFilterDialogFragment
 import kotlinx.coroutines.Job
 import java.text.SimpleDateFormat
 import java.util.*
 import android.util.Log
+import com.example.fixlink.adapters.IssueAdapter
+import com.example.fixlink.adapters.MyTasksAdapter
 
 class MyTasksFragment : Fragment() {
     private lateinit var issuesRecyclerView: RecyclerView

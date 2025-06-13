@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.fixlink.NavigationUtils
+import com.example.fixlink.utils.NavigationUtils
 import com.example.fixlink.data.preferences.LoginPreferences
 import com.example.fixlink.data.repository.UserRepository
 import kotlinx.coroutines.CoroutineScope

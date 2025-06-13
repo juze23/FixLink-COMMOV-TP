@@ -1,4 +1,4 @@
-package com.example.fixlink
+package com.example.fixlink.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

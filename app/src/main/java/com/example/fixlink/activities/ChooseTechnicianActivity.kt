@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.fixlink.adapters.TechnicianAdapter
 import com.example.fixlink.data.entities.User
 import com.example.fixlink.data.repository.IssueRepository
 import com.example.fixlink.data.repository.MaintenanceRepository

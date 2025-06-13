@@ -1,4 +1,4 @@
-package com.example.fixlink
+package com.example.fixlink.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.fixlink.R
 import com.example.fixlink.data.entities.Notification
 import com.google.android.material.button.MaterialButton
 import java.time.LocalDateTime
@@ -83,11 +84,11 @@ class NotificationsAdapter(
         val formattedDate = when {
             // Today
             notificationDate.truncatedTo(ChronoUnit.DAYS) == now.truncatedTo(ChronoUnit.DAYS) ->
-                context.getString(R.string.text_today) + " " + 
+                context.getString(R.string.text_today) + " " +
                 notificationDate.format(DateTimeFormatter.ofPattern("HH:mm"))
             // Yesterday
             notificationDate.truncatedTo(ChronoUnit.DAYS) == now.minusDays(1).truncatedTo(ChronoUnit.DAYS) ->
-                context.getString(R.string.text_yesterday) + " " + 
+                context.getString(R.string.text_yesterday) + " " +
                 notificationDate.format(DateTimeFormatter.ofPattern("HH:mm"))
             // Other days
             else -> notificationDate.format(DateTimeFormatter.ofPattern(context.getString(R.string.text_date_format)))

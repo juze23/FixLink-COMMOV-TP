@@ -1,10 +1,11 @@
-package com.example.fixlink
+package com.example.fixlink.adapters
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.fixlink.R
 import com.example.fixlink.data.entities.*
 import java.text.SimpleDateFormat
 import java.util.*
