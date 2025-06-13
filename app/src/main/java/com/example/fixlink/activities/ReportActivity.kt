@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.example.fixlink.data.repository.IssueRepository
 import com.example.fixlink.data.repository.MaintenanceRepository
@@ -35,6 +36,7 @@ class ReportActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_report)
+        enableEdgeToEdge()
 
         // Get IDs from intent first to determine if it's maintenance or issue
         issueId = intent.getStringExtra("ISSUE_ID")

@@ -120,6 +120,12 @@ class   MyTasksAdapter(
             val user = users.find { it.user_id == issue.id_user }
             val userName = if (user != null) "${user.firstname} ${user.lastname}" else issue.id_user
             reporterTextView.text = "${itemView.context.getString(R.string.text_user_label)} $userName"
+            val priorityText = when (issue.priority_id) {
+                1 -> itemView.context.getString(R.string.text_priority_low)
+                2 -> itemView.context.getString(R.string.text_priority_medium)
+                3 -> itemView.context.getString(R.string.text_priority_high)
+                else -> issue.priority_id.toString()
+            }
             val statusText = when (issue.state_id) {
                 1 -> itemView.context.getString(R.string.text_state_pending)
                 2 -> itemView.context.getString(R.string.text_state_assigned)
@@ -134,6 +140,7 @@ class   MyTasksAdapter(
             } else "?"
             val locationText = locations.find { it.location_id == issue.localization_id }?.name ?: issue.localization_id.toString()
 
+            priorityChip.text = priorityText
             statusChip.text = statusText
             equipmentChip.text = equipmentState
             locationTextView.text = locationText
