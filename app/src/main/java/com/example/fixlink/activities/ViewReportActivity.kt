@@ -3,7 +3,10 @@ package com.example.fixlink.activities
 import android.os.Bundle
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.example.fixlink.R
 import com.example.fixlink.data.repository.IssueRepository
 import com.example.fixlink.data.repository.MaintenanceRepository
@@ -15,6 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+
 class ViewReportActivity : AppCompatActivity() {
     private val issueRepository = IssueRepository()
     private val maintenanceRepository = MaintenanceRepository()
@@ -25,7 +29,16 @@ class ViewReportActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContentView(R.layout.activity_view_report)
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+
+
+        }
 
         // Check user role before proceeding
         CoroutineScope(Dispatchers.IO).launch {
