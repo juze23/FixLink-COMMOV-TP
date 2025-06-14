@@ -121,7 +121,7 @@
     <string name="text_chart_maintenance_by_status">Manutenções por Estado</string>
     <string name="text_recent_activity">Atividade Recente</string>
     <string name="text_view_all_activity">Ver Todas</string>
-    <string name="text_loading_dashboard">A carregar dados do painel...</string>
+    <string name="text_loading_dashboard">A carregar dados do dashboard...</string>
     <string name="text_chart_legend_pending">Pendente</string>
     <string name="text_chart_legend_in_progress">Em Progresso</string>
     <string name="text_chart_legend_completed">Concluído</string>
@@ -496,5 +496,18 @@
     <string name="error_location_not_found">Localização não encontrada</string>
 
     <string name="error_type_not_found">Tipo não encontrado</string>
+
+    <!-- Profile Error Messages -->
+    <string name="text_error_loading_profile">Erro ao carregar perfil: %1$s</string>
+    <string name="text_error_generic">Erro: %1$s</string>
+    <string name="text_loading_profile">A carregar perfil...</string>
+    <string name="text_error_firstname_required">Nome é obrigatório</string>
+    <string name="text_error_email_required">Email é obrigatório</string>
+    <string name="text_pending_updates_synced">Atualizações pendentes sincronizadas com sucesso</string>
+    <string name="text_error_syncing_updates">Falha ao sincronizar atualizações pendentes: %1$s</string>
+    <string name="text_error_syncing">Erro ao sincronizar: %1$s</string>
+    <string name="text_profile_update_success">Perfil atualizado com sucesso</string>
+    <string name="text_error_updating_profile_generic">Falha ao atualizar perfil: %1$s</string>
+    <string name="text_profile_offline_save">Alterações do perfil guardadas offline. Serão sincronizadas quando houver ligação à internet.</string>
 
 </resources> 

@@ -464,4 +464,17 @@
     <string name="error_location_not_found">Location not found</string>
     <string name="error_type_not_found">Type not found</string>
 
+    <!-- Profile Error Messages -->
+    <string name="text_error_loading_profile">Error loading profile: %1$s</string>
+    <string name="text_error_generic">Error: %1$s</string>
+    <string name="text_loading_profile">Loading profile...</string>
+    <string name="text_error_firstname_required">First name is required</string>
+    <string name="text_error_email_required">Email is required</string>
+    <string name="text_pending_updates_synced">Pending profile updates synced successfully</string>
+    <string name="text_error_syncing_updates">Failed to sync pending updates: %1$s</string>
+    <string name="text_error_syncing">Error syncing updates: %1$s</string>
+    <string name="text_profile_update_success">Profile updated successfully</string>
+    <string name="text_error_updating_profile_generic">Failed to update profile: %1$s</string>
+    <string name="text_profile_offline_save">Profile changes saved offline. Will sync when internet is available.</string>
+
 </resources> 

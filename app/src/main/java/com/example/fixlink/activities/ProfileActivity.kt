@@ -116,7 +116,7 @@ class ProfileActivity : AppCompatActivity(), NotificationsFragment.NotificationU
                                 }
                             } else {
                                 // Only show error if we have no cached data
-                                Toast.makeText(this@ProfileActivity, "Error loading profile: ${error.message}", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this@ProfileActivity, getString(R.string.text_error_loading_profile, error.message), Toast.LENGTH_SHORT).show()
                             }
                             hideSyncStatus()
                         }
@@ -132,7 +132,7 @@ class ProfileActivity : AppCompatActivity(), NotificationsFragment.NotificationU
                         }
                     } else {
                         // Only show error if we have no cached data
-                        Toast.makeText(this@ProfileActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@ProfileActivity, getString(R.string.text_error_generic, e.message), Toast.LENGTH_SHORT).show()
                     }
                     hideSyncStatus()
                 }
@@ -161,7 +161,7 @@ class ProfileActivity : AppCompatActivity(), NotificationsFragment.NotificationU
         // Show loading state
         syncProgressBar.visibility = View.VISIBLE
         syncStatusTextView.visibility = View.VISIBLE
-        syncStatusTextView.text = "Loading profile..."
+        syncStatusTextView.text = getString(R.string.text_loading_profile)
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -189,7 +189,7 @@ class ProfileActivity : AppCompatActivity(), NotificationsFragment.NotificationU
                                 }
                             } else {
                                 // Only show error if we have no cached data
-                                Toast.makeText(this@ProfileActivity, "Error loading profile: ${error.message}", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this@ProfileActivity, getString(R.string.text_error_loading_profile, error.message), Toast.LENGTH_SHORT).show()
                             }
                             hideSyncStatus()
                         }
@@ -205,7 +205,7 @@ class ProfileActivity : AppCompatActivity(), NotificationsFragment.NotificationU
                         }
                     } else {
                         // Only show error if we have no cached data
-                        Toast.makeText(this@ProfileActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@ProfileActivity, getString(R.string.text_error_generic, e.message), Toast.LENGTH_SHORT).show()
                     }
                     hideSyncStatus()
                 }

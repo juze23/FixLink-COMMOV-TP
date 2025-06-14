@@ -200,12 +200,12 @@ class EditProfileActivity : AppCompatActivity() {
 
                 if (result.isSuccess) {
                     profilePreferences.clearPendingUpdates()
-                    Toast.makeText(this@EditProfileActivity, "Pending profile updates synced successfully", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@EditProfileActivity, getString(R.string.text_pending_updates_synced), Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(this@EditProfileActivity, "Failed to sync pending updates: ${result.exceptionOrNull()?.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@EditProfileActivity, getString(R.string.text_error_syncing_updates, result.exceptionOrNull()?.message), Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
-                Toast.makeText(this@EditProfileActivity, "Error syncing updates: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@EditProfileActivity, getString(R.string.text_error_syncing, e.message), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -218,12 +218,12 @@ class EditProfileActivity : AppCompatActivity() {
         val phone = phoneEditText.text.toString().trim()
 
         if (firstname.isEmpty()) {
-            firstnameEditText.error = "First name is required"
+            firstnameEditText.error = getString(R.string.text_error_firstname_required)
             return
         }
 
         if (email.isEmpty()) {
-            emailEditText.error = "Email is required"
+            emailEditText.error = getString(R.string.text_error_email_required)
             return
         }
 
@@ -239,10 +239,10 @@ class EditProfileActivity : AppCompatActivity() {
                 )
 
                 if (result.isSuccess) {
-                    Toast.makeText(this@EditProfileActivity, "Profile updated successfully", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@EditProfileActivity, getString(R.string.text_profile_update_success), Toast.LENGTH_SHORT).show()
                     finish()
                 } else {
-                    Toast.makeText(this@EditProfileActivity, "Failed to update profile: ${result.exceptionOrNull()?.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@EditProfileActivity, getString(R.string.text_error_updating_profile_generic, result.exceptionOrNull()?.message), Toast.LENGTH_SHORT).show()
                 }
             }
         } else {
@@ -254,7 +254,7 @@ class EditProfileActivity : AppCompatActivity() {
                 email = email,
                 phone = phone
             )
-            Toast.makeText(this, "Profile changes saved offline. Will sync when internet is available.", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.text_profile_offline_save), Toast.LENGTH_LONG).show()
             finish()
         }
     }
