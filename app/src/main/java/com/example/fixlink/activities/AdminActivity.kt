@@ -505,7 +505,8 @@ class AdminActivity : AppCompatActivity() {
             else -> return
         }
 
-        // Show the fragment in the editFragmentContainer
+        // Hide the add button and show the fragment in the editFragmentContainer
+        addFab.visibility = View.GONE
         editFragmentContainer.visibility = View.VISIBLE
         supportFragmentManager.commit {
             setReorderingAllowed(true)
@@ -525,6 +526,8 @@ class AdminActivity : AppCompatActivity() {
             }
             editFragmentContainer.visibility = View.GONE
             editFragmentContainer.removeAllViews()
+            // Show the add button again
+            addFab.visibility = View.VISIBLE
             // Refresh all lists after hiding edit fragment
             refreshAllLists()
         } catch (e: Exception) {

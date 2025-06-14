@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/main"
-    tools:context=".DashboardActivity">
+    tools:context=".activities.DashboardActivity">
 
     <!-- Top App Bar Fragment Container -->
     <FrameLayout
