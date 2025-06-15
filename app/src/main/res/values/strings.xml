@@ -208,6 +208,7 @@
     <string name="text_state_assigned">Assigned</string>
     <string name="text_state_under_repair">Under Repair</string>
     <string name="text_state_resolved">Resolved</string>
+    <string name="text_state_cancelled">Cancelled</string>
     <string name="text_equipment_status">Equipment Status:</string>
     <string name="text_status_active">Active</string>
     <string name="text_status_inactive">Inactive</string>
@@ -391,9 +392,7 @@
     <string name="text_notification_issue_created">New issue has been created</string>
     <string name="text_notification_maintenance_created">New maintenance task has been created</string>
     <string name="text_view">View</string>
-
-    <!-- State Strings -->
-    <string name="text_state_cancelled">Cancelled</string>
+    
 
     <!-- Date Format Strings -->
     <string name="text_date_format">MM/dd/yyyy HH:mm</string>

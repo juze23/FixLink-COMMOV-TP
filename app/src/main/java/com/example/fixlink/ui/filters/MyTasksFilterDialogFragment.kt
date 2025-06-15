@@ -45,11 +45,15 @@ class MyTasksFilterDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return Dialog(requireContext(), R.style.DialogTheme).apply {
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            
+            // Set maximum height to 60% of screen height
+            val displayMetrics = resources.displayMetrics
+            val maxHeight = (displayMetrics.heightPixels * 0.6).toInt()
             window?.setLayout(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
+                maxHeight.coerceAtMost(ViewGroup.LayoutParams.WRAP_CONTENT)
             )
-            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         }
     }
 
@@ -125,6 +129,8 @@ class MyTasksFilterDialogFragment : DialogFragment() {
                 R.id.stateAssignedChip -> FilterConstants.STATE_ASSIGNED
                 R.id.stateOngoingChip -> FilterConstants.STATE_ONGOING
                 R.id.stateCompletedChip -> FilterConstants.STATE_COMPLETED
+                R.id.stateUnderRepairChip -> FilterConstants.STATE_UNDER_REPAIR
+                R.id.stateResolvedChip -> FilterConstants.STATE_RESOLVED
                 else -> null
             }
         }
@@ -176,6 +182,8 @@ class MyTasksFilterDialogFragment : DialogFragment() {
             FilterConstants.STATE_ASSIGNED -> stateChipGroup.check(R.id.stateAssignedChip)
             FilterConstants.STATE_ONGOING -> stateChipGroup.check(R.id.stateOngoingChip)
             FilterConstants.STATE_COMPLETED -> stateChipGroup.check(R.id.stateCompletedChip)
+            FilterConstants.STATE_UNDER_REPAIR -> stateChipGroup.check(R.id.stateUnderRepairChip)
+            FilterConstants.STATE_RESOLVED -> stateChipGroup.check(R.id.stateResolvedChip)
             else -> stateChipGroup.clearCheck()
         }
 
