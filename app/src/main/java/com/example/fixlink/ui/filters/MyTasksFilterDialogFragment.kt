@@ -46,14 +46,6 @@ class MyTasksFilterDialogFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return Dialog(requireContext(), R.style.DialogTheme).apply {
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            
-            // Set maximum height to 60% of screen height
-            val displayMetrics = resources.displayMetrics
-            val maxHeight = (displayMetrics.heightPixels * 0.6).toInt()
-            window?.setLayout(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                maxHeight.coerceAtMost(ViewGroup.LayoutParams.WRAP_CONTENT)
-            )
         }
     }
 
@@ -70,6 +62,12 @@ class MyTasksFilterDialogFragment : DialogFragment() {
         initializeViews(view)
         setupListeners()
         setupInitialSelections()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
 
     private fun initializeViews(view: View) {
